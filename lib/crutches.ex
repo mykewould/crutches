@@ -1,0 +1,2 @@
+defmodule Crutches do
+end
