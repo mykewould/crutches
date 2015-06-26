@@ -8,14 +8,17 @@ defmodule Crutches.StringTest do
     end
   end
 
-  test :camel_to_underscore do
+  def basic_camel_underscore_pairs do
     [
       ["Product",               "product"],
       ["SpecialGuest",          "special_guest"],
       ["ApplicationController", "application_controller"],
       ["Area51Controller",      "area51_controller"]
     ]
-    |> compare_underscored_camel
+  end
+
+  test :camel_to_underscore do
+    compare_underscored_camel(basic_camel_underscore_pairs)
   end
 
   test :camel_to_underscore_without_reverse do
@@ -39,12 +42,7 @@ defmodule Crutches.StringTest do
   end
 
   test :underscore_to_camel do
-    [
-      ["Product",               "product"],
-      ["SpecialGuest",          "special_guest"],
-      ["ApplicationController", "application_controller"],
-      ["Area51Controller",      "area51_controller"]
-    ]
+    basic_camel_underscore_pairs
     |> Enum.each fn([camel_case, underscore]) ->
       assert camel_case == String.camelize(underscore)
     end
