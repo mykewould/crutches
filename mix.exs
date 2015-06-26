@@ -7,7 +7,11 @@ defmodule Crutches.Mixfile do
      elixir: "~> 1.0",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps]
+     deps: deps,
+     description: "A small port of Ruby's ActiveSupport",
+     package: [contributors: ["Michael Wood"],
+               licenses: ["MIT"],
+               links: %{"GitHub" => "https://github.com/mykewould/crutches"}]]
   end
 
   # Configuration for the OTP application

@@ -3,7 +3,7 @@ defmodule Crutches.StringTest do
   use ExUnit.Case
 
   def compare_underscored_camel string_pairs do
-    string_pairs |> Enum.each fn([camel_case, underscore]) ->
+    Enum.each string_pairs fn [camel_case, underscore] ->
       assert underscore == String.underscore camel_case
     end
   end
