@@ -2,9 +2,9 @@ defmodule Crutches.StringTest do
   alias Crutches.String
   use ExUnit.Case
 
-  def compare_underscored_camel string_pairs do
-    Enum.each string_pairs fn [camel_case, underscore] ->
-      assert underscore == String.underscore camel_case
+  def compare_underscored_camel(string_pairs) do
+    string_pairs |> Enum.each fn([camel_case, underscore]) ->
+      assert underscore == String.underscore(camel_case)
     end
   end
 
@@ -36,5 +36,17 @@ defmodule Crutches.StringTest do
       ["UsersSection.CommissionDepartment","users_section/commission_department"]
     ]
     |> compare_underscored_camel
+  end
+
+  test :underscore_to_camel do
+    [
+      ["Product",               "product"],
+      ["SpecialGuest",          "special_guest"],
+      ["ApplicationController", "application_controller"],
+      ["Area51Controller",      "area51_controller"]
+    ]
+    |> Enum.each fn([camel_case, underscore]) ->
+      assert camel_case == String.camelize(underscore)
+    end
   end
 end
