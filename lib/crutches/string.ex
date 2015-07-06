@@ -17,10 +17,10 @@ defmodule Crutches.String do
 
   # Converts strings to UpperCamelCase.
   #
-  #  String.camelize("product")                # => Product
-  #  String.camelize("special_guest")          # => SpecialGuest
-  #  String.camelize("application_controller") # => ApplicationController
-  #  String.camelize("area51_controller")      # => Area51Controller
+  #  String.camelize("product")                # => "Product"
+  #  String.camelize("special_guest")          # => "SpecialGuest"
+  #  String.camelize("application_controller") # => "ApplicationController"
+  #  String.camelize("area51_controller")      # => "Area51Controller"
   def camelize(underscore) do
     underscore
     |> String.split("_")
