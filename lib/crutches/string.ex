@@ -9,12 +9,10 @@ defmodule Crutches.String do
   end
 
   def camelize(underscore) do
-    array = underscore
+    underscore
     |> String.split("_")
-    |> Enum.map fn(word) -> String.capitalize(word) end
-    array |> Enum.reduce fn(x, acc) ->  acc <> x end
-    #Not sure why we can't use the pipe directly from
-    #Enum.map, but it throws an error.
+    |> Enum.map(&String.capitalize(&1))
+    |> Enum.reduce(&(&2 <> &1))
   end
 
   #Switch parameter order so we can use the pipe operator.
