@@ -1,6 +1,7 @@
 defmodule Crutches.StringTest do
   alias Crutches.String
-  use ExUnit.Case
+  use ExUnit.Case, async: true
+  doctest Crutches.String
 
   def compare_underscored_camel(string_pairs) do
     string_pairs |> Enum.each fn([camel_case, underscore]) ->
@@ -8,18 +9,19 @@ defmodule Crutches.StringTest do
     end
   end
 
-  def basic_camel_underscore_pairs do
-    [
-      ["Product",               "product"],
-      ["SpecialGuest",          "special_guest"],
-      ["ApplicationController", "application_controller"],
-      ["Area51Controller",      "area51_controller"]
-    ]
-  end
+  # def basic_camel_underscore_pairs do
+  #   [
+  #     ["Product",               "product"],
+  #     ["SpecialGuest",          "special_guest"],
+  #     ["ApplicationController", "application_controller"],
+  #     ["Area51Controller",      "area51_controller"]
+  #   ]
+  # end
 
-  test :camel_to_underscore do
-    compare_underscored_camel(basic_camel_underscore_pairs)
-  end
+  # Covered by doctests
+  # test :camel_to_underscore do
+  #   compare_underscored_camel(basic_camel_underscore_pairs)
+  # end
 
   test :camel_to_underscore_without_reverse do
     [
@@ -41,22 +43,24 @@ defmodule Crutches.StringTest do
     |> compare_underscored_camel
   end
 
-  test :underscore_to_camel do
-    basic_camel_underscore_pairs |> Enum.each fn([camel_case, underscore]) ->
-      assert camel_case == String.camelize(underscore)
-    end
-  end
+  # Covered by doctests
+  # test :underscore_to_camel do
+  #   basic_camel_underscore_pairs |> Enum.each fn([camel_case, underscore]) ->
+  #     assert camel_case == String.camelize(underscore)
+  #   end
+  # end
 
 # Access
-  test :from_with_positive_integer do
-    assert "lo" == String.from("hello", 3)
-  end
-
-  test :from_with_negative_integer do
-    assert "lo" == String.from("hello", -2)
-  end
-
-  test :from_with_zero do
-    assert "hello" == String.from("hello", 0)
-  end
+  # Covered by doctests
+  # test :from_with_positive_integer do
+  #   assert "lo" == String.from("hello", 3)
+  # end
+  #
+  # test :from_with_negative_integer do
+  #   assert "lo" == String.from("hello", -2)
+  # end
+  #
+  # test :from_with_zero do
+  #   assert "hello" == String.from("hello", 0)
+  # end
 end

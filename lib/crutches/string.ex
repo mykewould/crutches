@@ -1,11 +1,20 @@
 defmodule Crutches.String do
-  # Makes an underscored, lowercase form from the expression in the string.
-  # +underscore+ will also change '.' to '/' to convert namespaces to paths.
-  #
-  #  String.underscore("Product")                # => "product"
-  #  String.underscore("SpeicalGuest")           # => "special_guest"
-  #  String.underscore("ApplicationController")  # => "application_controller"
-  #  String.underscore("Area51Controller")       # => "area51_controller"
+  @doc ~S"""
+  Makes an underscored, lowercase form from the expression in the string.
+  +underscore+ will also change '.' to '/' to convert namespaces to paths.
+
+  ## Examples
+
+      iex> String.underscore("Product")
+      "product"
+      iex> String.underscore("SpecialGuest")
+      "special_guest"
+      iex> String.underscore("ApplicationController")
+      "application_controller"
+      iex> String.underscore("Area51Controller")
+      "area51_controller"
+
+  """
   def underscore(camel_case) do
     camel_case
     |> regex_replace(~r/\./, "/")
@@ -15,12 +24,21 @@ defmodule Crutches.String do
     |> String.downcase
   end
 
-  # Converts strings to UpperCamelCase.
-  #
-  #  String.camelize("product")                # => "Product"
-  #  String.camelize("special_guest")          # => "SpecialGuest"
-  #  String.camelize("application_controller") # => "ApplicationController"
-  #  String.camelize("area51_controller")      # => "Area51Controller"
+  @doc ~S"""
+  Converts strings to UpperCamelCase.
+
+  ## Examples
+
+      iex> String.camelize("product")
+      "Product"
+      iex> String.camelize("special_guest")
+      "SpecialGuest"
+      iex> String.camelize("application_controller")
+      "ApplicationController"
+      iex> String.camelize("area51_controller")
+      "Area51Controller"
+
+  """
   def camelize(underscore) do
     underscore
     |> String.split("_")
@@ -34,14 +52,21 @@ defmodule Crutches.String do
   end
 
   # Access
+  
+  @doc ~S"""
+  Returns a substring from the given position to the end of the string.
+  If the position is negative, it is counted from the end of the string.
 
-  # Returns a substring from the given position to the end of the string.
-  # If the position is negative, it is counted from the end of the string.
-  #
-  #   str = "hello"
-  #   String.from(str, 0)  # => "hello"
-  #   String.from(str, 3)  # => "lo"
-  #   String.from(str, -2) # => "lo"
+  ## Examples
+      iex> str = "hello"
+      iex> String.from(str, 0)
+      "hello"
+      iex> String.from(str, 3)
+      "lo"
+      iex> String.from(str, -2)
+      "lo"
+
+  """
   def from(str, starting_point) when starting_point >= 0 do
     from_point(str, starting_point)
   end
