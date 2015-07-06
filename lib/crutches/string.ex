@@ -66,16 +66,59 @@ defmodule Crutches.String do
       iex> String.from(str, -2)
       "lo"
 
+  You can mix it with +from+ method and do fun things like:
+  ## Examples
+      iex> str = "hello"
+      iex> |> String.from(0)
+      iex> |> String.to(-1)
+      "hello"
+      iex> str
+      iex> |> String.from(1)
+      iex> |> String.to(-2)
+      "ell"
   """
   def from(str, starting_point) when starting_point >= 0 do
-    from_point(str, starting_point)
+    from_to(str, starting_point, String.length(str) - 1)
   end
 
   def from(str, starting_point) when starting_point < 0 do
-    from_point(str, String.length(str) + starting_point)
+    new_starting_point  = String.length(str) + starting_point
+    from_to(str, new_starting_point, String.length(str) - 1)
   end
 
-  defp from_point(str, point) do
-    to_string(Enum.map(point..String.length(str) - 1, &String.at(str, &1)))
+  @doc ~S"""
+  Returns a substring from the beginning of the string to the given position.
+  If the position is negative, it is counted from the end of the string.
+
+  ## Examples
+      iex> str = "hello"
+      iex> String.to(str, 0)
+      "h"
+      iex> String.to(str, 3)
+      "hell"
+      iex> String.to(str, -2)
+      "hell"
+
+  You can mix it with +from+ method and do fun things like:
+  ## Examples
+      iex> str = "hello"
+      iex> |> String.from(0)
+      iex> |> String.to(-1)
+      "hello"
+      iex> str
+      iex> |> String.from(1)
+      iex> |> String.to(-2)
+      "ell"
+  """
+  def to(str, end_point) when end_point >= 0 do
+    from_to(str, 0, end_point)
+  end
+
+  def to(str, end_point) when end_point < 0 do
+    from_to(str, 0, String.length(str) + end_point)
+  end
+
+  defp from_to(str, start_point, end_point) do
+    to_string(Enum.map(start_point..end_point, &String.at(str, &1)))
   end
 end
