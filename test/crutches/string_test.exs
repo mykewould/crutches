@@ -47,8 +47,8 @@ defmodule Crutches.StringTest do
     end
   end
 
-# Access 
-  test :from_with_integer do
+# Access
+  test :from_with_positive_integer do
     assert "lo" == String.from("hello", 3)
   end
 

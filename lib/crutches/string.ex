@@ -1,4 +1,11 @@
 defmodule Crutches.String do
+  # Makes an underscored, lowercase form from the expression in the string.
+  # +underscore+ will also change '.' to '/' to convert namespaces to paths.
+  #
+  #  String.underscore("Product")                # => "product"
+  #  String.underscore("SpeicalGuest")           # => "special_guest"
+  #  String.underscore("ApplicationController")  # => "application_controller"
+  #  String.underscore("Area51Controller")       # => "area51_controller"
   def underscore(camel_case) do
     camel_case
     |> regex_replace(~r/\./, "/")
@@ -8,6 +15,12 @@ defmodule Crutches.String do
     |> String.downcase
   end
 
+  # Converts strings to UpperCamelCase.
+  #
+  #  String.camelize("product")                # => Product
+  #  String.camelize("special_guest")          # => SpecialGuest
+  #  String.camelize("application_controller") # => ApplicationController
+  #  String.camelize("area51_controller")      # => Area51Controller
   def camelize(underscore) do
     underscore
     |> String.split("_")
