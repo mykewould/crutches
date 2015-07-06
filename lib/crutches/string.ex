@@ -1,11 +1,11 @@
 defmodule Crutches.String do
   def underscore(camel_case) do
     camel_case
-      |> regex_replace(~r/\./, "/")
-      |> regex_replace(~r/([A-Z]+)([A-Z][a-z])/, "\\1_\\2")
-      |> regex_replace(~r/([a-z\d])([A-Z])/, "\\1_\\2")
-      |> regex_replace(~r/-/, "_")
-      |> String.downcase
+    |> regex_replace(~r/\./, "/")
+    |> regex_replace(~r/([A-Z]+)([A-Z][a-z])/, "\\1_\\2")
+    |> regex_replace(~r/([a-z\d])([A-Z])/, "\\1_\\2")
+    |> regex_replace(~r/-/, "_")
+    |> String.downcase
   end
 
   def camelize(underscore) do
@@ -38,8 +38,6 @@ defmodule Crutches.String do
   end
 
   defp from_point(str, point) do
-    to_string Enum.map point..String.length(str) - 1, fn(int) ->
-      String.at(str, int)
-    end
+    to_string(Enum.map(point..String.length(str) - 1, &String.at(str, &1)))
   end
 end
