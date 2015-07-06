@@ -24,6 +24,11 @@ defmodule Crutches.String do
     |> String.downcase
   end
 
+  # Switch parameter order so we can use the pipe operator.
+  defp regex_replace(string, regex, replace) do
+    Regex.replace(regex, string, replace)
+  end
+
   @doc ~S"""
   Converts strings to UpperCamelCase.
 
@@ -46,13 +51,8 @@ defmodule Crutches.String do
     |> Enum.reduce(&(&2 <> &1))
   end
 
-  #Switch parameter order so we can use the pipe operator.
-  defp regex_replace(string, regex, replace) do
-    Regex.replace(regex, string, replace)
-  end
-
   # Access
-  
+
   @doc ~S"""
   Returns a substring from the given position to the end of the string.
   If the position is negative, it is counted from the end of the string.
