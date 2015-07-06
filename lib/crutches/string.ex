@@ -66,8 +66,7 @@ defmodule Crutches.String do
       iex> String.from(str, -2)
       "lo"
 
-  You can mix it with +from+ method and do fun things like:
-  ## Examples
+  You can mix it with +to+ method and do fun things like:
       iex> str = "hello"
       iex> |> String.from(0)
       iex> |> String.to(-1)
@@ -100,7 +99,6 @@ defmodule Crutches.String do
       "hell"
 
   You can mix it with +from+ method and do fun things like:
-  ## Examples
       iex> str = "hello"
       iex> |> String.from(0)
       iex> |> String.to(-1)
