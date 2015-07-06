@@ -31,16 +31,17 @@ defmodule Crutches.String do
   #   String.from(str, 0)  # => "hello"
   #   String.from(str, 3)  # => "lo"
   #   String.from(str, -2) # => "lo"
-  def from(str, starting_point) do
-    if starting_point < 0 do
-      new_point = String.length(str) + starting_point
-    else
-      new_point = starting_point
-    end
-    length = String.length(str) - 1
-    char_arr = Enum.map new_point..length, fn(int) ->
+  def from(str, starting_point) when starting_point >= 0 do
+    from_point(str, starting_point)
+  end
+
+  def from(str, starting_point) when starting_point < 0 do
+    from_point(str, String.length(str) + starting_point)
+  end
+
+  defp from_point(str, point) do
+    to_string Enum.map point..String.length(str) - 1, fn(int) ->
       String.at(str, int)
     end
-    to_string(char_arr)
   end
 end
