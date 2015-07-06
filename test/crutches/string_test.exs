@@ -42,9 +42,21 @@ defmodule Crutches.StringTest do
   end
 
   test :underscore_to_camel do
-    basic_camel_underscore_pairs
-    |> Enum.each fn([camel_case, underscore]) ->
+    basic_camel_underscore_pairs |> Enum.each fn([camel_case, underscore]) ->
       assert camel_case == String.camelize(underscore)
     end
+  end
+
+# Access 
+  test :from_with_integer do
+    assert "lo" == String.from("hello", 3)
+  end
+
+  test :from_with_negative_integer do
+    assert "lo" == String.from("hello", -2)
+  end
+
+  test :from_with_zero do
+    assert "hello" == String.from("hello", 0)
   end
 end
