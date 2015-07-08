@@ -8,10 +8,13 @@ defmodule Crutches.String do
 
       iex> String.underscore("Product")
       "product"
+
       iex> String.underscore("SpecialGuest")
       "special_guest"
+
       iex> String.underscore("ApplicationController")
       "application_controller"
+
       iex> String.underscore("Area51Controller")
       "area51_controller"
 
@@ -38,10 +41,13 @@ defmodule Crutches.String do
 
       iex> String.camelize("product")
       "Product"
+
       iex> String.camelize("special_guest")
       "SpecialGuest"
+
       iex> String.camelize("application_controller")
       "ApplicationController"
+
       iex> String.camelize("area51_controller")
       "Area51Controller"
 
@@ -61,12 +67,13 @@ defmodule Crutches.String do
   If the position is negative, it is counted from the end of the string.
 
   ## Examples
-      iex> str = "hello"
-      iex> String.from(str, 0)
+      iex> String.from("hello", 0)
       "hello"
-      iex> String.from(str, 3)
+
+      iex> String.from("hello", 3)
       "lo"
-      iex> String.from(str, -2)
+
+      iex> String.from("hello", -2)
       "lo"
 
   You can mix it with +to+ method and do fun things like:
@@ -74,7 +81,8 @@ defmodule Crutches.String do
       iex> |> String.from(0)
       iex> |> String.to(-1)
       "hello"
-      iex> str
+
+      iex> str = "hello"
       iex> |> String.from(1)
       iex> |> String.to(-2)
       "ell"
@@ -94,12 +102,13 @@ defmodule Crutches.String do
   If the position is negative, it is counted from the end of the string.
 
   ## Examples
-      iex> str = "hello"
-      iex> String.to(str, 0)
+      iex> String.to("hello", 0)
       "h"
-      iex> String.to(str, 3)
+
+      iex> String.to("hello", 3)
       "hell"
-      iex> String.to(str, -2)
+
+      iex> String.to("hello", -2)
       "hell"
 
   You can mix it with +from+ method and do fun things like:
@@ -107,7 +116,8 @@ defmodule Crutches.String do
       iex> |> String.from(0)
       iex> |> String.to(-1)
       "hello"
-      iex> str
+
+      iex> str = "hello"
       iex> |> String.from(1)
       iex> |> String.to(-2)
       "ell"
@@ -133,6 +143,7 @@ defmodule Crutches.String do
       iex> string"
       iex> String.squish(str)
       "A multi line string"
+
       iex> str = " foo   bar    \n   \t   boo"
       iex> String.squish(str)
       "foo bar boo"
@@ -148,12 +159,13 @@ defmodule Crutches.String do
   Returns a new string with all occurrences of the patterns removed.
 
   ## Examples
-      iex> str = "foo bar test"
-      iex> String.remove(str, " test")
+      iex> String.remove("foo bar test", " test")
       "foo bar"
-      iex> String.remove(str, ~r/foo /)
+
+      iex> String.remove("foo bar test", ~r/foo /)
       "bar test"
-      iex> String.remove(str, [~r/foo /, " test"])
+
+      iex> String.remove("foo bar test", [~r/foo /, " test"])
       "bar"
   """
   @spec remove(t, t | Regex.t | List.t) :: t
