@@ -1,5 +1,5 @@
 defmodule Crutches.String do
-  @type t :: Crutches.String
+  @type t :: String
   @doc ~S"""
   Makes an underscored, lowercase form from the expression in the string.
   +underscore+ will also change '.' to '/' to convert namespaces to paths.
@@ -137,7 +137,7 @@ defmodule Crutches.String do
       iex> String.squish(str)
       "foo bar boo"
   """
-  @spec squish(char) :: t
+  @spec squish(t) :: t
   def squish(str) do
     Regex.replace(~r/[[:space:]]+/, str, " ")
     |> String.strip
