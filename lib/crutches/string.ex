@@ -77,12 +77,12 @@ defmodule Crutches.String do
       "ell"
   """
   def from(str, starting_point) when starting_point >= 0 do
-    from_to(str, starting_point, String.length(str) - 1)
+    within(str, starting_point..(String.length(str) - 1))
   end
 
   def from(str, starting_point) when starting_point < 0 do
     new_starting_point  = String.length(str) + starting_point
-    from_to(str, new_starting_point, String.length(str) - 1)
+    within(str, new_starting_point..(String.length(str) - 1))
   end
 
   @doc ~S"""
@@ -109,14 +109,56 @@ defmodule Crutches.String do
       "ell"
   """
   def to(str, end_point) when end_point >= 0 do
-    from_to(str, 0, end_point)
+    within(str, 0..(end_point))
   end
 
   def to(str, end_point) when end_point < 0 do
-    from_to(str, 0, String.length(str) + end_point)
+    within(str, 0..(String.length(str) + end_point))
   end
 
-  defp from_to(str, start_point, end_point) do
-    to_string(Enum.map(start_point..end_point, &String.at(str, &1)))
+  defp within(str, range) do
+    to_string(Enum.map(range, &String.at(str, &1)))
+  end
+
+  # Filters
+
+  @doc ~S"""
+  Returns the string, first removing all whitespace on both ends of
+  the string, and then changing remaining consecutive whitespace
+  groups into one space each.
+
+  ## Examples
+      iex> str = "A multi line
+      iex> string"
+      iex> String.squish(str)
+      "A multi line string"
+      iex> str = " foo   bar    \n   \t   boo"
+      iex> String.squish(str)
+      "foo bar boo"
+  """
+  def squish(str) do
+    Regex.replace(~r/[[:space:]]+/, str, " ")
+    |> String.strip
+  end
+
+
+  @doc ~S"""
+  Returns a new string with all occurrences of the patterns removed.
+
+  ## Examples
+      iex> str = "foo bar test"
+      iex> String.remove(str, " test")
+      "foo bar"
+      iex> String.remove(str, ~r/foo /)
+      "bar test"
+      iex> String.remove(str, [~r/foo /, " test"])
+      "bar"
+  """
+  def remove(str, str_to_rm) when is_list(str_to_rm) == false do
+    String.replace(str, str_to_rm, "")
+  end
+
+  def remove(str, removeables) when is_list(removeables) do
+    Enum.reduce(removeables, str, &(remove(&2, &1)))
   end
 end
