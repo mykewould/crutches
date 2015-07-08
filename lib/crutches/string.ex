@@ -77,12 +77,12 @@ defmodule Crutches.String do
       "ell"
   """
   def from(str, starting_point) when starting_point >= 0 do
-    within(str, starting_point..(String.length(str) - 1))
+    String.slice(str, starting_point..(String.length(str) - 1))
   end
 
   def from(str, starting_point) when starting_point < 0 do
     new_starting_point  = String.length(str) + starting_point
-    within(str, new_starting_point..(String.length(str) - 1))
+    String.slice(str, new_starting_point..(String.length(str) - 1))
   end
 
   @doc ~S"""
@@ -109,15 +109,11 @@ defmodule Crutches.String do
       "ell"
   """
   def to(str, end_point) when end_point >= 0 do
-    within(str, 0..(end_point))
+    String.slice(str, 0..(end_point))
   end
 
   def to(str, end_point) when end_point < 0 do
-    within(str, 0..(String.length(str) + end_point))
-  end
-
-  defp within(str, range) do
-    to_string(Enum.map(range, &String.at(str, &1)))
+    String.slice(str, 0..(String.length(str) + end_point))
   end
 
   # Filters
