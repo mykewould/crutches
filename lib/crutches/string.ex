@@ -80,6 +80,9 @@ defmodule Crutches.String do
       iex> String.from("hello", -2)
       "lo"
 
+      iex> String.from("hello", -7)
+      ""
+
   You can mix it with +to+ method and do fun things like:
       iex> str = "hello"
       iex> |> String.from(0)
@@ -90,6 +93,16 @@ defmodule Crutches.String do
       iex> |> String.from(1)
       iex> |> String.to(-2)
       "ell"
+
+      iex> str = "a"
+      iex> |> String.from(1)
+      iex> |> String.to(1500)
+      ""
+
+      iex> str = "elixir"
+      iex> |> String.from(-10)
+      iex> |> String.to(-7)
+      ""
   """
   @spec from(t, Integer.t) :: t
   def from(str, start) when start >= 0 do
@@ -98,7 +111,10 @@ defmodule Crutches.String do
 
   def from(str, start) when start < 0 do
     new_start  = String.length(str) + start
-    String.slice(str, new_start..(String.length(str) - 1))
+    case new_start < 0 do
+      true  -> ""
+      false -> String.slice(str, new_start..(String.length(str) - 1))
+    end
   end
 
   @doc ~S"""
