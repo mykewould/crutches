@@ -110,7 +110,7 @@ defmodule Crutches.String do
   end
 
   def from(str, start) when start < 0 do
-    new_start  = String.length(str) + start
+    new_start = String.length(str) + start
     case new_start < 0 do
       true  -> ""
       false -> String.slice(str, new_start..(String.length(str) - 1))
