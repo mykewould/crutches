@@ -189,8 +189,8 @@ defmodule Crutches.String do
       "bar"
   """
   @spec remove(t, t | Regex.t | List.t) :: t
-  def remove(str, str_to_rm) when is_list(str_to_rm) == false do
-    String.replace(str, str_to_rm, "")
+  def remove(str, to_rm) when is_list(to_rm) == false do
+    String.replace(str, to_rm, "")
   end
 
   def remove(str, removeables) when is_list(removeables) do
