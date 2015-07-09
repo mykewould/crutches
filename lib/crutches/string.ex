@@ -18,6 +18,10 @@ defmodule Crutches.String do
       iex> String.underscore("Area51Controller")
       "area51_controller"
 
+      ["HTMLTidyGenerator",  "html_tidy_generator"],
+
+      ["UsersSection.Commission.Department", "users_section/commission/department"],
+
   """
   @spec underscore(t) :: t
   def underscore(camel_case) do
@@ -88,13 +92,13 @@ defmodule Crutches.String do
       "ell"
   """
   @spec from(t, Integer.t) :: t
-  def from(str, starting_point) when starting_point >= 0 do
-    String.slice(str, starting_point..(String.length(str) - 1))
+  def from(str, start) when start >= 0 do
+    String.slice(str, start..(String.length(str) - 1))
   end
 
-  def from(str, starting_point) when starting_point < 0 do
-    new_starting_point  = String.length(str) + starting_point
-    String.slice(str, new_starting_point..(String.length(str) - 1))
+  def from(str, start) when start < 0 do
+    new_start  = String.length(str) + start
+    String.slice(str, new_start..(String.length(str) - 1))
   end
 
   @doc ~S"""
@@ -123,12 +127,12 @@ defmodule Crutches.String do
       "ell"
   """
   @spec to(t, Integer.t) :: t
-  def to(str, end_point) when end_point >= 0 do
-    String.slice(str, 0..(end_point))
+  def to(str, length) when length >= 0 do
+    String.slice(str, 0..length)
   end
 
-  def to(str, end_point) when end_point < 0 do
-    String.slice(str, 0..(String.length(str) + end_point))
+  def to(str, length) when length < 0 do
+    String.slice(str, 0..(String.length(str) + length))
   end
 
   # Filters
