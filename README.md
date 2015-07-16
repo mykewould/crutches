@@ -12,7 +12,7 @@ This library is a great for Elixir beginners to contribute to. By porting over A
 * If you don't see a method you'd like to implement in the issues section, feel free to go grab one from ActiveSupport, or implement a unique method.
 * The documentation is written for Ruby, start by converting that into a doctest in Elixir.
 * Use TDD to solve the doctest.
-* Open a PR with your doctest and code.
+* Open a PR
 
 ### Why ActiveSupport?
 ActiveSupport has some great goodies that are useful in web application development. Furthermore the design pattern for ActiveSupport, and it's use cases, are not hard to understand. If you are coming from the Rails community, being a contributor on this project shouldn't be overly difficult.
