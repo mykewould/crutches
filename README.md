@@ -26,3 +26,6 @@ ActiveSupport has some great goodies that are useful in web application developm
 * to
 * squish
 * remove
+
+### License
+MIT
