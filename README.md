@@ -30,6 +30,7 @@ ActiveSupport has some great goodies that are useful in web application developm
 #### List
 * without
 * from
+* to_sentence
 
 ### License
 MIT
