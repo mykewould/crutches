@@ -21,4 +21,34 @@ defmodule Crutches.List do
     Enum.filter(collection, fn(x) -> !Enum.member?(elements, x) end)
   end
 
+  @doc ~S"""
+  Returns the tail of the array from +position+.
+
+  ## Examples
+
+
+      iex> List.from(["a", "b", "c", "d"], 0)
+      ["a", "b", "c", "d"]
+
+      iex> List.from(["a", "b", "c", "d"], 2)
+      ["c", "d"]
+
+      iex> List.from(["a", "b", "c", "d"], 10)
+      []
+
+      iex> List.from([], 0)
+      []
+
+      iex> List.from(["a", "b", "c", "d"], -2)
+      ["c", "d"]
+
+      iex> List.from(["a", "b", "c", "d"], -10)
+      []
+
+  """
+  @spec from(t, i) :: t
+  def from(collection, position) do
+    Enum.slice(collection, position, Enum.count(collection))
+  end
+
 end
