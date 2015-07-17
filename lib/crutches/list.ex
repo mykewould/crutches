@@ -75,16 +75,16 @@ defmodule Crutches.List do
 
       iex> List.to_sentence([])
       ""
-      
+
       iex> List.to_sentence(["one"])
       "one"
 
       iex> List.to_sentence(["one", "two"])
       "one and two"
-      
+
       iex> List.to_sentence(["one", "two", "three"])
       "one, two, and three"
-     
+
       iex> List.to_sentence(["one", "two"], [{:passing, "invalid option"}])
       ** (ArgumentError) Unknown key passing
 
@@ -111,7 +111,7 @@ defmodule Crutches.List do
 
       iex> es = [support: [array: [words_connector: " o ", two_words_connector: " y ", last_word_connector: " o al menos "]]]
       iex> List.to_sentence(['uno', 'dos', 'tres'], [{:locale, es}])
-      "uno o dos o al menos tres" 
+      "uno o dos o al menos tres"
 
   """
   @spec to_sentence(t) :: t
@@ -127,7 +127,7 @@ defmodule Crutches.List do
       {:two_words_connector, " and "},
       {:last_word_connector, ", and "}
     ]
-    
+
     new_options = Keyword.merge(default_connectors, options)
     if new_options[:locale] do
       new_options = Keyword.merge(new_options, options[:locale][:support][:array])
@@ -143,4 +143,25 @@ defmodule Crutches.List do
         "#{Enum.join(Enum.reverse(tl(Enum.reverse(words))), new_options[:words_connector])}#{new_options[:last_word_connector]}#{List.last(words)}"
     end
   end
+
+  @doc ~S"""
+  Returns all elements in a list, except the last one.
+
+  Returns `nil` if the list is empty.
+
+  ## Examples
+
+      iex> List.init([])
+      nil
+
+      iex> List.init([5])
+      []
+
+      iex> List.init([5, 6, 7, 8])
+      [5, 6, 7]
+  """
+  @spec init(t) :: t
+  def init([]), do: nil
+  def init([_ | []]), do: []
+  def init([head | tail]), do: [head | init(tail)]
 end

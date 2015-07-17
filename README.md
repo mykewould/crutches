@@ -31,6 +31,7 @@ ActiveSupport has some great goodies that are useful in web application developm
 * without
 * from
 * to_sentence
+* shorten
 
 ### License
 MIT
