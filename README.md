@@ -28,10 +28,11 @@ ActiveSupport has some great goodies that are useful in web application developm
 * remove
 
 #### List
-* without
 * from
-* to_sentence
 * shorten
+* to
+* to_sentence
+* without
 
 ### License
 MIT

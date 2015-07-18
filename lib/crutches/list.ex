@@ -168,4 +168,26 @@ defmodule Crutches.List do
   def shorten([head | tail], amount) when length(tail) > amount do
     [head | shorten(tail, amount)]
   end
+
+  @doc ~S"""
+  Returns a copy of the List from the beginning to the required index.
+
+  ## Examples
+
+      iex> List.to(["a", "b", "c"], 0)
+      ["a"]
+
+      iex> List.to(["a", "b", "c"], 1)
+      ["a", "b"]
+
+      iex> List.to(["a", "b", "c"], 20)
+      ["a", "b", "c"]
+
+      iex> List.to(["a", "b", "c"], -1)
+      []
+  """
+  @spec to(t, i) :: t
+  def to(collection, position) do
+    if position >= 0, do: Enum.take(collection, position + 1), else: []
+  end
 end
