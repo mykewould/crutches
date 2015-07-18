@@ -84,22 +84,22 @@ defmodule Crutches.String do
       ""
 
   You can mix it with +to+ method and do fun things like:
-      iex> str = "hello"
+      iex> "hello"
       iex> |> String.from(0)
       iex> |> String.to(-1)
       "hello"
 
-      iex> str = "hello"
+      iex> "hello"
       iex> |> String.from(1)
       iex> |> String.to(-2)
       "ell"
 
-      iex> str = "a"
+      iex> "a"
       iex> |> String.from(1)
       iex> |> String.to(1500)
       ""
 
-      iex> str = "elixir"
+      iex> "elixir"
       iex> |> String.from(-10)
       iex> |> String.to(-7)
       ""
@@ -132,12 +132,12 @@ defmodule Crutches.String do
       "hell"
 
   You can mix it with +from+ method and do fun things like:
-      iex> str = "hello"
+      iex> "hello"
       iex> |> String.from(0)
       iex> |> String.to(-1)
       "hello"
 
-      iex> str = "hello"
+      iex> "hello"
       iex> |> String.from(1)
       iex> |> String.to(-2)
       "ell"
