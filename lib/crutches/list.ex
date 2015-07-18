@@ -1,6 +1,7 @@
 defmodule Crutches.List do
   @type t :: List
   @type i :: Integer
+  @type a :: any
 
   @doc ~S"""
   Returns a copy of the List without the specified elements.
@@ -189,5 +190,47 @@ defmodule Crutches.List do
   @spec to(t, i) :: t
   def to(collection, position) do
     if position >= 0, do: Enum.take(collection, position + 1), else: []
+  end
+
+  @doc ~S"""
+  Return a List containing the original List splitted by an element or by a
+  function.
+
+  ## Examples
+
+      iex> List.split(["a", "b", "c", "d", "c", "e"], "c")
+      [["a", "b"], ["d"], ["e"]]
+
+      iex> List.split(["c", "a", "b"], "c")
+      [[], ["a", "b"]]
+
+      iex> List.split([], 1)
+      [[]]
+
+      iex> List.split([1, 2, 3, 4, 5, 6, 7, 8], fn(x) -> rem(x, 2) == 0 end)
+      [[1], [3], [5], [7], []]
+
+      iex> List.split(1..15, &(rem(&1,3) == 0))
+      [[1, 2], [4, 5], [7, 8], [10 , 11], [13, 14], []]
+  """
+  @spec split(t, any) :: t
+  def split(collection, x) do
+    {head, acc} = do_split(collection, x)
+    Enum.reverse(acc, [Enum.reverse(head)])
+  end
+
+  defp do_split(collection, x) when is_function(x) do
+    Stream.map(collection, fn(k) -> {x.(k), k} end)
+      |>  Enum.reduce({[], []}, fn
+             {true, elem}, {head, acc} -> {[], [Enum.reverse(head) | acc]}
+            {false, elem}, {head, acc} -> {[elem | head], acc}
+          end)
+  end
+
+  defp do_split(collection, x) do
+    Enum.reduce(collection, {[], []}, fn
+      elem, {head, acc} when elem == x -> {[], [Enum.reverse(head) | acc]}
+      elem, {head, acc} -> {[elem | head], acc}
+    end)
   end
 end
