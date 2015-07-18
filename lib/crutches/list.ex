@@ -145,23 +145,27 @@ defmodule Crutches.List do
   end
 
   @doc ~S"""
-  Returns all elements in a list, except the last one.
+  Shorten a list by a given amount.
 
-  Returns `nil` if the list is empty.
+  When the list is shorter than the amount given, this function returns nil.
 
   ## Examples
 
-      iex> List.init([])
-      nil
+      iex> List.shorten(["one", "two", "three"], 2)
+      ["one"]
 
-      iex> List.init([5])
+      iex> List.shorten([5, 6], 2)
       []
 
-      iex> List.init([5, 6, 7, 8])
-      [5, 6, 7]
+      iex> List.shorten([5, 6, 7, 8], 5)
+      nil
   """
-  @spec init(t) :: t
-  def init([]), do: nil
-  def init([_ | []]), do: []
-  def init([head | tail]), do: [head | init(tail)]
+  @spec shorten(t, integer) :: t
+  def shorten(list, amount \\ 1)
+  def shorten(list, amount) when length(list) < amount, do: nil
+  def shorten(list, amount) when length(list) == amount, do: []
+  def shorten([head | tail], amount) when length(tail) == amount, do: [head]
+  def shorten([head | tail], amount) when length(tail) > amount do
+    [head | shorten(tail, amount)]
+  end
 end
