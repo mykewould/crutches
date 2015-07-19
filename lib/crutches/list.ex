@@ -222,15 +222,10 @@ defmodule Crutches.List do
   defp do_split(collection, x) when is_function(x) do
     Stream.map(collection, fn(k) -> {x.(k), k} end)
       |>  Enum.reduce({[], []}, fn
-             {true, elem}, {head, acc} -> {[], [Enum.reverse(head) | acc]}
+            {true,  _},    {head, acc} -> {[], [Enum.reverse(head) | acc]}
             {false, elem}, {head, acc} -> {[elem | head], acc}
           end)
   end
 
-  defp do_split(collection, x) do
-    Enum.reduce(collection, {[], []}, fn
-      elem, {head, acc} when elem == x -> {[], [Enum.reverse(head) | acc]}
-      elem, {head, acc} -> {[elem | head], acc}
-    end)
-  end
+  defp do_split(collection, x), do: do_split(collection, fn(k) -> k == x end)
 end
