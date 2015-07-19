@@ -75,16 +75,16 @@ defmodule Crutches.List do
 
       iex> List.to_sentence([])
       ""
-      
+
       iex> List.to_sentence(["one"])
       "one"
 
       iex> List.to_sentence(["one", "two"])
       "one and two"
-      
+
       iex> List.to_sentence(["one", "two", "three"])
       "one, two, and three"
-     
+
       iex> List.to_sentence(["one", "two"], [{:passing, "invalid option"}])
       ** (ArgumentError) Unknown key passing
 
@@ -111,7 +111,7 @@ defmodule Crutches.List do
 
       iex> es = [support: [array: [words_connector: " o ", two_words_connector: " y ", last_word_connector: " o al menos "]]]
       iex> List.to_sentence(['uno', 'dos', 'tres'], [{:locale, es}])
-      "uno o dos o al menos tres" 
+      "uno o dos o al menos tres"
 
   """
   @spec to_sentence(t) :: t
@@ -127,7 +127,7 @@ defmodule Crutches.List do
       {:two_words_connector, " and "},
       {:last_word_connector, ", and "}
     ]
-    
+
     new_options = Keyword.merge(default_connectors, options)
     if new_options[:locale] do
       new_options = Keyword.merge(new_options, options[:locale][:support][:array])
@@ -142,5 +142,30 @@ defmodule Crutches.List do
       _ ->
         "#{Enum.join(Enum.reverse(tl(Enum.reverse(words))), new_options[:words_connector])}#{new_options[:last_word_connector]}#{List.last(words)}"
     end
+  end
+
+  @doc ~S"""
+  Shorten a list by a given amount.
+
+  When the list is shorter than the amount given, this function returns nil.
+
+  ## Examples
+
+      iex> List.shorten(["one", "two", "three"], 2)
+      ["one"]
+
+      iex> List.shorten([5, 6], 2)
+      []
+
+      iex> List.shorten([5, 6, 7, 8], 5)
+      nil
+  """
+  @spec shorten(t, integer) :: t
+  def shorten(list, amount \\ 1)
+  def shorten(list, amount) when length(list) < amount, do: nil
+  def shorten(list, amount) when length(list) == amount, do: []
+  def shorten([head | tail], amount) when length(tail) == amount, do: [head]
+  def shorten([head | tail], amount) when length(tail) > amount do
+    [head | shorten(tail, amount)]
   end
 end
