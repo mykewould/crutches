@@ -20,18 +20,20 @@ ActiveSupport has some great goodies that are useful in web application developm
 ### Current Methods Available
 
 #### String
-* underscore
 * camelize
 * from
-* to
-* squish
 * remove
+* squish
+* to
+* underscore
 
 #### List
-* without
 * from
-* to_sentence
 * shorten
+* split
+* to
+* to_sentence
+* without
 
 ### License
 MIT
