@@ -130,7 +130,7 @@ defmodule Crutches.List do
       _ ->
         connector   = merged_opts[:last_word_connector]
         start_of    = words
-                      |> Crutches.List.shorten(1)
+                      |> Crutches.List.shorten
                       |> Enum.join(merged_opts[:words_connector])
     end
     "#{start_of}#{connector}#{List.last(words)}"
