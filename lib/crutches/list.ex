@@ -119,7 +119,7 @@ defmodule Crutches.List do
   def to_sentence(words, options \\ [])
   def to_sentence([],     _), do: ""
   def to_sentence([word], _), do: "#{word}"
-  def to_sentence(words, options) when length(words) >= 2 do
+  def to_sentence(words, options) do
     bad_options_check(options)
     merged_opts = merge_default_options(options)
 
