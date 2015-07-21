@@ -117,8 +117,8 @@ defmodule Crutches.List do
   """
   @spec to_sentence(t) :: t
   def to_sentence(words, options \\ [])
-  def to_sentence([],    _),                         do: ""
-  def to_sentence(words, _) when length(words) == 1, do: "#{List.first(words)}"
+  def to_sentence([],     _), do: ""
+  def to_sentence([word], _), do: "#{word}"
   def to_sentence(words, options) when length(words) >= 2 do
     bad_options_check(options)
     merged_opts = merge_default_options(options)
