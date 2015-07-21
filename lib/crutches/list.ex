@@ -121,18 +121,17 @@ defmodule Crutches.List do
   def to_sentence([word], _), do: "#{word}"
   def to_sentence(words, options) do
     bad_options_check(options)
+
     merged_opts = merge_default_options(options)
+    start_of    = words
+                  |> Crutches.List.shorten
+                  |> Enum.join(merged_opts[:words_connector])
 
     case length(words) do
-      2 ->
-        connector   = merged_opts[:two_words_connector]
-        start_of    = List.first(words)
-      _ ->
-        connector   = merged_opts[:last_word_connector]
-        start_of    = words
-                      |> Crutches.List.shorten
-                      |> Enum.join(merged_opts[:words_connector])
+      2 -> connector = merged_opts[:two_words_connector]
+      _ -> connector = merged_opts[:last_word_connector]
     end
+
     "#{start_of}#{connector}#{List.last(words)}"
   end
 
