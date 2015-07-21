@@ -137,9 +137,9 @@ defmodule Crutches.List do
 
   defp merge_default_options(options) do
     default_connectors = [
-      {:words_connector,      ", "},
-      {:two_words_connector,  " and "},
-      {:last_word_connector,  ", and "}
+      words_connector:      ", ",
+      two_words_connector:  " and ",
+      last_word_connector:  ", and "
     ]
 
     new_options = Keyword.merge(default_connectors, options)
