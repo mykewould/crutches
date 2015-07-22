@@ -50,12 +50,7 @@ defmodule Crutches.Enum do
       false
   """
   @spec many?(l) :: b
-  def many?(collection) when is_list(collection) do
-    case Enum.at(collection, 1) do
-      nil -> false
-      _ -> true
-    end
-  end
+  def many?(collection) when is_list(collection), do: length(collection) > 1
 
   @spec many?(m) :: b
   def many?(collection) when is_map(collection), do: Map.size(collection) > 1
