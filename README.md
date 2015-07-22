@@ -34,7 +34,15 @@ ActiveSupport has some great goodies that are useful in web application developm
 * split
 * to
 * to_sentence
+
+#### Enum
 * without
+* many?
+
+#### Integer
+* multiple_of
+* ordinal
+* ordinalize
 
 ### License
 MIT
