@@ -45,4 +45,20 @@ defmodule Crutches.Integer do
   """
   @spec ordinalize(i) :: s
   def ordinalize(n) when is_integer(n), do: "#{n}#{ordinal(n)}"
+
+  @doc ~S"""
+  Check whether the integer is evenly divisible by the argument.
+
+  ## Examples
+
+      iex> Integer.multiple_of(7, 3)
+      false
+
+      iex> Integer.multiple_of(10, 2)
+      true
+
+      iex> Integer.multiple_of(14, 7)
+      true
+  """
+  def multiple_of(n, divisor), do: rem(n, divisor) == 0
 end
