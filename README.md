@@ -36,6 +36,9 @@ ActiveSupport has some great goodies that are useful in web application developm
 * to_sentence
 * without
 
+#### Enum
+* many?
+
 #### Integer
 * ordinal
 * ordinalize
