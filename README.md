@@ -36,5 +36,9 @@ ActiveSupport has some great goodies that are useful in web application developm
 * to_sentence
 * without
 
+#### Integer
+* ordinal
+* ordinalize
+
 ### License
 MIT
