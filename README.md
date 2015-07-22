@@ -34,9 +34,9 @@ ActiveSupport has some great goodies that are useful in web application developm
 * split
 * to
 * to_sentence
-* without
 
 #### Enum
+* without
 * many?
 
 #### Integer
