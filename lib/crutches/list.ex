@@ -97,32 +97,47 @@ defmodule Crutches.List do
 
   """
   @spec to_sentence(t) :: t
-  def to_sentence(words, options \\ []) do
-    allowed_keys = [:words_connector, :two_words_connector, :last_word_connector, :locale]
-    bad_keys = Enum.reject(Keyword.keys(options), &Enum.member?(allowed_keys, &1))
-    if length(bad_keys) > 0 do
-      raise ArgumentError, message: "Unknown key #{hd(bad_keys)}"
+  def to_sentence(words, options \\ [])
+  def to_sentence([],     _), do: ""
+  def to_sentence([word], _), do: "#{word}"
+  def to_sentence(words, options) do
+    bad_options_check(options)
+
+    merged_opts = merge_default_options(options)
+    start_of    = words
+                  |> Crutches.List.shorten
+                  |> Enum.join(merged_opts[:words_connector])
+
+    case length(words) do
+      2 -> connector = merged_opts[:two_words_connector]
+      _ -> connector = merged_opts[:last_word_connector]
     end
 
+    "#{start_of}#{connector}#{List.last(words)}"
+  end
+
+  defp merge_default_options(options) do
     default_connectors = [
-      {:words_connector, ", "},
-      {:two_words_connector, " and "},
-      {:last_word_connector, ", and "}
+      words_connector:      ", ",
+      two_words_connector:  " and ",
+      last_word_connector:  ", and "
     ]
 
     new_options = Keyword.merge(default_connectors, options)
     if new_options[:locale] do
       new_options = Keyword.merge(new_options, options[:locale][:support][:array])
     end
-    case length(words) do
-      0 ->
-        ""
-      1 ->
-        "#{List.first(words)}"
-      2 ->
-        "#{List.first(words)}#{new_options[:two_words_connector]}#{List.last(words)}"
-      _ ->
-        "#{Enum.join(Enum.reverse(tl(Enum.reverse(words))), new_options[:words_connector])}#{new_options[:last_word_connector]}#{List.last(words)}"
+    new_options
+  end
+
+  defp bad_options_check(options) do
+    good_opts = ~w( words_connector
+                    two_words_connector
+                    last_word_connector
+                    locale )a
+    bad_opts  = Enum.reject(Keyword.keys(options), &Enum.member?(good_opts, &1))
+    if length(bad_opts) > 0 do
+      raise ArgumentError, message: "Unknown key #{hd(bad_opts)}"
     end
   end
 
