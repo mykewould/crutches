@@ -40,7 +40,7 @@ ActiveSupport has some great goodies that are useful in web application developm
 * many?
 
 #### Integer
-* multiple_of
+* multiple_of?
 * ordinal
 * ordinalize
 
