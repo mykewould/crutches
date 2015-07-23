@@ -40,6 +40,9 @@ defmodule Crutches.Enum do
 
   ## Examples
 
+      iex> Enum.many?([])
+      false
+
       iex> Enum.many?([1, 2, 3])
       true
 
@@ -50,7 +53,8 @@ defmodule Crutches.Enum do
       false
   """
   @spec many?(l) :: b
-  def many?(collection) when is_list(collection), do: length(collection) > 1
+  def many?([]), do: false
+  def many?([ head | tail ]), do: !Enum.empty?(tail)
 
   @spec many?(m) :: b
   def many?(collection) when is_map(collection), do: Map.size(collection) > 1
