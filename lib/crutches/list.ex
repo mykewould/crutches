@@ -1,4 +1,6 @@
 defmodule Crutches.List do
+  import Crutches.Keyword, only: [validate_keys: 2]
+
   @type t :: List
   @type i :: Integer
   @type a :: any
@@ -68,7 +70,7 @@ defmodule Crutches.List do
       "one, two, and three"
 
       iex> List.to_sentence(["one", "two"], [{:passing, "invalid option"}])
-      ** (ArgumentError) Unknown key passing
+      ** (ArgumentError) invalid key passing
 
       iex> List.to_sentence(["one", "two"], [{:two_words_connector, "-"}])
       "one-two"
@@ -96,12 +98,24 @@ defmodule Crutches.List do
       "uno o dos o al menos tres"
 
   """
+  @to_sentence [
+    valid_options: ~w(words_connector
+                      two_words_connector
+                      last_word_connector
+                      locale)a,
+    default_connectors: [
+      words_connector: ", ",
+      two_words_connector: " and ",
+      last_word_connector: ", and "
+    ]
+  ]
+
   @spec to_sentence(t) :: t
   def to_sentence(words, options \\ [])
   def to_sentence([],     _), do: ""
   def to_sentence([word], _), do: "#{word}"
   def to_sentence(words, provided_options) do
-    bad_options_check(provided_options)
+    Crutches.Keyword.validate_keys!(provided_options, @to_sentence[:valid_options])
 
     options = merge_default_options(provided_options)
     start_of = words
@@ -116,34 +130,12 @@ defmodule Crutches.List do
     "#{start_of}#{connector}#{List.last(words)}"
   end
 
-  @to_sentence [
-    accepted_options: ~w( words_connector
-                          two_words_connector
-                          last_word_connector
-                          locale )a,
-    default_connectors: [
-      words_connector: ", ",
-      two_words_connector: " and ",
-      last_word_connector: ", and "
-    ]
-  ]
-
   defp merge_default_options(options) do
     new_options = @to_sentence[:default_connectors] |> Keyword.merge(options)
     if new_options[:locale] do
       new_options |> Keyword.merge(options[:locale][:support][:array])
     else
       new_options
-    end
-  end
-
-  defp bad_options_check(options) do
-    bad_options =
-      options
-      |> Keyword.keys
-      |> Enum.reject(&Enum.member?(@to_sentence[:accepted_options], &1))
-    if Enum.any?(bad_options) do
-      raise ArgumentError, message: "Unknown key #{hd(bad_options)}"
     end
   end
 
