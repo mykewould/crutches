@@ -15,7 +15,7 @@ defmodule Crutches.Keyword do
       options
       |> Stream.reject(fn {option, _} -> option in whitelist end)
       |> Stream.take(1)
-    !Enum.any?(invalid_options)
+    Enum.empty?(invalid_options)
   end
 
   @doc ~S"""
@@ -35,10 +35,10 @@ defmodule Crutches.Keyword do
       options
       |> Enum.reject(fn {option, _} -> option in whitelist end)
       |> Keyword.keys
-    if Enum.any?(invalid_options) do
-      {:error, invalid_options}
-    else
+    if Enum.empty?(invalid_options) do
       {:ok, []}
+    else
+      {:error, invalid_options}
     end
   end
 

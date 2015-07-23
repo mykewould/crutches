@@ -1,6 +1,4 @@
 defmodule Crutches.List do
-  import Crutches.Keyword, only: [validate_keys: 2]
-
   @type t :: List
   @type i :: Integer
   @type a :: any
