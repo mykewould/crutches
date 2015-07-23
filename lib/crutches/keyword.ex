@@ -1,6 +1,7 @@
 defmodule Crutches.Keyword do
   @doc ~S"""
-  Checks a keyword list for unexpected keys, by using a default list of keys. When a bad key is detected it returns false, else it returns true.
+  Checks a keyword list for unexpected keys, by using a default list of keys.
+  When a bad key is detected it returns false, else it returns true.
 
   ## Examples
 
@@ -19,7 +20,9 @@ defmodule Crutches.Keyword do
   end
 
   @doc ~S"""
-  Checks a keyword list for unexpected keys, by using a default list of keys. Return {:ok, []} if all options are kosher, otherwise {:error, list}, where list is a list of all invalid keys.
+  Checks a keyword list for unexpected keys, by using a default list of keys.
+  Returns {:ok, []} if all options are kosher, otherwise {:error, list},
+  where list is a list of all invalid keys.
 
   ## Examples
 
