@@ -28,6 +28,9 @@ ActiveSupport has some great goodies that are useful in web application developm
 * to
 * underscore
 
+#### Keyword
+* all_options_valid?
+
 #### List
 * from
 * shorten
