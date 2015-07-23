@@ -28,6 +28,11 @@ ActiveSupport has some great goodies that are useful in web application developm
 * to
 * underscore
 
+#### Keyword
+* all_options_valid?
+* validate_options
+* validate_options!
+
 #### List
 * from
 * shorten
@@ -40,7 +45,7 @@ ActiveSupport has some great goodies that are useful in web application developm
 * many?
 
 #### Integer
-* multiple_of
+* multiple_of?
 * ordinal
 * ordinalize
 

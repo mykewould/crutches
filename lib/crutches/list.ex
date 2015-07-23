@@ -68,7 +68,7 @@ defmodule Crutches.List do
       "one, two, and three"
 
       iex> List.to_sentence(["one", "two"], [{:passing, "invalid option"}])
-      ** (ArgumentError) Unknown key passing
+      ** (ArgumentError) invalid key passing
 
       iex> List.to_sentence(["one", "two"], [{:two_words_connector, "-"}])
       "one-two"
@@ -96,48 +96,44 @@ defmodule Crutches.List do
       "uno o dos o al menos tres"
 
   """
+  @to_sentence [
+    valid_options: ~w(words_connector
+                      two_words_connector
+                      last_word_connector
+                      locale)a,
+    default_connectors: [
+      words_connector: ", ",
+      two_words_connector: " and ",
+      last_word_connector: ", and "
+    ]
+  ]
+
   @spec to_sentence(t) :: t
   def to_sentence(words, options \\ [])
   def to_sentence([],     _), do: ""
   def to_sentence([word], _), do: "#{word}"
-  def to_sentence(words, options) do
-    bad_options_check(options)
+  def to_sentence(words, provided_options) do
+    Crutches.Keyword.validate_keys!(provided_options, @to_sentence[:valid_options])
 
-    merged_opts = merge_default_options(options)
-    start_of    = words
-                  |> Crutches.List.shorten
-                  |> Enum.join(merged_opts[:words_connector])
+    options = merge_default_options(provided_options)
+    start_of = words
+      |> Crutches.List.shorten
+      |> Enum.join(options[:words_connector])
 
     case length(words) do
-      2 -> connector = merged_opts[:two_words_connector]
-      _ -> connector = merged_opts[:last_word_connector]
+      2 -> connector = options[:two_words_connector]
+      _ -> connector = options[:last_word_connector]
     end
 
     "#{start_of}#{connector}#{List.last(words)}"
   end
 
   defp merge_default_options(options) do
-    default_connectors = [
-      words_connector:      ", ",
-      two_words_connector:  " and ",
-      last_word_connector:  ", and "
-    ]
-
-    new_options = Keyword.merge(default_connectors, options)
+    new_options = @to_sentence[:default_connectors] |> Keyword.merge(options)
     if new_options[:locale] do
-      new_options = Keyword.merge(new_options, options[:locale][:support][:array])
-    end
-    new_options
-  end
-
-  defp bad_options_check(options) do
-    good_opts = ~w( words_connector
-                    two_words_connector
-                    last_word_connector
-                    locale )a
-    bad_opts  = Enum.reject(Keyword.keys(options), &Enum.member?(good_opts, &1))
-    if length(bad_opts) > 0 do
-      raise ArgumentError, message: "Unknown key #{hd(bad_opts)}"
+      new_options |> Keyword.merge(options[:locale][:support][:array])
+    else
+      new_options
     end
   end
 

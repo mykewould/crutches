@@ -51,14 +51,14 @@ defmodule Crutches.Integer do
 
   ## Examples
 
-      iex> Integer.multiple_of(7, 3)
+      iex> Integer.multiple_of?(7, 3)
       false
 
-      iex> Integer.multiple_of(10, 2)
+      iex> Integer.multiple_of?(10, 2)
       true
 
-      iex> Integer.multiple_of(14, 7)
+      iex> Integer.multiple_of?(14, 7)
       true
   """
-  def multiple_of(n, divisor), do: rem(n, divisor) == 0
+  def multiple_of?(n, divisor), do: rem(n, divisor) == 0
 end
