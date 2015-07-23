@@ -30,6 +30,7 @@ ActiveSupport has some great goodies that are useful in web application developm
 
 #### Keyword
 * all_options_valid?
+* validate_options
 
 #### List
 * from

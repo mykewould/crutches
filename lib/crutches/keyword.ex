@@ -19,4 +19,28 @@ defmodule Crutches.Keyword do
       |> Stream.take(1)
     !Enum.any?(invalid_options)
   end
+
+  @doc ~S"""
+  Checks a keyword list for unexpected keys, by using a default list of keys. Return {:ok, []} if all options are kosher, otherwise {:error, list}, where list is a list of all invalid keys.
+
+  ## Examples
+
+      iex> Keyword.validate_keys([good: "", good_opt: ""], [:good, :good_opt])
+      {:ok, []}
+
+      iex> Keyword.validate_keys([good: "", bad: ""], [:good])
+      {:error, [:bad]}
+
+  """
+  def validate_keys(options, whitelist) do
+    invalid_options =
+      options
+      |> Enum.reject(fn {option, _} -> option in whitelist end)
+      |> Keyword.keys
+    if Enum.any?(invalid_options) do
+      {:error, invalid_options}
+    else
+      {:ok, []}
+    end
+  end
 end
