@@ -1,6 +1,4 @@
 defmodule Crutches.Keyword do
-  require Logger
-
   @doc ~S"""
   Checks a keyword list for unexpected keys, by using a default list of keys. When a bad key is detected it returns false, else it returns true.
 
@@ -41,6 +39,29 @@ defmodule Crutches.Keyword do
       {:error, invalid_options}
     else
       {:ok, []}
+    end
+  end
+
+  @doc ~S"""
+  Throwing version of Keyword.validate_keys
+
+  ## Examples
+
+      iex> Keyword.validate_keys!([good: "", bad: ""], [:good])
+      ** (ArgumentError) invalid key bad
+
+      iex> Keyword.validate_keys!([good: "", bad: "", worse: ""], [:good])
+      ** (ArgumentError) invalid key bad, worse
+
+      iex> Keyword.validate_keys!([good: ""], [:good])
+      true
+  """
+  def validate_keys!(options, whitelist) do
+    if all_keys_valid?(options, whitelist) do
+      true
+    else
+      {:error, invalid_options} = validate_keys(options, whitelist)
+      raise ArgumentError, "invalid key " <> Enum.join(invalid_options, ", ")
     end
   end
 end
