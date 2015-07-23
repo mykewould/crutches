@@ -10,7 +10,7 @@ This library is a great for Elixir beginners to contribute to. By porting over A
 * Fork crutches.
 * Pick an issue to implement.
 * If you pick an issue from the list, please comment on the issue to let others know you've started on it.
-* If you don't see a method you'd like to implement in the issues section, feel free to go grab one from ActiveSupport, or implement a unique method.
+* If you don't see a function you'd like to implement in the issues section, feel free to go grab one from ActiveSupport, or implement a unique function.
 * The documentation is written for Ruby, start by converting that into a doctest in Elixir.
 * Use TDD to solve the doctest.
 * Open a PR
