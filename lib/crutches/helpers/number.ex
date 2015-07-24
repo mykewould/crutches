@@ -1,6 +1,4 @@
 defmodule Crutches.Helpers.Number do
-  require Logger
-
   @doc ~s"""
   Formats a number with grouped thousands (e.g. 1,234)
 
