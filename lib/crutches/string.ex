@@ -1,4 +1,13 @@
 defmodule Crutches.String do
+  import String, only: [
+    replace: 3,
+    downcase: 1,
+    split: 2,
+    capitalize: 1,
+    slice: 2,
+    strip: 1
+  ]
+
   @type t :: String
   @doc ~S"""
   Makes an underscored, lowercase form from the expression in the string.
@@ -26,16 +35,11 @@ defmodule Crutches.String do
   @spec underscore(t) :: t
   def underscore(camel_case) do
     camel_case
-    |> regex_replace(~r/\./, "/")
-    |> regex_replace(~r/([A-Z]+)([A-Z][a-z])/, "\\1_\\2")
-    |> regex_replace(~r/([a-z\d])([A-Z])/, "\\1_\\2")
-    |> regex_replace(~r/-/, "_")
-    |> String.downcase
-  end
-
-  # Switch parameter order so we can use the pipe operator.
-  defp regex_replace(string, regex, replace) do
-    Regex.replace(regex, string, replace)
+    |> replace(~r/\./, "/")
+    |> replace(~r/([A-Z]+)([A-Z][a-z])/, "\\1_\\2")
+    |> replace(~r/([a-z\d])([A-Z])/, "\\1_\\2")
+    |> replace(~r/-/, "_")
+    |> downcase
   end
 
   @doc ~S"""
@@ -59,8 +63,8 @@ defmodule Crutches.String do
   @spec camelize(t) :: t
   def camelize(underscore) do
     underscore
-    |> String.split("_")
-    |> Enum.map(&String.capitalize(&1))
+    |> split("_")
+    |> Enum.map(&capitalize/1)
     |> Enum.reduce(&(&2 <> &1))
   end
 
@@ -105,15 +109,15 @@ defmodule Crutches.String do
       ""
   """
   @spec from(t, Integer.t) :: t
-  def from(str, start) when start >= 0 do
-    String.slice(str, start..(String.length(str) - 1))
+  def from(string, start) when start >= 0 do
+    slice(string, start..(String.length(string) - 1))
   end
 
-  def from(str, start) when start < 0 do
-    new_start = String.length(str) + start
+  def from(string, start) when start < 0 do
+    new_start = String.length(string) + start
     case new_start < 0 do
       true  -> ""
-      false -> String.slice(str, new_start..(String.length(str) - 1))
+      false -> slice(string, new_start..(String.length(string) - 1))
     end
   end
 
@@ -143,12 +147,12 @@ defmodule Crutches.String do
       "ell"
   """
   @spec to(t, Integer.t) :: t
-  def to(str, length) when length >= 0 do
-    String.slice(str, 0..length)
+  def to(string, length) when length >= 0 do
+    slice(string, 0..length)
   end
 
-  def to(str, length) when length < 0 do
-    String.slice(str, 0..(String.length(str) + length))
+  def to(string, length) when length < 0 do
+    slice(string, 0..(String.length(string) + length))
   end
 
   # Filters
@@ -169,11 +173,9 @@ defmodule Crutches.String do
       "foo bar boo"
   """
   @spec squish(t) :: t
-  def squish(str) do
-    Regex.replace(~r/[[:space:]]+/, str, " ")
-    |> String.strip
+  def squish(string) do
+    string |> replace(~r/[[:space:]]+/, " ") |> strip
   end
-
 
   @doc ~S"""
   Returns a new string with all occurrences of the patterns removed.
@@ -189,11 +191,11 @@ defmodule Crutches.String do
       "bar"
   """
   @spec remove(t, t | Regex.t | List.t) :: t
-  def remove(str, to_rm) when is_list(to_rm) == false do
-    String.replace(str, to_rm, "")
+  def remove(string, to_remove) when is_list(to_remove) do
+    to_remove |> Enum.reduce(string, &remove(&2, &1))
   end
 
-  def remove(str, removeables) when is_list(removeables) do
-    Enum.reduce(removeables, str, &(remove(&2, &1)))
+  def remove(string, to_remove) do
+    replace(string, to_remove, "")
   end
 end
