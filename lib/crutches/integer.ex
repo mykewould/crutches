@@ -21,10 +21,10 @@ defmodule Crutches.Integer do
   """
   @spec ordinal(i) :: s
   def ordinal(n) when is_integer(n) do
-    case n |> to_string |> String.slice(-1, 1) |> Integer.parse do
-      { 1, _ } -> "st"
-      { 2, _ } -> "nd"
-      { 3, _ } -> "rd"
+    case n |> to_string |> String.slice(-1, 1) do
+      "1" -> "st"
+      "2" -> "nd"
+      "3" -> "rd"
       _ -> "th"
     end
   end
@@ -44,7 +44,7 @@ defmodule Crutches.Integer do
       "-8th"
   """
   @spec ordinalize(i) :: s
-  def ordinalize(n) when is_integer(n), do: "#{n}#{ordinal(n)}"
+  def ordinalize(n) when is_integer(n), do: to_string(n) <> ordinal(n)
 
   @doc ~S"""
   Check whether the integer is evenly divisible by the argument.
