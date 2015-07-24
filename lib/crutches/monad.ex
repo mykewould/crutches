@@ -10,7 +10,7 @@ defmodule Crutches.Monad do
     end
   end
 
-  defmacro module(type) do
+  def module(type) do
     cond do
       type == :some || type == :none -> Crutches.Maybe
       type == :ok || type == :error  -> Crutches.Result
