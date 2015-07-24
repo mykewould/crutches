@@ -108,7 +108,7 @@ defmodule Crutches.List do
     ]
   ]
 
-  @spec to_sentence(t) :: t
+  @spec to_sentence(t) :: String.t
   def to_sentence(words, options \\ [])
   def to_sentence([],     _), do: ""
   def to_sentence([word], _), do: "#{word}"
