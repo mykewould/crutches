@@ -43,8 +43,14 @@ defmodule Crutches.Enum do
       iex> Enum.many?([])
       false
 
+      iex> Enum.many?([nil, nil, nil])
+      true
+
       iex> Enum.many?([1, 2, 3])
       true
+
+      iex> Enum.many?(%{})
+      false
 
       iex> Enum.many?(%{ name: "Kash" })
       false
@@ -57,5 +63,6 @@ defmodule Crutches.Enum do
   def many?([ head | tail ]), do: !Enum.empty?(tail)
 
   @spec many?(m) :: b
+  def many?(%{}), do: false
   def many?(collection) when is_map(collection), do: Map.size(collection) > 1
 end
