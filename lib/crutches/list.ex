@@ -30,7 +30,7 @@ defmodule Crutches.List do
   """
   @spec from(t, i) :: t
   def from(collection, position) do
-    Enum.slice(collection, position, Enum.count(collection))
+    Enum.slice(collection, position, length(collection))
   end
 
   @doc ~S"""
@@ -101,7 +101,7 @@ defmodule Crutches.List do
                       two_words_connector
                       last_word_connector
                       locale)a,
-    default_connectors: [
+    default_options: [
       words_connector: ", ",
       two_words_connector: " and ",
       last_word_connector: ", and "
@@ -129,7 +129,7 @@ defmodule Crutches.List do
   end
 
   defp merge_default_options(options) do
-    new_options = @to_sentence[:default_connectors] |> Keyword.merge(options)
+    new_options = @to_sentence[:default_options] |> Keyword.merge(options)
     if new_options[:locale] do
       new_options |> Keyword.merge(options[:locale][:support][:array])
     else
@@ -211,13 +211,16 @@ defmodule Crutches.List do
     Enum.reverse(acc, [Enum.reverse(head)])
   end
 
-  defp do_split(collection, x) when is_function(x) do
-    Stream.map(collection, fn(k) -> {x.(k), k} end)
-      |>  Enum.reduce({[], []}, fn
-            {true,  _},    {head, acc} -> {[], [Enum.reverse(head) | acc]}
-            {false, elem}, {head, acc} -> {[elem | head], acc}
-          end)
+  defp do_split(collection, predicate) when is_function(predicate) do
+    collection
+    |> Stream.map(fn (elem) -> {predicate.(elem), elem} end)
+    |> Enum.reduce {[], []}, fn
+      {true,  _},    {head, acc} -> {[], [Enum.reverse(head) | acc]}
+      {false, elem}, {head, acc} -> {[elem | head], acc}
+    end
   end
 
-  defp do_split(collection, x), do: do_split(collection, fn(k) -> k == x end)
+  defp do_split(collection, x) do
+    do_split(collection, fn (k) -> k == x end)
+  end
 end
