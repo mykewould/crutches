@@ -66,4 +66,104 @@ defmodule Crutches.Helpers.Number do
       end
     String.first(number) <> List.to_string(formatted_number)
   end
+
+  @doc ~s"""
+    Formats a +number+ into a US phone number (e.g., (555) 123-9876).
+    You can customize the format in the +options+ hash.
+
+    iex> Number.number_to_phone(5551234)
+    "555-1234"
+
+    iex> Number.number_to_phone("5551234")
+    "555-1234"
+
+    iex> Number.number_to_phone(1235551234)
+    "123-555-1234"
+
+    iex> Number.number_to_phone(1235551234, area_code: true)
+    "(123) 555-1234"
+
+    iex> Number.number_to_phone(12345551234, area_code: true)
+    "1(234) 555-1234"
+
+    iex> Number.number_to_phone(1235551234, delimiter: " ")
+    "123 555 1234"
+
+    iex> Number.number_to_phone(1235551234, area_code: true, extension: 555)
+    "(123) 555-1234 x 555"
+
+    iex> Number.number_to_phone(1235551234, country_code: 1)
+    "+1-123-555-1234"
+
+    iex> Number.number_to_phone('123a456')
+    "123a456"
+
+    iex> Number.number_to_phone(1235551234, country_code: 1, extension: 1343, delimiter: ".")
+    "+1.123.555.1234 x 1343"
+  """
+  @number_to_phone [
+    valid_options: [:area_code, :delimiter, :extension, :country_code],
+    default_options: [
+      area_code: nil,
+      delimiter: "-",
+      extension: nil,
+      country_code: nil
+    ]
+  ]
+
+  def number_to_phone(number, opts \\ [])
+  def number_to_phone(number, opts) when is_list(number) do
+    number |> to_string |> number_to_phone(opts)
+  end
+  def number_to_phone(number, opts) when is_binary(number) do
+    case Integer.parse(number) do
+      {integer, ""} -> number_to_phone integer, opts
+      _             -> number
+    end
+  end
+  def number_to_phone(number, opts) when is_integer(number) do
+    area_code = opts[:area_code] || false
+    delimiter = to_string(opts[:delimiter] || "-")
+    extension = opts[:extension]
+    country_code = opts[:country_code]
+
+    Integer.to_string(number)
+    |> split_for_phone
+    |> join_as_phone(delimiter, area_code)
+    |> add_extension(extension)
+    |> add_country_code(country_code, delimiter)
+  end
+
+  defp split_for_phone(safe_string) when byte_size(safe_string) < 7 do
+    [safe_string]
+  end
+  defp split_for_phone(safe_string) when byte_size(safe_string) === 7 do
+    safe_string |> String.split_at(3) |> Tuple.to_list
+  end
+  defp split_for_phone(safe_string) when byte_size(safe_string) > 7 do
+    {first, last} = String.split_at(safe_string, -4)
+    {first, second} = String.split_at(first, -3)
+    [first, second, last]
+  end
+
+  defp join_as_phone([area_code, second, last], delimiter, true) when byte_size(area_code) <= 3 do
+    "(#{area_code}) " <> join_as_phone([second, last], delimiter, true)
+  end
+  defp join_as_phone([first, second, last], delimiter, true) when byte_size(first) > 3 do
+    {first_split, area_code} = String.split_at(first, -3)
+    "#{first_split}(#{area_code}) " <> join_as_phone([second, last], delimiter, true)
+  end
+  defp join_as_phone(phone_components, delimiter, _) do
+    phone_components |> Enum.join(delimiter)
+  end
+
+  defp add_extension(phone_number, nil), do: phone_number
+  defp add_extension(phone_number, extension) do
+    phone_number <> " x #{extension}"
+  end
+
+  defp add_country_code(phone_number, nil, _), do: phone_number
+  defp add_country_code(phone_number, country_code, delimiter) do
+    "+#{country_code}#{delimiter}" <> phone_number
+  end
 end
