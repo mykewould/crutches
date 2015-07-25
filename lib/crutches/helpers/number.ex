@@ -104,7 +104,7 @@ defmodule Crutches.Helpers.Number do
   @number_to_phone [
     valid_options: [:area_code, :delimiter, :extension, :country_code],
     default_options: [
-      area_code: nil,
+      area_code: false,
       delimiter: "-",
       extension: nil,
       country_code: nil
@@ -122,10 +122,11 @@ defmodule Crutches.Helpers.Number do
     end
   end
   def number_to_phone(number, opts) when is_integer(number) do
-    area_code = opts[:area_code] || false
-    delimiter = to_string(opts[:delimiter] || "-")
-    extension = opts[:extension]
-    country_code = opts[:country_code]
+    default_options = @number_to_phone[:default_options]
+    area_code = opts[:area_code] || default_options[:area_code]
+    delimiter = to_string(opts[:delimiter] || default_options[:delimiter])
+    extension = opts[:extension] || default_options[:extension]
+    country_code = opts[:country_code] || default_options[:country_code]
 
     Integer.to_string(number)
     |> split_for_phone
