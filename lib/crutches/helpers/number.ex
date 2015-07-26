@@ -122,17 +122,14 @@ defmodule Crutches.Helpers.Number do
     end
   end
   def number_to_phone(number, opts) when is_integer(number) do
-    default_options = @number_to_phone[:default_options]
-    area_code = opts[:area_code] || default_options[:area_code]
-    delimiter = to_string(opts[:delimiter] || default_options[:delimiter])
-    extension = opts[:extension] || default_options[:extension]
-    country_code = opts[:country_code] || default_options[:country_code]
+    opts = Keyword.merge @number_to_phone[:default_options], opts
+    delimiter = to_string opts[:delimiter]
 
     Integer.to_string(number)
     |> split_for_phone
-    |> join_as_phone(delimiter, area_code)
-    |> add_extension(extension)
-    |> add_country_code(country_code, delimiter)
+    |> join_as_phone(delimiter, opts[:area_code])
+    |> add_extension(opts[:extension])
+    |> add_country_code(opts[:country_code], delimiter)
   end
 
   defp split_for_phone(safe_string) when byte_size(safe_string) < 7 do
