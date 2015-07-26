@@ -1,7 +1,4 @@
 defmodule Crutches.Integer do
-  @type s :: String.t()
-  @type i :: integer
-
   @doc ~S"""
   Return _just_ the ordinal of a number ("st", "nd", "rd", "th")
 
@@ -19,7 +16,7 @@ defmodule Crutches.Integer do
       iex> Integer.ordinal(-23)
       "rd"
   """
-  @spec ordinal(i) :: s
+  @spec ordinal(integer) :: String.t
   def ordinal(n) when is_integer(n) do
     case n |> to_string |> String.slice(-1, 1) do
       "1" -> "st"
@@ -43,7 +40,7 @@ defmodule Crutches.Integer do
       iex> Integer.ordinalize(-8)
       "-8th"
   """
-  @spec ordinalize(i) :: s
+  @spec ordinalize(integer) :: String.t
   def ordinalize(n) when is_integer(n), do: to_string(n) <> ordinal(n)
 
   @doc ~S"""
@@ -60,5 +57,6 @@ defmodule Crutches.Integer do
       iex> Integer.multiple_of?(14, 7)
       true
   """
+  @spec multiple_of?(integer, integer) :: boolean
   def multiple_of?(n, divisor), do: rem(n, divisor) == 0
 end
