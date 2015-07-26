@@ -100,6 +100,9 @@ defmodule Crutches.Helpers.Number do
 
     iex> Number.number_to_phone(1235551234, country_code: 1, extension: 1343, delimiter: ".")
     "+1.123.555.1234 x 1343"
+
+    iex> Number.number_to_phone(1235551234, unsupported_option: "some_value")
+    ** (ArgumentError) invalid key unsupported_option
   """
   @number_to_phone [
     valid_options: [:area_code, :delimiter, :extension, :country_code],
@@ -122,6 +125,7 @@ defmodule Crutches.Helpers.Number do
     end
   end
   def number_to_phone(number, opts) when is_integer(number) do
+    Crutches.Keyword.validate_keys! opts, @number_to_phone[:valid_options]
     opts = Keyword.merge @number_to_phone[:default_options], opts
     delimiter = to_string opts[:delimiter]
 
