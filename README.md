@@ -6,6 +6,8 @@ Crutches
 
 The start of an Elixir ~~ripoff~~ port to the [ActiveSupport Ruby gem](https://github.com/rails/rails/tree/master/activesupport).
 
+### [Documentation](http://hexdocs.pm/crutches/)
+
 ### New to Elixir, and coming from Ruby?
 This library is a great for Elixir beginners to contribute to. By porting over ActiveSupport most of the documentation and specs have been written for the methods. This allows the contributor to focus on the syntax and nuances of Elixir. The bonus here is that the contributor will be helping an open source project while learning the basics.
 
