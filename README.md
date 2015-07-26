@@ -23,36 +23,5 @@ This library is a great for Elixir beginners to contribute to. By porting over A
 ### Why ActiveSupport?
 ActiveSupport has some great goodies that are useful in web application development. Furthermore the design pattern for ActiveSupport, and it's use cases, are not hard to understand. If you are coming from the Rails community, being a contributor on this project shouldn't be overly difficult.
 
-### Current Functions Available
-
-#### String
-* camelize
-* from
-* remove
-* squish
-* to
-* underscore
-
-#### Keyword
-* all_options_valid?
-* validate_options
-* validate_options!
-
-#### List
-* from
-* shorten
-* split
-* to
-* to_sentence
-
-#### Enum
-* without
-* many?
-
-#### Integer
-* multiple_of?
-* ordinal
-* ordinalize
-
 ### License
 MIT
