@@ -236,7 +236,7 @@ defmodule Crutches.List do
       [["1", "2", "3", "4"], ["5", "6", "7"], ["8", "9", "10"]]
 
   """
-  @spec in_groups(list(any), integer, any, (() -> any)) :: list(any)
+  @spec in_groups(list(any), integer, any, (any -> any)) :: list(any)
   def in_groups(collection, number, elem, fun) do
     in_groups(collection, number, elem)
     |> Enum.map(fun)
