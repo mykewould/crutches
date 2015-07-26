@@ -189,7 +189,7 @@ defmodule Crutches.String do
       iex> String.remove("foo bar test", [~r/foo /, " test"])
       "bar"
   """
-  @spec remove(String.t, String.t | Regex.t | List.t) :: String.t
+  @spec remove(String.t, String.t | Regex.t | list(any)) :: String.t
   def remove(string, to_remove) when is_list(to_remove) do
     to_remove |> Enum.reduce(string, &remove(&2, &1))
   end
