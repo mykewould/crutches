@@ -75,24 +75,14 @@ defmodule Crutches.Option do
       {:error, [:boom]}
 
   """
+  @spec combine(list(any), list(any)) :: list(any)
   def combine(opts, config) do
-    case Crutches.Keyword.validate_keys(opts, config[:valid]) do
-      {:ok, _} -> {:ok, Elixir.Keyword.merge(config[:defaults], opts)}
-      {:error, invalid} -> {:error, invalid}
-    end
+    combine(opts, config, &Elixir.Keyword.merge(&1, &2))
   end
 
   @doc ~S"""
-  Validates the `opts` keyword list according to `config`, combines defaults.
-
-  For intended use see the module documentation.
-
-  The `config` parameter should be a keyword list with the following keys:
-
-    - `:valid`    -- list of atoms of options that your function accepts.
-    - `:defaults` -- keyword list of default values for the options in `:valid`
-
-  Returns `options` on succes, throws `ArgumentError` on failure.
+  This function is the same as `combine/2`, except it returns `options` on
+  validation succes and throws `ArgumentError` on validation failure.
 
   ### Examples
 
@@ -106,11 +96,118 @@ defmodule Crutches.Option do
 
   """
   def combine!(opts, config) do
-    case Crutches.Option.combine(opts, config) do
+    combine!(opts, config, &Elixir.Keyword.merge(&1, &2))
+  end
+
+  @doc ~S"""
+  Validate `opts` according to `config`, combines according to `combinator`
+
+  Behavior is the same as `combine/2`, except that you can specify how `opts`
+  and `config[:defaults]` are merged by passing a `combinator` function.
+
+  This function should combine the two keyword lists into one. It receives
+  `config[:defaults]` as the first parameter and the validated `opts` as the
+  second.
+
+  ### Examples
+
+  Contrived example showing of the use of `combinator`.
+
+      iex> config = [valid: ~w(foo bar)a, defaults: [foo: "some", bar: "value"]]
+      iex> combinator = fn(_, _) -> nil end
+      iex> Option.combine([foo: "again"], config, combinator)
+      {:ok, nil}
+
+  """
+  def combine(opts, config, combinator) do
+    case validate(opts, config[:valid]) do
+      {:ok, _} -> {:ok, combinator.(config[:defaults], opts)}
+      {:error, invalid} -> {:error, invalid}
+    end
+  end
+
+  @doc ~S"""
+  Throwing version of `combine/3`
+
+  ### Examples
+
+      iex> config = [valid: ~w(foo bar)a, defaults: [foo: "some", bar: "value"]]
+      iex> combinator = fn(_, _) -> nil end
+      iex> Option.combine!([baz: "fail"], config, combinator)
+      ** (ArgumentError) invalid key baz
+  """
+  def combine!(opts, config, combinator) do
+    case combine(opts, config, combinator) do
       {:ok, opts} -> opts
       {:error, invalid} ->
-        invalid = invalid |> Enum.map_join(" ", &(to_string(&1)))
+        invalid = invalid |> Enum.join(" ")
         raise ArgumentError, message: "invalid key #{invalid}"
     end
+  end
+
+  @doc ~S"""
+  Checks a keyword list for unexpected keys, by using a default list of keys.
+  Returns {:ok, []} if all options are kosher, otherwise {:error, list},
+  where list is a list of all invalid keys.
+
+  ## Examples
+
+      iex> Option.validate([good: "", good_opt: ""], [:good, :good_opt])
+      {:ok, []}
+
+      iex> Option.validate([good: "", bad: ""], [:good])
+      {:error, [:bad]}
+
+  """
+  def validate(opts, valid) do
+    if Enum.empty?(invalid_options(opts, valid)) do
+      {:ok, []}
+    else
+      {:error, invalid_options(opts, valid)}
+    end
+  end
+
+  @doc ~S"""
+  Throwing version of `Option.validate`
+
+  ## Examples
+
+      iex> Option.validate!([good: "", bad: ""], [:good])
+      ** (ArgumentError) invalid key bad
+
+      iex> Option.validate!([good: "", bad: "", worse: ""], [:good])
+      ** (ArgumentError) invalid key bad, worse
+
+      iex> Option.validate!([good: ""], [:good])
+      true
+  """
+  def validate!(opts, valid) do
+    case validate(opts, valid) do
+      {:ok, _} -> true
+      {:error, invalid_options} ->
+        raise ArgumentError, "invalid key " <> Enum.join(invalid_options, ", ")
+    end
+  end
+
+  @doc ~S"""
+  Checks a keyword list for unexpected keys, by using a default list of keys.
+  When a bad key is detected it returns false, else it returns true.
+
+  ## Examples
+
+      iex> Option.all_valid?([good: "", good_opt: ".", bad: "!"], [:good, :good_opt])
+      false
+
+      iex> Option.all_valid?([good: "", good_opt: "."], [:good, :good_opt])
+      true
+  """
+  def all_valid?(opts, valid) do
+    Enum.empty?(invalid_options(opts, valid))
+  end
+
+  defp invalid_options(opts, valid) do
+    opts
+    |> Keyword.keys
+    |> Enum.reject(& &1 in valid)
   end
 end
