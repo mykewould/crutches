@@ -8,7 +8,6 @@ defmodule Crutches.String do
     strip: 1
   ]
 
-  @type t :: String
   @doc ~S"""
   Makes an underscored, lowercase form from the expression in the string.
   +underscore+ will also change '.' to '/' to convert namespaces to paths.
@@ -32,7 +31,7 @@ defmodule Crutches.String do
       ["UsersSection.Commission.Department", "users_section/commission/department"],
 
   """
-  @spec underscore(t) :: t
+  @spec underscore(String.t) :: String.t
   def underscore(camel_case) do
     camel_case
     |> replace(~r/\./, "/")
@@ -60,7 +59,7 @@ defmodule Crutches.String do
       "Area51Controller"
 
   """
-  @spec camelize(t) :: t
+  @spec camelize(String.t) :: String.t
   def camelize(underscore) do
     underscore
     |> split("_")
@@ -108,7 +107,7 @@ defmodule Crutches.String do
       iex> |> String.to(-7)
       ""
   """
-  @spec from(t, Integer.t) :: t
+  @spec from(String.t, integer) :: String.t
   def from(string, start) when start >= 0 do
     slice(string, start..(String.length(string) - 1))
   end
@@ -146,7 +145,7 @@ defmodule Crutches.String do
       iex> |> String.to(-2)
       "ell"
   """
-  @spec to(t, Integer.t) :: t
+  @spec to(String.t, integer) :: String.t
   def to(string, length) when length >= 0 do
     slice(string, 0..length)
   end
@@ -172,7 +171,7 @@ defmodule Crutches.String do
       iex> String.squish(str)
       "foo bar boo"
   """
-  @spec squish(t) :: t
+  @spec squish(String.t) :: String.t
   def squish(string) do
     string |> replace(~r/[[:space:]]+/, " ") |> strip
   end
@@ -190,7 +189,7 @@ defmodule Crutches.String do
       iex> String.remove("foo bar test", [~r/foo /, " test"])
       "bar"
   """
-  @spec remove(t, t | Regex.t | List.t) :: t
+  @spec remove(String.t, String.t | Regex.t | list(any)) :: String.t
   def remove(string, to_remove) when is_list(to_remove) do
     to_remove |> Enum.reduce(string, &remove(&2, &1))
   end
