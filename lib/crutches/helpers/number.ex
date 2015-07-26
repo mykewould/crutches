@@ -100,6 +100,9 @@ defmodule Crutches.Helpers.Number do
 
     iex> Number.number_to_phone(1235551234, country_code: 1, extension: 1343, delimiter: ".")
     "+1.123.555.1234 x 1343"
+
+    iex> Number.number_to_phone(1235551234, unsupported_option: "some_value")
+    ** (ArgumentError) invalid key unsupported_option
   """
   @number_to_phone [
     valid_options: [:area_code, :delimiter, :extension, :country_code],
@@ -122,17 +125,15 @@ defmodule Crutches.Helpers.Number do
     end
   end
   def number_to_phone(number, opts) when is_integer(number) do
-    default_options = @number_to_phone[:default_options]
-    area_code = opts[:area_code] || default_options[:area_code]
-    delimiter = to_string(opts[:delimiter] || default_options[:delimiter])
-    extension = opts[:extension] || default_options[:extension]
-    country_code = opts[:country_code] || default_options[:country_code]
+    Crutches.Keyword.validate_keys! opts, @number_to_phone[:valid_options]
+    opts = Keyword.merge @number_to_phone[:default_options], opts
+    delimiter = to_string opts[:delimiter]
 
     Integer.to_string(number)
     |> split_for_phone
-    |> join_as_phone(delimiter, area_code)
-    |> add_extension(extension)
-    |> add_country_code(country_code, delimiter)
+    |> join_as_phone(delimiter, opts[:area_code])
+    |> add_extension(opts[:extension])
+    |> add_country_code(opts[:country_code], delimiter)
   end
 
   defp split_for_phone(safe_string) when byte_size(safe_string) < 7 do
