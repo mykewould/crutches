@@ -8,8 +8,10 @@ defmodule Crutches.Mixfile do
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps,
-     description: "A small port of Ruby's ActiveSupport",
-     package: [contributors: ["Michael Wood"],
+     description: "An Elixir toolbelt freely inspired from Ruby's ActiveSupport",
+     package: [contributors: ["Michael Wood", "Kash Nouroozi", "Maurizio Del Corno",
+                              "nawns", "Laurens Duijvesteijn", "Joel Meador",
+                              "Sonny Scroggin"],
                licenses: ["MIT"],
                links: %{"GitHub" => "https://github.com/mykewould/crutches"}]]
   end
