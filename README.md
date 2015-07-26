@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mykewould/crutches.svg?branch=master)](https://travis-ci.org/mykewould/crutches)
+[![Inline docs](http://inch-ci.org/github/mykewould/crutches.svg?branch=master)](http://inch-ci.org/github/mykewould/crutches)
 
 Crutches
 =======
