@@ -1,6 +1,6 @@
 defmodule Crutches.Integer do
-  @type s :: String
-  @type i :: Integer
+  @type s :: String.t()
+  @type i :: integer
 
   @doc ~S"""
   Return _just_ the ordinal of a number ("st", "nd", "rd", "th")
