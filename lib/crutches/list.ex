@@ -223,4 +223,62 @@ defmodule Crutches.List do
   defp do_split(collection, x) do
     do_split(collection, fn (k) -> k == x end)
   end
+
+    @doc ~S"""
+  Splits or iterates over the array in +number+ of groups, padding any
+  remaining slots with +fill_with+ unless it is +false+.
+
+  ## Examples
+
+      iex> List.in_groups(~w(1 2 3 4 5 6 7 8 9 10), 3)
+      [["1", "2", "3", "4"], ["5", "6", "7", nil], ["8", "9", "10", nil]]
+
+      iex> List.in_groups(~w(1 2 3 4 5 6 7 8 9 10), 3, false, fn(x) -> Enum.join(x, ",") end)
+      ["1,2,3,4", "5,6,7", "8,9,10"]
+
+      iex> List.in_groups(~w(1 2 3 4 5 6 7 8 9 10), 3, false)
+      [["1", "2", "3", "4"], ["5", "6", "7"], ["8", "9", "10"]]
+
+  """
+  @spec in_groups(t, i, Any, Fun) :: t
+  def in_groups(collection, number, elem, fun) do
+    in_groups(collection, number, elem)
+    |> Enum.map(fun)
+  end
+
+  def in_groups(collection, number, elem \\ nil)
+
+  def in_groups(collection, number, elem) when is_function(elem) do
+    in_groups(collection, number, nil, elem)
+  end
+
+  def in_groups(collection, number, elem) do
+    coll_size = length(collection)
+    group_min = div(coll_size, number)
+    group_rem = rem(coll_size, number)
+
+    {result, _} =
+      Enum.to_list(1..number)
+      |> Enum.reduce {[], collection}, fn(x, acc) ->
+        {list, kollection} = acc
+
+        if x <= group_rem do
+          {[Enum.take(kollection, group_min + 1) | list], Enum.drop(kollection, group_min + 1)}
+        else
+          case group_rem do
+            0 ->
+              {[Enum.take(kollection, group_min) | list], Enum.drop(kollection, group_min)}
+            _ ->
+              case elem do
+                false ->
+                  {[Enum.take(kollection, group_min) | list], Enum.drop(kollection, group_min)}
+                _ ->
+                  {[(Enum.take(kollection, group_min) |> Enum.concat([elem])) | list], Enum.drop(kollection, group_min)}
+              end
+          end
+        end
+      end
+
+      Enum.reverse(result)
+  end
 end
