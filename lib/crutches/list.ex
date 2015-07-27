@@ -220,7 +220,7 @@ defmodule Crutches.List do
     do_split(collection, fn (k) -> k == x end)
   end
 
-    @doc ~S"""
+  @doc ~S"""
   Splits or iterates over the array in +number+ of groups, padding any
   remaining slots with +fill_with+ unless it is +false+.
 
