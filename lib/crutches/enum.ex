@@ -55,9 +55,9 @@ defmodule Crutches.Enum do
   """
   @spec many?(list(any)) :: boolean
   def many?([]), do: false
-  def many?([head | tail]), do: !Enum.empty?(tail)
+  def many?([_ | tail]), do: !Enum.empty?(tail)
 
   @spec many?(map) :: boolean
   def many?(%{}), do: false
-  def many?(collection) when is_map(collection), do: Map.size(collection) > 1
+  def many?(collection) when is_map(collection), do: map_size(collection) > 1
 end
