@@ -1,55 +1,57 @@
-[![Build Status](https://travis-ci.org/mykewould/crutches.svg?branch=master)](https://travis-ci.org/mykewould/crutches)
-
 Crutches
 =======
 
-The start of an Elixir ~~ripoff~~ port to the [ActiveSupport Ruby gem](https://github.com/rails/rails/tree/master/activesupport).
+[![Build Status](https://travis-ci.org/mykewould/crutches.svg?branch=master)](https://travis-ci.org/mykewould/crutches)
+[![Inline docs](http://inch-ci.org/github/mykewould/crutches.svg?branch=master)](http://inch-ci.org/github/mykewould/crutches)
 
-### New to Elixir, and coming from Ruby?
-This library is a great for Elixir beginners to contribute to. By porting over ActiveSupport most of the documentation and specs have been written for the methods. This allows the contributor to focus on the syntax and nuances of Elixir. The bonus here is that the contributor will be helping an open source project while learning the basics.
+This is the start of an Elixir port of the [ActiveSupport Rubygem]. [Contributions
+welcome].
 
-### How to contribute
-* Fork crutches.
-* Pick an issue to implement.
-* If you pick an issue from the list, please comment on the issue to let others know you've started on it.
-* If you don't see a function you'd like to implement in the issues section, feel free to go grab one from ActiveSupport, or implement a unique function.
-* The documentation is written for Ruby, start by converting that into a doctest in Elixir.
-* Use TDD to solve the doctest.
-* Open a PR
+ [ActiveSupport Rubygem]:https://github.com/rails/rails/tree/master/activesupport
+ [Contributions welcome]:https://github.com/mykewould/crutches#new-to-elixir
 
-### Why ActiveSupport?
-ActiveSupport has some great goodies that are useful in web application development. Furthermore the design pattern for ActiveSupport, and it's use cases, are not hard to understand. If you are coming from the Rails community, being a contributor on this project shouldn't be overly difficult.
+Contributions are especially welcomed! Take a look at `[CONTRIBUTING.md]` for
+more information.
 
-### Current Functions Available
+### Compatability and versioning
 
-#### String
-* camelize
-* from
-* remove
-* squish
-* to
-* underscore
+We test against the following combinations of Erlang/OTP and Elixir. Other
+combinations are not officially supported.
 
-#### Keyword
-* all_options_valid?
-* validate_options
-* validate_options!
+ - Erlang/OTP `18.0` and Elixir `1.0.5`
 
-#### List
-* from
-* shorten
-* split
-* to
-* to_sentence
+This project is still alpha software. APIs and supported Elixir and/or Erlang
+versions may change at a moments notice. Use with discretion.
 
-#### Enum
-* without
-* many?
+### Documentation
 
-#### Integer
-* multiple_of?
-* ordinal
-* ordinalize
+The following places contain documentation on Crutches:
 
-### License
-MIT
+ - [API reference] on Hexdocs, the standard Elixir documentation hoster.
+ - [Wiki]&mdash;still under construction.
+
+ [API reference]:http://hexdocs.pm/crutches/
+ [Wiki]:https://github.com/mykewould/crutches/wiki
+
+### New to Elixir?
+
+This library is a great for Elixir beginners to contribute to. We are porting
+over ActiveSupport, an addition to the standard library of the Ruby programming
+language. Most of the function documentation and specs have been written already.
+This allows the contributor to focus on the syntax and nuances of Elixir. The
+bonus here is that the contributor will be helping an open source project while
+learning the basics.
+
+Take a look at `[CONTRIBUTING.md]` for more information on how you can get
+started.
+
+ [CONTRIBUTING.md]:https://github.com/mykewould/crutches/blob/master/CONTRIBUTING.md
+
+#### Why ActiveSupport?
+
+ActiveSupport has some great goodies that are useful in web application
+development. Furthermore the design pattern for ActiveSupport, and it's use
+cases, are not hard to understand. If you are coming from the Rails community,
+being a contributor on this project shouldn't be overly difficult. And if you're
+not, just give it a try!
+

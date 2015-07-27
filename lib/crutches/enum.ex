@@ -1,9 +1,4 @@
 defmodule Crutches.Enum do
-  @type b :: Boolean
-  @type a :: Any
-  @type l :: List
-  @type m :: Map
-
   @doc ~S"""
   Returns a copy of the Enum without the specified elements.
 
@@ -21,7 +16,7 @@ defmodule Crutches.Enum do
       iex > Enum.without([ answer: 42 ], [:answer])
       []
   """
-  @spec without(l, l) :: l
+  @spec without(list(any), list(any)) :: list(any)
   def without(collection, elements) when is_list(collection) do
     if Keyword.keyword? collection do
       Keyword.drop collection, elements
@@ -30,7 +25,7 @@ defmodule Crutches.Enum do
     end
   end
 
-  @spec without(m, l) :: m
+  @spec without(map, list(any)) :: map
   def without(collection, elements) when is_map(collection) do
     Map.drop collection, elements
   end
@@ -58,11 +53,11 @@ defmodule Crutches.Enum do
       iex> Enum.many?([ answer: 42 ])
       false
   """
-  @spec many?(l) :: b
+  @spec many?(list(any)) :: boolean
   def many?([]), do: false
-  def many?([ head | tail ]), do: !Enum.empty?(tail)
+  def many?([head | tail]), do: !Enum.empty?(tail)
 
-  @spec many?(m) :: b
+  @spec many?(map) :: boolean
   def many?(%{}), do: false
   def many?(collection) when is_map(collection), do: Map.size(collection) > 1
 end
