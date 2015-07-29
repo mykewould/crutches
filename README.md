@@ -13,7 +13,7 @@ welcome].
 Contributions are especially welcomed! Take a look at `[CONTRIBUTING.md]` for
 more information.
 
-### Compatability and versioning
+### Compatibility and versioning
 
 We test against the following combinations of Erlang/OTP and Elixir. Other
 combinations are not officially supported.
