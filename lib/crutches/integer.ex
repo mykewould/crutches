@@ -25,10 +25,10 @@ defmodule Crutches.Integer do
       n >= 11 and n <= 13 ->
         "th"
       true ->
-        case n |> to_string |> String.slice(-1, 1) do
-          "1" -> "st"
-          "2" -> "nd"
-          "3" -> "rd"
+        case :erlang.abs(:erlang.rem(n, 10)) do
+          1 -> "st"
+          2 -> "nd"
+          3 -> "rd"
           _ -> "th"
         end
     end
