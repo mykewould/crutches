@@ -10,6 +10,9 @@ defmodule Crutches.Integer do
       iex> Integer.ordinal(11)
       "th"
 
+      iex> Integer.ordinal(-113)
+      "th"
+
       iex> Integer.ordinal(174)
       "th"
 
@@ -21,11 +24,13 @@ defmodule Crutches.Integer do
   """
   @spec ordinal(integer) :: String.t
   def ordinal(n) when is_integer(n) do
+    last_2 = :erlang.abs(:erlang.rem(n, 100))
     cond do
-      n >= 11 and n <= 13 ->
+      last_2 >= 11 and last_2 <= 13 ->
         "th"
       true ->
-        case :erlang.abs(:erlang.rem(n, 10)) do
+        last = :erlang.rem(last_2, 10)
+        case last do
           1 -> "st"
           2 -> "nd"
           3 -> "rd"
