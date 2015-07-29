@@ -12,11 +12,10 @@ defmodule Crutches.Keyword do
       true
   """
   def all_keys_valid?(options, whitelist) do
-    invalid_options =
-      options
-      |> Stream.reject(fn {option, _} -> option in whitelist end)
-      |> Stream.take(1)
-    Enum.empty?(invalid_options)
+    options
+    |> Stream.reject(fn {option, _} -> option in whitelist end)
+    |> Stream.take(1)
+    |> Enum.empty?
   end
 
   @doc ~S"""
