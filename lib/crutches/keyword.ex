@@ -60,11 +60,11 @@ defmodule Crutches.Keyword do
       true
   """
   def validate_keys!(options, whitelist) do
-    if all_keys_valid?(options, whitelist) do
-      true
-    else
-      {:error, invalid_options} = validate_keys(options, whitelist)
-      raise ArgumentError, "invalid key " <> Enum.join(invalid_options, ", ")
+    case validate_keys(options, whitelist) do
+      {:ok, _} ->
+        true
+      {:error, invalid_options} ->
+        raise ArgumentError, "invalid key " <> Enum.join(invalid_options, ", ")
     end
   end
 end
