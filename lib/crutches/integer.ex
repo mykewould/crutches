@@ -23,21 +23,17 @@ defmodule Crutches.Integer do
       "rd"
   """
   @spec ordinal(integer) :: String.t
+  def ordinal(n) when n === 1, do: "st"
+  def ordinal(n) when n === 2, do: "nd"
+  def ordinal(n) when n === 3, do: "rd"
   def ordinal(n) when is_integer(n) do
-    last_2 = :erlang.abs(:erlang.rem(n, 100))
     cond do
-      last_2 >= 11 and last_2 <= 13 ->
-        "th"
-      true ->
-        last = :erlang.rem(last_2, 10)
-        case last do
-          1 -> "st"
-          2 -> "nd"
-          3 -> "rd"
-          _ -> "th"
-        end
+      n in 0..13 -> "th"
+      n in 14..99 -> n |> rem(10) |> abs |> ordinal
+      true       -> n |> rem(100) |> abs |> ordinal
     end
   end
+
 
   @doc ~S"""
   Return the number and it's ordinal as a string
