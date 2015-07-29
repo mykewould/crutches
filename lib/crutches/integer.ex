@@ -7,6 +7,9 @@ defmodule Crutches.Integer do
       iex> Integer.ordinal(-1)
       "st"
 
+      iex> Integer.ordinal(11)
+      "th"
+
       iex> Integer.ordinal(174)
       "th"
 
@@ -18,11 +21,16 @@ defmodule Crutches.Integer do
   """
   @spec ordinal(integer) :: String.t
   def ordinal(n) when is_integer(n) do
-    case n |> to_string |> String.slice(-1, 1) do
-      "1" -> "st"
-      "2" -> "nd"
-      "3" -> "rd"
-      _ -> "th"
+    cond do
+      n >= 11 and n <= 13 ->
+        "th"
+      true ->
+        case n |> to_string |> String.slice(-1, 1) do
+          "1" -> "st"
+          "2" -> "nd"
+          "3" -> "rd"
+          _ -> "th"
+        end
     end
   end
 
