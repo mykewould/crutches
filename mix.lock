@@ -1,0 +1,6 @@
+%{"earmark": {:hex, :earmark, "0.1.17"},
+  "ex_doc": {:hex, :ex_doc, "0.7.3"},
+  "inch_ex": {:hex, :inch_ex, "0.3.3"},
+  "linguist": {:hex, :linguist, "0.1.5"},
+  "poison": {:hex, :poison, "1.4.0"},
+  "yamerl": {:git, "git://github.com/yakaz/yamerl.git", "ae810a808817d9482b4628ae3e20d746e3729fe0", [tag: "v0.3.2-1"]}}
