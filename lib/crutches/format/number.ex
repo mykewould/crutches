@@ -172,4 +172,100 @@ defmodule Crutches.Format.Number do
   defp add_country_code(phone_number, country_code, delimiter) do
     "+#{country_code}#{delimiter}" <> phone_number
   end
+
+  @doc ~s"""
+    Formats a `number` into a currency string (e.g., $13.65). You can customize the format in 
+    the `options` hash. The `as_currency!` method raises an exception if the input is 
+    not numeric
+
+    # Options
+
+     * `:locale` - Sets the locale to be used for formatting (defaults to current locale) *** Not implemented ***.
+     * `:precision` - Sets the level of precision (defaults to 2).
+     * `:unit` - Sets the denomination of the currency (defaults to “$”).
+     * `:separator` - Sets the separator between the units (defaults to “.”).
+     * `:delimiter` - Sets the thousands delimiter (defaults to “,”).
+     * `:format` - Sets the format for non-negative numbers (defaults to “%u%n”). Fields are %u for the currency, and %n for the number.
+     * `:negative_format` - Sets the format for negative numbers (defaults to prepending an hyphen to the formatted number given by :format). Accepts the same fields than :format, except %n is here the absolute value of the number.
+
+
+    iex> Number.as_currency(1234567890.50)                
+    "$1,234,567,890.50"
+
+    iex> Number.as_currency(1234567890.506)               
+    "$1,234,567,890.51"
+
+    iex> Number.as_currency(1234567890.506, precision: 3) 
+    "$1,234,567,890.506"
+
+    iex> Number.as_currency(1234567890.506, locale: :fr)  
+    "$1,234,567,890.51"
+
+    iex> Number.as_currency("123a456")                    
+    "$123a456"
+   
+    iex> Number.as_currency(-1234567890.50, negative_format: "(%u%n)")
+    "($1,234,567,890.50)"
+
+    iex> Number.as_currency(1234567890.50, unit: "&pound;", separator: ",", delimiter: "")
+    "&pound;1234567890,50"
+
+    iex> Number.as_currency(1234567890.50, unit: "&pound;", separator: ",", delimiter: "", format: "%n %u")
+    "1234567890,50 &pound;"
+
+    iex> Number.as_currency(1235551234, unsupported_option: "some_value")
+    ** (ArgumentError) invalid key unsupported_option
+
+    iex> Number.as_currency!("123a456")
+    ** (ArithmeticError) bad argument in arithmetic expression
+  """
+
+  @as_currency [
+    valid_options: [:locale, :precision, :unit, :separator, :delimiter, :format, :negative_format],
+    default_options: [
+      locale: :en,
+      precision: 2,
+      unit: "$",
+      separator: ".",
+      delimiter: ",",
+      format: "%u%n",
+      negative_format: "-%u%n"
+    ]
+  ]
+
+  def as_currency!(number, opts \\ @as_currency[:default_options])
+  def as_currency!(number, opts) when is_binary(number) do
+    case Float.parse(number) do
+      {float, ""} -> as_currency float, opts
+      _           -> raise ArithmeticError
+    end
+  end
+  def as_currency!(number, opts) do
+    as_currency number, opts
+  end
+
+  def as_currency(number, opts \\ @as_currency[:default_options])
+  def as_currency(number, opts) when is_binary(number) do
+    case Float.parse(number) do
+      {float, ""} -> as_currency float, opts
+      _           -> format_as_currency number, opts[:unit], opts[:format]
+    end
+  end
+  def as_currency(number, opts) when is_number(number) do
+    Crutches.Keyword.validate_keys! opts, @as_currency[:valid_options]
+    opts = Keyword.merge @as_currency[:default_options], opts
+
+    format = number < 0 && opts[:negative_format] || opts[:format]
+
+    abs(number/1) 
+    |> Float.to_string(decimals: opts[:precision]) 
+    |> as_delimited(delimiter: opts[:delimiter], separator: opts[:separator])
+    |> format_as_currency(opts[:unit], format)
+  end
+
+  defp format_as_currency(binary, unit, format) when is_binary(binary) do
+    format
+    |> String.replace("%n", String.lstrip(binary, ?-), global: false)
+    |> String.replace("%u", unit)
+  end
 end
