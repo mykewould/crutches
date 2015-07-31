@@ -26,8 +26,6 @@ defmodule Crutches.Map do
       42
   """
 
-  def get_path(map, path)
-
   def get_path(map, path) when is_map(map) and is_binary(path) do
     path
     |> String.split(".")
@@ -39,5 +37,50 @@ defmodule Crutches.Map do
     |> Atom.to_string
     |> String.split(".")
     |> Enum.reduce map, &Map.get(&2, String.to_atom(&1))
+  end
+
+  @doc """
+  The fetch version of get_path, where if the key is found returns
+  `{:ok, value}`, and if not then `:error`.
+
+  ## Examples
+
+      iex> Map.fetch_path(%{ good: %{ bad: "ugly" } }, :"good.bad")
+      {:ok, "ugly"}
+
+      iex> Map.fetch_path(%{ good: "" }, :"good.worse")
+      :error
+  """
+  def fetch_path(map, path) when is_map(map) do
+    try do
+      {:ok, fetch_path!(map, path)}
+    rescue
+      _ -> :error
+    end
+  end
+
+  @doc """
+  Throwing version of fetch_path, that returns the value if the path has been
+  successfully traversed, and if not then throws an error.
+
+  ## Examples
+
+      iex> Map.fetch_path!(%{ good: %{ bad: "ugly" }}, :"good.ugly")
+      ** (KeyError) key :ugly not found in: %{bad: "ugly"}
+
+      iex> Map.fetch_path!(%{ good: %{ bad: "ugly" }}, :"good.bad")
+      "ugly"
+  """
+  def fetch_path!(map, path) when is_map(map) and is_binary(path) do
+    path
+    |> String.split(".")
+    |> Enum.reduce map, &Map.fetch!(&2, &1)
+  end
+
+  def fetch_path!(map, path) when is_map(map) and is_atom(path) do
+    path
+    |> Atom.to_string
+    |> String.split(".")
+    |> Enum.reduce map, &Map.fetch!(&2, String.to_atom(&1))
   end
 end
