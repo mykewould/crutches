@@ -6,22 +6,22 @@ defmodule Crutches.Map do
   ## Examples
   
   iex> map = %{"hello" => %{"goodbye" => 1}, "akuna" => "matata"}
-  iex> Map.dkey_update(map, fn (key) -> String.to_atom(key) end)
+  iex> Map.dkeys_update(map, fn (key) -> String.to_atom(key) end)
   %{:hello => %{:goodbye => 1}, :akuna => "matata"}
   
   iex> map = %{"hello" => %{"goodbye" => 1, "akuna" => "matata", "hello" => %{"goodbye" => 1, "akuna" => "matata"}}, "akuna" => "matata"}
-  iex> Map.dkey_update(map, fn (key) -> String.to_atom(key) end)
+  iex> Map.dkeys_update(map, fn (key) -> String.to_atom(key) end)
   %{hello: %{akuna: "matata", goodbye: 1, hello: %{akuna: "matata", goodbye: 1}}, akuna: "matata"}
   
   """
-  def dkey_update(map, fun), do: dkey_update(map, fun, %{})
-  def dkey_update(map, _, acc) when map == %{}, do: acc
-  def dkey_update(map, fun, acc) do
+  def dkeys_update(map, fun), do: dkeys_update(map, fun, %{})
+  def dkeys_update(map, _, acc) when map == %{}, do: acc
+  def dkeys_update(map, fun, acc) do
     key = Map.keys(map) |> List.first
     case is_map(map[key]) do
-      true -> value = dkey_update(map[key], fun)
+      true -> value = dkeys_update(map[key], fun)
          _ -> value = map[key]
     end
-    dkey_update(Map.delete(map, key), fun, Map.put(acc, fun.(key), value))
+    dkeys_update(Map.delete(map, key), fun, Map.put(acc, fun.(key), value))
   end
 end
