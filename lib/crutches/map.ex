@@ -21,9 +21,9 @@ defmodule Crutches.Map do
       5951762
   """
 
-  def get_path(map, path, strings \\ false)
+  def get_path(map, path, string_keys \\ false)
 
-  def get_path(map, path, strings) when is_map(map) and is_binary(path) do
+  def get_path(map, path, string_keys) when is_map(map) and is_binary(path) do
     get_path(map, String.split(path, "."), strings)
   end
 
