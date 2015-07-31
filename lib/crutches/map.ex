@@ -6,6 +6,8 @@ defmodule Crutches.Map do
   Set the third parameter to `true` if the keys of the map are `Strings`.
   It otherwise defaults to `false`, where it assumes the keys are `atoms`.
 
+  Pass in a string if the keys are strings, otherwise pass an atom (`:"parent.child"`).
+
   ## Examples
 
       iex> data = %{
@@ -17,21 +19,25 @@ defmodule Crutches.Map do
       ...>   "username" => "snoopdogg",
       ...>   "website" => "http://smarturl.it/BushAlbum"
       ...> }
-      iex> Map.get_path(data, "counts.followed_by", true)
+      iex> Map.get_path(data, "counts.followed_by")
       5951762
+
+      iex> Map.get_path(%{ answer: 42 }, :answer)
+      42
   """
 
-  def get_path(map, path, string_keys \\ false)
+  def get_path(map, path)
 
-  def get_path(map, path, string_keys) when is_map(map) and is_binary(path) do
-    get_path(map, String.split(path, "."), strings)
+  def get_path(map, path) when is_map(map) and is_binary(path) do
+    path
+    |> String.split(".")
+    |> Enum.reduce map, &Map.get(&2, &1)
   end
 
-  def get_path(map, path, true) when is_map(map) and is_list(path) do
-    path |> Enum.reduce(map, &Map.get(&2, &1))
-  end
-
-  def get_path(map, path, false) when is_map(map) and is_list(path) do
-    path |> Enum.map(&String.to_atom/1) |> Enum.reduce(map, &Map.get(&2, &1))
+  def get_path(map, path) when is_map(map) and is_atom(path) do
+    path
+    |> Atom.to_string
+    |> String.split(".")
+    |> Enum.reduce map, &Map.get(&2, String.to_atom(&1))
   end
 end
