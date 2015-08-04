@@ -34,7 +34,7 @@ defmodule Crutches.Format.Number do
   def as_delimited(number, provided_options \\ [])
 
   def as_delimited(number, provided_options) when is_binary(number) do
-    Crutches.Keyword.validate_keys!(provided_options, @as_delimited[:valid_options])
+    Crutches.Option.validate!(provided_options, @as_delimited[:valid_options])
 
     options = Keyword.merge(@as_delimited[:default_options], provided_options)
     decimal_separator = to_string(@as_delimited[:default_options][:separator])
@@ -125,7 +125,7 @@ defmodule Crutches.Format.Number do
     end
   end
   def as_phone(number, opts) when is_integer(number) do
-    Crutches.Keyword.validate_keys! opts, @as_phone[:valid_options]
+    Crutches.Option.validate! opts, @as_phone[:valid_options]
     opts = Keyword.merge @as_phone[:default_options], opts
     delimiter = to_string opts[:delimiter]
 
@@ -174,8 +174,8 @@ defmodule Crutches.Format.Number do
   end
 
   @doc ~s"""
-    Formats a `number` into a currency string (e.g., $13.65). You can customize the format in 
-    the `options` hash. The `as_currency!` method raises an exception if the input is 
+    Formats a `number` into a currency string (e.g., $13.65). You can customize the format in
+    the `options` hash. The `as_currency!` method raises an exception if the input is
     not numeric
 
     # Options
@@ -189,21 +189,21 @@ defmodule Crutches.Format.Number do
      * `:negative_format` - Sets the format for negative numbers (defaults to prepending an hyphen to the formatted number given by :format). Accepts the same fields than :format, except %n is here the absolute value of the number.
 
 
-    iex> Number.as_currency(1234567890.50)                
+    iex> Number.as_currency(1234567890.50)
     "$1,234,567,890.50"
 
-    iex> Number.as_currency(1234567890.506)               
+    iex> Number.as_currency(1234567890.506)
     "$1,234,567,890.51"
 
-    iex> Number.as_currency(1234567890.506, precision: 3) 
+    iex> Number.as_currency(1234567890.506, precision: 3)
     "$1,234,567,890.506"
 
-    iex> Number.as_currency(1234567890.506, locale: :fr)  
+    iex> Number.as_currency(1234567890.506, locale: :fr)
     "$1,234,567,890.51"
 
-    iex> Number.as_currency("123a456")                    
+    iex> Number.as_currency("123a456")
     "$123a456"
-   
+
     iex> Number.as_currency(-1234567890.50, negative_format: "(%u%n)")
     "($1,234,567,890.50)"
 
@@ -252,13 +252,13 @@ defmodule Crutches.Format.Number do
     end
   end
   def as_currency(number, opts) when is_number(number) do
-    Crutches.Keyword.validate_keys! opts, @as_currency[:valid_options]
+    Crutches.Option.validate! opts, @as_currency[:valid_options]
     opts = Keyword.merge @as_currency[:default_options], opts
 
     format = number < 0 && opts[:negative_format] || opts[:format]
 
-    abs(number/1) 
-    |> Float.to_string(decimals: opts[:precision]) 
+    abs(number/1)
+    |> Float.to_string(decimals: opts[:precision])
     |> as_delimited(delimiter: opts[:delimiter], separator: opts[:separator])
     |> format_as_currency(opts[:unit], format)
   end
