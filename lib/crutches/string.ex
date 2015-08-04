@@ -9,8 +9,10 @@ defmodule Crutches.String do
   ]
 
   @doc ~S"""
-  Makes an underscored, lowercase form from the expression in the string.
-  +underscore+ will also change '.' to '/' to convert namespaces to paths.
+  Converts a `string` to `snake_case`.
+
+  `underscore/1` also changes `.` to `/` to convert namespaces into paths.
+
 
   ## Examples
 
@@ -32,8 +34,8 @@ defmodule Crutches.String do
 
   """
   @spec underscore(String.t) :: String.t
-  def underscore(camel_case) do
-    camel_case
+  def underscore(string) do
+    string
     |> replace(~r/\./, "/")
     |> replace(~r/([A-Z]+)([A-Z][a-z])/, "\\1_\\2")
     |> replace(~r/([a-z\d])([A-Z])/, "\\1_\\2")
@@ -42,7 +44,7 @@ defmodule Crutches.String do
   end
 
   @doc ~S"""
-  Converts strings to UpperCamelCase.
+  Converts `string` to CamelCase.
 
   ## Examples
 
@@ -60,8 +62,8 @@ defmodule Crutches.String do
 
   """
   @spec camelize(String.t) :: String.t
-  def camelize(underscore) do
-    underscore
+  def camelize(string) do
+    string
     |> split("_")
     |> Enum.map(&capitalize/1)
     |> Enum.reduce(&(&2 <> &1))
@@ -70,8 +72,10 @@ defmodule Crutches.String do
   # Access
 
   @doc ~S"""
-  Returns a substring from the given position to the end of the string.
-  If the position is negative, it is counted from the end of the string.
+  Gives a substring of `string` from the given `position`.
+
+  If `position` is positive, counts from the start of the string.
+  If `position` is negative, count from the end of the string.
 
   ## Examples
       iex> String.from("hello", 0)
@@ -87,6 +91,7 @@ defmodule Crutches.String do
       ""
 
   You can mix it with +to+ method and do fun things like:
+
       iex> "hello"
       iex> |> String.from(0)
       iex> |> String.to(-1)
@@ -108,15 +113,15 @@ defmodule Crutches.String do
       ""
   """
   @spec from(String.t, integer) :: String.t
-  def from(string, start) when start >= 0 do
-    slice(string, start..(String.length(string) - 1))
+  def from(string, position) when position >= 0 do
+    slice(string, position..(String.length(string) - 1))
   end
 
-  def from(string, start) when start < 0 do
-    new_start = String.length(string) + start
-    case new_start < 0 do
+  def from(string, position) when position < 0 do
+    new_position = String.length(string) + position
+    case new_position < 0 do
       true  -> ""
-      false -> slice(string, new_start..(String.length(string) - 1))
+      false -> slice(string, new_position..(String.length(string) - 1))
     end
   end
 
@@ -177,7 +182,9 @@ defmodule Crutches.String do
   end
 
   @doc ~S"""
-  Returns a new string with all occurrences of the patterns removed.
+  Remove all occurrences of `pattern` from `string`.
+
+  Can also take a list of `patterns`.
 
   ## Examples
       iex> String.remove("foo bar test", " test")
@@ -190,11 +197,11 @@ defmodule Crutches.String do
       "bar"
   """
   @spec remove(String.t, String.t | Regex.t | list(any)) :: String.t
-  def remove(string, to_remove) when is_list(to_remove) do
-    to_remove |> Enum.reduce(string, &remove(&2, &1))
+  def remove(string, patterns) when is_list(patterns) do
+    patterns |> Enum.reduce(string, &remove(&2, &1))
   end
 
-  def remove(string, to_remove) do
-    replace(string, to_remove, "")
+  def remove(string, pattern) do
+    replace(string, pattern, "")
   end
 end

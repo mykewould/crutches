@@ -1,6 +1,6 @@
 defmodule Crutches.Enum do
   @doc ~S"""
-  Returns a copy of the Enum without the specified elements.
+  Returns a copy of the `collection` without the specified `elements`.
 
   ## Examples
 
