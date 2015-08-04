@@ -8,6 +8,13 @@ elixir:
 
 notifications:
   email: false
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/0152272011bece7f993c
+    on_success: change
+    on_failure: always
+    on_start: false
+
 
 after_script:
   - MIX_ENV=docs mix deps.get
