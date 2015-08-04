@@ -1,6 +1,6 @@
 defmodule Crutches.List do
   @doc ~S"""
-  Returns the tail of the array from +position+.
+  Returns the tail of the `collection` from `position`.
 
   ## Examples
 
