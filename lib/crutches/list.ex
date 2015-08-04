@@ -181,8 +181,17 @@ defmodule Crutches.List do
   end
 
   @doc ~S"""
-  Return a List containing the original List splitted by an element or by a
-  function.
+  Split a `collection` by an element or by a function (`x`)
+
+  The function removes elements when they are equal to the given element, or;
+
+  When passing in a function, an element gets removed if the function returns
+  `true` for that element.
+
+  ## Parameters
+
+  `collection` - The collection to do the split on.
+  `x`          - Function predicate or element to split on.
 
   ## Examples
 
@@ -199,7 +208,7 @@ defmodule Crutches.List do
       [[1], [3], [5], [7], []]
 
       iex> List.split(1..15, &(rem(&1,3) == 0))
-      [[1, 2], [4, 5], [7, 8], [10 , 11], [13, 14], []]
+      [[1, 2], [4, 5], [7, 8], [10, 11], [13, 14], []]
   """
   @spec split(list(any), any) :: list(any)
   def split(collection, x) do
@@ -215,9 +224,8 @@ defmodule Crutches.List do
       {false, elem}, {head, acc} -> {[elem | head], acc}
     end
   end
-
-  defp do_split(collection, x) do
-    do_split(collection, fn (k) -> k == x end)
+  defp do_split(collection, elem) do
+    do_split(collection, fn (k) -> k == elem end)
   end
 
   @doc ~S"""
