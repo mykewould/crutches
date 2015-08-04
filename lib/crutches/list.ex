@@ -134,9 +134,9 @@ defmodule Crutches.List do
   end
 
   @doc ~S"""
-  Shorten a list by a given amount.
+  Shorten a `list` by a given `amount`.
 
-  When the list is shorter than the amount given, this function returns nil.
+  When the list is shorter than the amount given, this function returns `nil`.
 
   ## Examples
 
