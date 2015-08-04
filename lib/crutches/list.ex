@@ -109,7 +109,7 @@ defmodule Crutches.List do
   def to_sentence([],     _), do: ""
   def to_sentence([word], _), do: "#{word}"
   def to_sentence(words, provided_options) do
-    Crutches.Keyword.validate_keys!(provided_options, @to_sentence[:valid_options])
+    Crutches.Option.validate!(provided_options, @to_sentence[:valid_options])
 
     options = merge_default_options(provided_options)
     start_of = words
