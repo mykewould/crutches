@@ -10,7 +10,7 @@ welcome].
  [ActiveSupport Rubygem]:https://github.com/rails/rails/tree/master/activesupport
  [Contributions welcome]:https://github.com/mykewould/crutches#new-to-elixir
 
-Contributions are especially welcomed! Take a look at `[CONTRIBUTING.md]` for
+Contributions are especially welcomed! Take a look at [CONTRIBUTING.md] for
 more information.
 
 ### Compatibility and versioning
@@ -42,10 +42,10 @@ This allows the contributor to focus on the syntax and nuances of Elixir. The
 bonus here is that the contributor will be helping an open source project while
 learning the basics.
 
-Take a look at `[CONTRIBUTING.md]` for more information on how you can get
+Take a look at [CONTRIBUTING.md] for more information on how you can get
 started.
 
- [CONTRIBUTING.md]:https://github.com/mykewould/crutches/blob/master/CONTRIBUTING.md
+[CONTRIBUTING.md]: https://github.com/mykewould/crutches/blob/master/CONTRIBUTING.md
 
 #### Why ActiveSupport?
 
@@ -54,4 +54,3 @@ development. Furthermore the design pattern for ActiveSupport, and it's use
 cases, are not hard to understand. If you are coming from the Rails community,
 being a contributor on this project shouldn't be overly difficult. And if you're
 not, just give it a try!
-
