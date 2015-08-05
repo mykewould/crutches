@@ -2,6 +2,7 @@ Crutches
 =======
 
 [![Build Status](https://travis-ci.org/mykewould/crutches.svg?branch=master)](https://travis-ci.org/mykewould/crutches)
+[![Hex version](https://img.shields.io/hexpm/v/crutches.svg)](https://hex.pm/packages/crutches)
 [![Inline docs](http://inch-ci.org/github/mykewould/crutches.svg?branch=master)](http://inch-ci.org/github/mykewould/crutches)
 
 This is the start of an Elixir port of the [ActiveSupport Rubygem]. [Contributions
