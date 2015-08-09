@@ -11,60 +11,52 @@ defmodule Crutches.Format.Number do
       iex> Number.as_delimited(12345678.05)
       "12,345,678.05"
 
-      iex> Number.as_delimited(12345678, delimiter: '.')
+      iex> Number.as_delimited(12345678, delimiter: ".")
       "12.345.678"
 
-      iex> Number.as_delimited(12345678, delimiter: ',')
+      iex> Number.as_delimited(12345678, delimiter: ",")
       "12,345,678"
 
-      iex> Number.as_delimited(12345678.05, separator: ' ')
+      iex> Number.as_delimited(12345678.05, separator: " ")
       "12,345,678 05"
 
-      iex> Number.as_delimited(98765432.98, delimiter: ' ', separator: ',')
+      iex> Number.as_delimited(98765432.98, delimiter: " ", separator: ",")
       "98 765 432,98"
   """
   @as_delimited [
-    valid_options: [:delimiter, :separator],
-    default_options: [
-      delimiter: ',',
-      separator: '.'
+    valid: [:delimiter, :separator],
+    defaults: [
+      delimiter: ",",
+      separator: "."
     ]
   ]
 
-  def as_delimited(number, provided_options \\ [])
+  def as_delimited(number, opts \\ @as_delimited[:defaults])
+  def as_delimited(number, opts) when is_binary(number) do
+    opts = Crutches.Option.combine!(opts, @as_delimited)
 
-  def as_delimited(number, provided_options) when is_binary(number) do
-    Crutches.Option.validate!(provided_options, @as_delimited[:valid_options])
-
-    options = Keyword.merge(@as_delimited[:default_options], provided_options)
-    decimal_separator = to_string(@as_delimited[:default_options][:separator])
-
-    if String.contains?(number, decimal_separator) do
-      [number, decimal] = String.split(number, decimal_separator)
-      format_number(number, options) <> to_string(options[:separator]) <> decimal
+    if String.contains?(number, ".") do
+      [number, decimal] = String.split(number, ".")
+      format_number(number, opts) <> opts[:separator] <> decimal
     else
-      format_number(number, options)
+      format_number(number, opts)
     end
   end
-
-  def as_delimited(number, provided_options) do
-    number |> to_string |> as_delimited(provided_options)
+  def as_delimited(number, opts) do
+    number |> to_string |> as_delimited(opts)
   end
 
-  defp format_number(number, options) do
-    {formatted_number, _} =
-      number
-      |> to_char_list
-      |> tl
-      |> Enum.reverse
-      |> Enum.reduce {[], 1}, fn (char, {buffer, counter}) ->
-        if rem(counter, 3) == 0 do
-          {[options[:delimiter] | [char | buffer]], 1}
-        else
-          {[char | buffer], counter + 1}
-        end
-      end
-    String.first(number) <> List.to_string(formatted_number)
+  defp format_number(number, opts) do
+    delimiter = to_char_list(opts[:delimiter])
+
+    number
+    |> to_char_list
+    |> Enum.reverse
+    |> Enum.chunk(3, 3, [])
+    |> Enum.map(&Enum.reverse/1)
+    |> Enum.intersperse(delimiter)
+    |> Enum.reverse
+    |> to_string
   end
 
   @doc ~s"""
