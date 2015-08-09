@@ -268,4 +268,97 @@ defmodule Crutches.Format.Number do
     |> String.replace("%n", String.lstrip(binary, ?-), global: false)
     |> String.replace("%u", unit)
   end
+
+  @doc ~S"""
+    Formats a `number` as a percentage string (e.g., 65%). You can customize the
+    format in the `options` Dict
+
+    The `as_percentage!` method raises an error if the input is not numeric.
+
+    # Options
+
+     * `:locale` - Sets the locale to be used for formatting (defaults to current locale).
+     * `:precision` - Sets the precision of the number (defaults to 3).
+     * `:significant` - If true, precision will be the # of significant_digits. If false, the # of fractional digits (defaults to false).
+     * `:separator` - Sets the separator between the fractional and integer digits (defaults to “.”).
+     * `:delimiter` - Sets the thousands delimiter (defaults to “”).
+     * `:strip_insignificant_zeros` - If true removes insignificant zeros after the decimal separator (defaults to false).
+     * `:format` - Specifies the format of the percentage string The number field is %n (defaults to “%n%”).
+
+    # Examples
+
+        iex> Number.as_percentage(100)
+        "100.000%"
+
+        iex> Number.as_percentage("98")
+        "98.000%"
+
+        iex> Number.as_percentage(100, precision: 0)
+        "100%"
+
+        iex> Number.as_percentage(302.24398923423, precision: 5)
+        "302.24399%"
+
+        iex> Number.as_percentage(1000, delimiter: '.', separator: ',')
+        "1.000,000%"
+
+        iex> Number.as_percentage(100, strip_insignificant_zeros: true)
+        "100.0%"
+
+        iex> Number.as_percentage("98a")
+        "98a%"
+
+        iex> Number.as_percentage(100, format: "%n  %")
+        "100.000  %"
+
+        iex> Number.as_percentage!("98a")
+        ** (ArithmeticError) bad argument in arithmetic expression
+    """
+
+  @as_percentage [
+    valid: [:locale, :precision, :significant, :separator, :delimiter, :strip_insignificant_zeros, :format],
+    defaults: [
+      locale: :en,
+      precision: 3,
+      significant: false,
+      separator: ".",
+      delimiter: "",
+      strip_insignificant_zeros: false,
+      format: "%n%"
+    ]
+  ]
+
+  def as_percentage!(number, opts \\ @as_percentage[:defaults])
+  def as_percentage!(number, opts) when is_binary(number) do
+    case Float.parse(number) do
+      {float, ""} -> as_percentage float, opts
+      _           -> raise ArithmeticError
+    end
+  end
+
+  def as_percentage!(number, opts) do
+    as_percentage number, opts
+  end
+
+  def as_percentage(number, opts \\ @as_percentage[:defaults])
+  def as_percentage(number, opts) when is_binary(number) do
+    case Float.parse(number) do
+      {float, ""} -> as_percentage float, opts
+      _           -> format_as_percentage number, opts[:format]
+    end
+  end
+
+  def as_percentage(number, opts) when is_number(number) do
+    Crutches.Option.validate! opts, @as_percentage[:valid]
+    opts = Keyword.merge @as_percentage[:defaults], opts
+
+    number/1
+    |> Float.to_string([decimals: opts[:precision], compact: opts[:strip_insignificant_zeros]])
+    |> as_delimited(delimiter: opts[:delimiter], separator: opts[:separator])
+    |> format_as_percentage(opts[:format])
+  end
+
+  def format_as_percentage(binary, format) when is_binary(binary) do
+    String.replace(format, "%n", String.lstrip(binary, ?-), global: false)
+  end
 end
