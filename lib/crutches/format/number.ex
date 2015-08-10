@@ -291,7 +291,7 @@ defmodule Crutches.Format.Number do
         iex> Number.as_percentage(302.24398923423, precision: 5)
         "302.24399%"
 
-        iex> Number.as_percentage(1000, delimiter: '.', separator: ',')
+        iex> Number.as_percentage(1000, delimiter: ".", separator: ",")
         "1.000,000%"
 
         iex> Number.as_percentage(100, strip_insignificant_zeros: true)
