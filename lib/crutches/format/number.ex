@@ -1,4 +1,6 @@
 defmodule Crutches.Format.Number do
+  alias Crutches.Option
+
   @doc ~s"""
   Formats a number with grouped thousands (e.g. 1,234)
 
@@ -31,9 +33,9 @@ defmodule Crutches.Format.Number do
     ]
   ]
 
-  def as_delimited(number, opts \\ @as_delimited[:defaults])
+  def as_delimited(number, opts \\ [])
   def as_delimited(number, opts) when is_binary(number) do
-    opts = Crutches.Option.combine!(opts, @as_delimited)
+    opts = Option.combine!(opts, @as_delimited)
 
     if String.contains?(number, ".") do
       [number, decimal] = String.split(number, ".")
@@ -42,8 +44,11 @@ defmodule Crutches.Format.Number do
       format_number(number, opts)
     end
   end
+
   def as_delimited(number, opts) do
-    number |> to_string |> as_delimited(opts)
+    number
+    |> to_string
+    |> as_delimited(opts)
   end
 
   defp format_number(number, opts) do
@@ -97,8 +102,8 @@ defmodule Crutches.Format.Number do
     ** (ArgumentError) invalid key unsupported_option
   """
   @as_phone [
-    valid_options: [:area_code, :delimiter, :extension, :country_code],
-    default_options: [
+    valid: [:area_code, :delimiter, :extension, :country_code],
+    defaults: [
       area_code: false,
       delimiter: "-",
       extension: nil,
@@ -108,17 +113,20 @@ defmodule Crutches.Format.Number do
 
   def as_phone(number, opts \\ [])
   def as_phone(number, opts) when is_list(number) do
-    number |> to_string |> as_phone(opts)
+    number
+    |> to_string
+    |> as_phone(opts)
   end
+
   def as_phone(number, opts) when is_binary(number) do
     case Integer.parse(number) do
-      {integer, ""} -> as_phone integer, opts
-      _             -> number
+      {integer, ""} -> as_phone(integer, opts)
+                  _ -> number
     end
   end
+
   def as_phone(number, opts) when is_integer(number) do
-    Crutches.Option.validate! opts, @as_phone[:valid_options]
-    opts = Keyword.merge @as_phone[:default_options], opts
+    opts = Option.combine!(opts, @as_phone)
     delimiter = to_string opts[:delimiter]
 
     Integer.to_string(number)
@@ -133,7 +141,9 @@ defmodule Crutches.Format.Number do
   end
 
   defp split_for_phone(safe_string) when byte_size(safe_string) === 7 do
-    safe_string |> String.split_at(3) |> Tuple.to_list
+    safe_string
+    |> String.split_at(3)
+    |> Tuple.to_list
   end
 
   defp split_for_phone(safe_string) when byte_size(safe_string) > 7 do
@@ -152,7 +162,8 @@ defmodule Crutches.Format.Number do
   end
 
   defp join_as_phone(phone_components, delimiter, _) do
-    phone_components |> Enum.join(delimiter)
+    phone_components
+    |> Enum.join(delimiter)
   end
 
   defp add_extension(phone_number, nil), do: phone_number
@@ -213,8 +224,8 @@ defmodule Crutches.Format.Number do
   """
 
   @as_currency [
-    valid_options: [:locale, :precision, :unit, :separator, :delimiter, :format, :negative_format],
-    default_options: [
+    valid: [:locale, :precision, :unit, :separator, :delimiter, :format, :negative_format],
+    defaults: [
       locale: :en,
       precision: 2,
       unit: "$",
@@ -225,28 +236,31 @@ defmodule Crutches.Format.Number do
     ]
   ]
 
-  def as_currency!(number, opts \\ @as_currency[:default_options])
+  def as_currency!(number, opts \\ [])
   def as_currency!(number, opts) when is_binary(number) do
     case Float.parse(number) do
-      {float, ""} -> as_currency float, opts
-      _           -> raise ArithmeticError
+      {float, ""} -> as_currency(float, opts)
+                _ -> raise ArithmeticError
     end
   end
+
   def as_currency!(number, opts) do
     as_currency number, opts
   end
 
-  def as_currency(number, opts \\ @as_currency[:default_options])
+  def as_currency(number, opts \\ [])
   def as_currency(number, opts) when is_binary(number) do
     case Float.parse(number) do
-      {float, ""} -> as_currency float, opts
-      _           -> format_as_currency number, opts[:unit], opts[:format]
+      {float, ""} ->
+        as_currency(float, opts)
+      _ ->
+        opts = Option.combine!(opts, @as_currency)
+        format_as_currency(number, opts[:unit], opts[:format])
     end
   end
-  def as_currency(number, opts) when is_number(number) do
-    Crutches.Option.validate! opts, @as_currency[:valid_options]
-    opts = Keyword.merge @as_currency[:default_options], opts
 
+  def as_currency(number, opts) when is_number(number) do
+    opts = Option.combine!(opts, @as_currency)
     format = number < 0 && opts[:negative_format] || opts[:format]
 
     abs(number/1)
@@ -320,29 +334,31 @@ defmodule Crutches.Format.Number do
     ]
   ]
 
-  def as_percentage!(number, opts \\ @as_percentage[:defaults])
+  def as_percentage!(number, opts \\ [])
   def as_percentage!(number, opts) when is_binary(number) do
     case Float.parse(number) do
-      {float, ""} -> as_percentage float, opts
-      _           -> raise ArithmeticError
+      {float, ""} -> as_percentage(float, opts)
+                _ -> raise ArithmeticError
     end
   end
 
   def as_percentage!(number, opts) do
-    as_percentage number, opts
+    as_percentage(number, opts)
   end
 
-  def as_percentage(number, opts \\ @as_percentage[:defaults])
+  def as_percentage(number, opts \\ [])
   def as_percentage(number, opts) when is_binary(number) do
     case Float.parse(number) do
-      {float, ""} -> as_percentage float, opts
-      _           -> format_as_percentage number, opts[:format]
+      {float, ""} ->
+        as_percentage(float, opts)
+      _ ->
+        opts = Option.combine!(opts, @as_percentage)
+        format_as_percentage(number, opts[:format])
     end
   end
 
   def as_percentage(number, opts) when is_number(number) do
-    Crutches.Option.validate! opts, @as_percentage[:valid]
-    opts = Keyword.merge @as_percentage[:defaults], opts
+    opts = Option.combine!(opts, @as_percentage)
 
     number/1
     |> Float.to_string([decimals: opts[:precision], compact: opts[:strip_insignificant_zeros]])
