@@ -54,6 +54,7 @@ of this repository.
  - Rebase the `master` branch into your own, ensuring that your changes can
    be merged cleanly.
  - Write a [proper commit message].
+ - Provide documentation with your implementation.
 
  [proper commit message]:https://robots.thoughtbot.com/5-useful-tips-for-a-better-commit-message
  [Elixir style guide]:https://github.com/niftyn8/elixir_style_guide
