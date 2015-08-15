@@ -65,41 +65,51 @@ defmodule Crutches.Format.Number do
   end
 
   @doc ~s"""
-    Formats a +number+ into a US phone number (e.g., (555) 123-9876).
-    You can customize the format in the +options+ hash.
+  Formats a `number` as a US phone number.
 
-    iex> Number.as_phone(5551234)
-    "555-1234"
+  # Options
 
-    iex> Number.as_phone("5551234")
-    "555-1234"
+  Pass these via the `opts` keyword list.
 
-    iex> Number.as_phone(1235551234)
-    "123-555-1234"
+  - `:area_code` (boolean) --- whether the number has an area code.
+  - `:delimiter` (string) --- delimiter to use.
+  - `:extension` (number) --- extension to add to the number.
+  - `:country_code` (number) --- country code to add.
 
-    iex> Number.as_phone(1235551234, area_code: true)
-    "(123) 555-1234"
+  # Examples
 
-    iex> Number.as_phone(12345551234, area_code: true)
-    "1(234) 555-1234"
+      iex> Number.as_phone(5551234)
+      "555-1234"
 
-    iex> Number.as_phone(1235551234, delimiter: " ")
-    "123 555 1234"
+      iex> Number.as_phone("5551234")
+      "555-1234"
 
-    iex> Number.as_phone(1235551234, area_code: true, extension: 555)
-    "(123) 555-1234 x 555"
+      iex> Number.as_phone(1235551234)
+      "123-555-1234"
 
-    iex> Number.as_phone(1235551234, country_code: 1)
-    "+1-123-555-1234"
+      iex> Number.as_phone(1235551234, area_code: true)
+      "(123) 555-1234"
 
-    iex> Number.as_phone('123a456')
-    "123a456"
+      iex> Number.as_phone(12345551234, area_code: true)
+      "1(234) 555-1234"
 
-    iex> Number.as_phone(1235551234, country_code: 1, extension: 1343, delimiter: ".")
-    "+1.123.555.1234 x 1343"
+      iex> Number.as_phone(1235551234, delimiter: " ")
+      "123 555 1234"
 
-    iex> Number.as_phone(1235551234, unsupported_option: "some_value")
-    ** (ArgumentError) invalid key unsupported_option
+      iex> Number.as_phone(1235551234, area_code: true, extension: 555)
+      "(123) 555-1234 x 555"
+
+      iex> Number.as_phone(1235551234, country_code: 1)
+      "+1-123-555-1234"
+
+      iex> Number.as_phone('123a456')
+      "123a456"
+
+      iex> Number.as_phone(1235551234, country_code: 1, extension: 1343, delimiter: ".")
+      "+1.123.555.1234 x 1343"
+
+      iex> Number.as_phone(1235551234, unsupported_option: "some_value")
+      ** (ArgumentError) invalid key unsupported_option
   """
   @as_phone [
     valid: [:area_code, :delimiter, :extension, :country_code],
