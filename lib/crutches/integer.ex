@@ -7,9 +7,9 @@ defmodule Crutches.Integer do
   """
 
   @doc ~S"""
-  Return _just_ the ordinal of a number ("st", "nd", "rd", "th")
+  Return the ordinal of `n`. ("st", "nd", "rd", "th")
 
-  ## Examples
+  # Examples
 
       iex> Integer.ordinal(-1)
       "st"
@@ -43,9 +43,9 @@ defmodule Crutches.Integer do
 
 
   @doc ~S"""
-  Return the number and it's ordinal as a string
+  Return `n` and it's ordinal as a string.
 
-  ## Examples
+  # Examples
 
       iex> Integer.ordinalize(2)
       "2nd"
@@ -60,9 +60,9 @@ defmodule Crutches.Integer do
   def ordinalize(n) when is_integer(n), do: to_string(n) <> ordinal(n)
 
   @doc ~S"""
-  Check whether the integer is evenly divisible by the argument.
+  Check whether `n` is evenly divisible by `divisor`.
 
-  ## Examples
+  # Examples
 
       iex> Integer.multiple_of?(7, 3)
       false

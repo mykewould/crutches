@@ -7,15 +7,12 @@ defmodule Crutches.Map do
   """
 
   @doc """
-  Travel through a map by specifying a path, JSON-style.
-  First parameter is the map, second parameter is the path (either as a list or a string).
+  Travel through `map` according to a specified `path`.
 
-  Set the third parameter to `true` if the keys of the map are `Strings`.
-  It otherwise defaults to `false`, where it assumes the keys are `atoms`.
+  The `path` is either a list or a string.  Pass in a string if the keys in
+  `map` are strings, otherwise pass an atom (`:"parent.child"`).
 
-  Pass in a string if the keys are strings, otherwise pass an atom (`:"parent.child"`).
-
-  ## Examples
+  # Examples
 
       iex> data = %{
       ...>   "bio" => "Get BUSH now!",
@@ -50,7 +47,7 @@ defmodule Crutches.Map do
   The fetch version of get_path, where if the key is found returns
   `{:ok, value}`, and if not then `:error`.
 
-  ## Examples
+  # Examples
 
       iex> Map.fetch_path(%{ good: %{ bad: "ugly" } }, :"good.bad")
       {:ok, "ugly"}
@@ -70,7 +67,7 @@ defmodule Crutches.Map do
   Throwing version of fetch_path, that returns the value if the path has been
   successfully traversed, and if not then throws an error.
 
-  ## Examples
+  # Examples
 
       iex> Map.fetch_path!(%{ good: %{ bad: "ugly" }}, :"good.ugly")
       ** (KeyError) key :ugly not found in: %{bad: "ugly"}
@@ -92,10 +89,9 @@ defmodule Crutches.Map do
   end
 
   @doc ~S"""
-  Recursively traverse a (nested) hash and change the keys based on
-  the function provided.
+  Recursively traverse `map` and change the keys based on `fun`.
 
-  ## Examples
+  # Examples
 
       iex> map = %{"hello" => %{"goodbye" => 1}, "akuna" => "matata"}
       iex> Map.dkeys_update(map, fn (key) -> String.to_atom(key) end)
@@ -106,8 +102,8 @@ defmodule Crutches.Map do
       %{hello: %{akuna: "matata", goodbye: 1, hello: %{akuna: "matata", goodbye: 1}}, akuna: "matata"}
   """
   def dkeys_update(map, fun), do: dkeys_update(map, fun, %{})
-  def dkeys_update(map, _, acc) when map == %{}, do: acc
-  def dkeys_update(map, fun, acc) do
+  defp dkeys_update(map, _, acc) when map == %{}, do: acc
+  defp dkeys_update(map, fun, acc) do
     key = Map.keys(map) |> List.first
     case is_map(map[key]) do
       true -> value = dkeys_update(map[key], fun)
