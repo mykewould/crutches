@@ -1,4 +1,11 @@
 defmodule Crutches.Integer do
+  @moduledoc ~s"""
+  Convenience functions for integers.
+
+  This module provides several convenience functions operating on integers.
+  Simply call any function (with any options if applicable) to make use of it.
+  """
+
   @doc ~S"""
   Return _just_ the ordinal of a number ("st", "nd", "rd", "th")
 

@@ -1,4 +1,11 @@
 defmodule Crutches.Enum do
+  @moduledoc ~s"""
+  Convenience functions for enums.
+
+  This module provides several convenience functions operating on enums.
+  Simply call any function (with any options if applicable) to make use of it.
+  """
+
   @doc ~S"""
   Returns a copy of the `collection` without the specified `elements`.
 

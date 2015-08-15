@@ -8,6 +8,13 @@ defmodule Crutches.String do
     strip: 1
   ]
 
+  @moduledoc ~s"""
+  Convenience functions for strings.
+
+  This module provides several convenience functions operating on strings.
+  Simply call any function (with any options if applicable) to make use of it.
+  """
+
   @doc ~S"""
   Converts a `string` to `snake_case`.
 

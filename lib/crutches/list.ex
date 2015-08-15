@@ -1,4 +1,11 @@
 defmodule Crutches.List do
+  @moduledoc ~s"""
+  Convenience functions for lists.
+
+  This module provides several convenience functions operating on lists.
+  Simply call any function (with any options if applicable) to make use of it.
+  """
+
   @doc ~S"""
   Returns the tail of the `collection` from `position`.
 

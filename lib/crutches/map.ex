@@ -1,4 +1,11 @@
 defmodule Crutches.Map do
+  @moduledoc ~s"""
+  Convenience functions for maps.
+
+  This module provides several convenience functions operating on maps.
+  Simply call any function (with any options if applicable) to make use of it.
+  """
+
   @doc """
   Travel through a map by specifying a path, JSON-style.
   First parameter is the map, second parameter is the path (either as a list or a string).
