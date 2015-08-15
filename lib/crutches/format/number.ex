@@ -418,4 +418,247 @@ defmodule Crutches.Format.Number do
   def as_percentage!(number, opts) do
     as_percentage(number, opts)
   end
+
+  @doc ~S"""
+  Pretty prints (formats and approximates) a `number` in a way it is more readable
+  by humans (eg.: 1200000000 becomes “1.2 Billion”). This is useful for numbers
+  that can get very large (and too hard to read).
+
+  See `as_human_size` if you want to print a file size.
+
+  You can also define you own unit-quantifier names if you want to use other
+  decimal units (eg.: 1500 becomes “1.5 kilometers”, 0.150 becomes
+  “150 milliliters”, etc). You may define a wide range of unit quantifiers, even
+  fractional ones (centi, deci, mili, etc).
+
+  The `as_human!` method raises an exception if the input is not a valid
+  number
+
+  # Options
+
+    * `:locale` - Sets the locale to be used for formatting (defaults to current
+      locale).
+    * `:precision` - Sets the precision of the number (defaults to 3).
+    * `:significant` - If true, precision will be the # of significant_digits. If
+      false, the # of fractional digits (defaults to true)
+    * `:separator` - Sets the separator between the fractional and integer digits
+      (defaults to “.”).
+    * `:delimiter` - Sets the thousands delimiter (defaults to “”).
+    * `:strip_insignificant_zeros` - If true removes insignificant zeros after the
+      decimal separator (defaults to true)
+    * `:units` - A Hash of unit quantifier names. Or a string containing an i18n
+      scope where to find this hash. It might have the following keys:
+      + :unit, :ten, :hundred, :thousand, :million, :billion,
+        :trillion, :quadrillion, :deci, :centi, :milli, :micro, :nano, :pico,
+        :femto
+    * `:format` - Sets the format of the output string (defaults to “%n %u”).
+      The field types are:
+      +  %u - The quantifier (ex.: 'thousand')
+      +  %n - The number
+
+  # Examples
+
+    iex> Number.as_human(123)
+    "123"
+
+    iex> Number.as_human(1234)
+    "1.23 Thousand"
+
+    iex> Number.as_human(12345)
+    "12.3 Thousand"
+
+    iex> Number.as_human(1234567)
+    "1.23 Million"
+
+    iex> Number.as_human(1234567890)
+    "1.23 Billion"
+
+    iex> Number.as_human(1234567890123)
+    "1.23 Trillion"
+
+    iex> Number.as_human(1234567890123456)
+    "1.23 Quadrillion"
+
+    iex> Number.as_human(1234567890123456789)
+    "1230 Quadrillion"
+
+    iex> Number.as_human(489939, precision: 2)
+    "490 Thousand"
+
+    iex> Number.as_human(489939, precision: 4)
+    "489.9 Thousand"
+
+    iex> Number.as_human(1234567, precision: 4, significant: false)
+    "1.2346 Million"
+
+    iex> Number.as_human(1234567, precision: 1, separator: ",", significant: false)
+    "1,2 Million"
+
+    iex> Number.as_human(500000000, precision: 5)
+    "500 Million"
+
+    iex> Number.as_human(12345012345, significant: false)
+    "12.345 Billion"
+
+    iex> Number.as_human!("abc")
+    ** (ArithmeticError) bad argument in arithmetic expression
+
+  """
+
+  @as_human [
+    valid: [:locale, :precision, :significant, :separator, :delimiter,
+      :strip_insignificant_zeros, :units, :format],
+    defaults: [
+      precision: 3,
+      significant: true,
+      separator: ".",
+      delimiter: "",
+      strip_insignificant_zeros: true,
+      units: [
+        quadrillion: "Quadrillion",
+        trillion: "Trillion",
+        billion: "Billion",
+        million: "Million",
+        thousand: "Thousand",
+        hundred: "",
+        ten: "",
+        unit: "",
+        deci: "deci",
+        centi: "centi",
+        milli: "milli",
+        micro: "micro",
+        nano: "nano",
+        pico: "pico",
+        femto: "femto"
+      ],
+      format: "%n %u"
+    ]
+  ]
+
+  def as_human!(number, opts \\ [])
+  def as_human!(number, opts) when is_binary(number) do
+    case Float.parse(number) do
+      {num, ""} -> as_human(num, opts)
+              _ -> raise(ArithmeticError, message: "bad argument in arithmetic expression")
+    end
+  end
+
+  def as_human!(number, opts) when is_number(number) do
+    as_human(number, opts)
+  end
+
+  def as_human(number, opts \\ [])
+  def as_human(number, opts) when is_number(number) do
+    opts = Option.combine!(opts, @as_human)
+    {exp, unit, sign} = closest_size_and_sign(number)
+
+    precision = opts[:precision]
+
+    precision = case precision do
+      x when x >= 0 -> x
+      _ -> 0
+    end
+
+    delimited_opts = Keyword.take(opts, @as_delimited[:valid])
+
+    fract_num =
+      abs(number) / :math.pow(10, exp)
+      |> rounded_or_significant(opts[:significant], precision)
+      |> strip_trailing_zeroes(opts[:strip_insignificant_zeros])
+      |> as_delimited(delimited_opts)
+
+    if sign < 0 do
+      fract_num = "-" <> fract_num
+    end
+
+    format_as_human(fract_num, opts[:units][unit], opts[:format])
+  end
+
+  def closest_size_and_sign(number) when is_number(number) do
+    tenth_exp =
+      number
+      |> abs
+      |> :math.log10
+      |> trunc
+
+    sign = number_sign(number)
+
+    cond do
+      tenth_exp >= 15 -> {15, :quadrillion, sign}
+      tenth_exp >= 12 -> {12, :trillion, sign}
+      tenth_exp >= 9  -> {9, :billion, sign}
+      tenth_exp >= 6  -> {6, :million, sign}
+      tenth_exp >= 3  -> {3, :thousand, sign}
+      tenth_exp >= 2  -> {0, :hundred, sign}
+      tenth_exp >= 1  -> {0, :ten, sign}
+      tenth_exp >= 0  -> {0, :unit, sign}
+      tenth_exp < 0  && tenth_exp >= -1  -> {-1, :deci, sign}
+      tenth_exp < -1 && tenth_exp >= -2  -> {-2, :centi, sign}
+      tenth_exp < -2 && tenth_exp >= -3  -> {-3, :milli, sign}
+      tenth_exp < -3 && tenth_exp >= -6  -> {-6, :micro, sign}
+      tenth_exp < -6 && tenth_exp >= -9  -> {-9, :nano, sign}
+      tenth_exp < -9 && tenth_exp >= -12 -> {-12, :pico, sign}
+      tenth_exp < -12 -> {-15, :femto, sign}
+    end
+  end
+
+  defp number_sign(number) when is_number(number) do
+    cond do
+      number >= 0 ->  1
+      true -> -1
+    end
+  end
+
+  defp rounded_or_significant(number, significant, precision) do
+    case significant do
+      true ->
+        make_significant(number, precision)
+      false ->
+        number = Float.round(number, precision)
+
+        if precision > 0 do
+          :io_lib.format("~.#{precision}f", [number]) |> List.to_string
+        else
+          number |> trunc |> Integer.to_string
+        end
+    end
+  end
+
+  defp make_significant(number, precision) do
+    digits = (:math.log10(number) + 1) |> Float.floor |> trunc
+    multiplier = :math.pow(10, digits - precision)
+    extra_precision = precision - digits
+
+    result = Float.round(number / multiplier) * multiplier
+
+    if extra_precision > 0 do
+      :io_lib.format("~.#{extra_precision}f", [result]) |> List.to_string
+    else
+      result |> trunc |> Integer.to_string
+    end
+  end
+
+  defp strip_trailing_zeroes(number, strip) do
+    case strip do
+      true  -> strip_trailing_zeroes(number)
+      false -> number
+    end
+  end
+
+  defp strip_trailing_zeroes(number) do
+    if String.contains?(number, ".") do
+      case String.reverse(number) do
+        "0" <> number -> String.reverse(number) |> strip_trailing_zeroes
+        "." <> number -> String.reverse(number)
+        number -> String.reverse(number)
+      end
+    else
+      number
+    end
+  end
+
+  defp format_as_human(binary, unit, format) when is_binary(binary) do
+    str = String.replace(format, "%n", binary, global: false)
+    String.replace(str, "%u", unit, global: false) |> String.strip
+  end
 end
