@@ -1,6 +1,16 @@
 defmodule Crutches.Format.Number do
   alias Crutches.Option
 
+  @moduledoc ~s"""
+  Formatting helper functions for numbers.
+
+  This module contains various helper functions that should be of use to you
+  when writing user interfaces or other parts of your application that have
+  to deal with number formatting.
+
+  Simply call the desired function with any relevant options that you may need.
+  """
+
   @doc ~s"""
   Formats `number` with grouped thousands.
 
