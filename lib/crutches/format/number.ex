@@ -2,7 +2,18 @@ defmodule Crutches.Format.Number do
   alias Crutches.Option
 
   @doc ~s"""
-  Formats a number with grouped thousands (e.g. 1,234)
+  Formats `number` with grouped thousands.
+
+  # Options
+
+  Pass these via the `opts` keyword list.
+
+  - `:delimiter` (string) --- Delmiter to use for delimiting the thousands.
+  *Default:* `","`
+  - `:separator` (string) --- Separator to use for separating the integer part
+  from the decimal part. *Default:* `"."`
+
+  # Examples
 
       iex> Number.as_delimited(12345678)
       "12,345,678"
@@ -71,10 +82,11 @@ defmodule Crutches.Format.Number do
 
   Pass these via the `opts` keyword list.
 
-  - `:area_code` (boolean) --- whether the number has an area code.
-  - `:delimiter` (string) --- delimiter to use.
-  - `:extension` (number) --- extension to add to the number.
-  - `:country_code` (number) --- country code to add.
+  - `:area_code` (boolean) --- Whether the number has an area code. *Default:*
+  `false`
+  - `:delimiter` (string) --- Delimiter to use. *Default:* `"-"`
+  - `:extension` (number) --- Extension to add to the number. *Default:* `nil`
+  - `:country_code` (number) --- Country code to add. *Default:* `nil`
 
   # Examples
 
@@ -187,50 +199,54 @@ defmodule Crutches.Format.Number do
   end
 
   @doc ~s"""
-    Formats a `number` into a currency string (e.g., $13.65). You can customize the format in
-    the `options` hash. The `as_currency!` method raises an exception if the input is
-    not numeric
+  Formats `number` as a currency string.
 
-    # Options
+  # Options
 
-     * `:locale` - Sets the locale to be used for formatting (defaults to current locale) *** Not implemented ***.
-     * `:precision` - Sets the level of precision (defaults to 2).
-     * `:unit` - Sets the denomination of the currency (defaults to “$”).
-     * `:separator` - Sets the separator between the units (defaults to “.”).
-     * `:delimiter` - Sets the thousands delimiter (defaults to “,”).
-     * `:format` - Sets the format for non-negative numbers (defaults to “%u%n”). Fields are %u for the currency, and %n for the number.
-     * `:negative_format` - Sets the format for negative numbers (defaults to prepending an hyphen to the formatted number given by :format). Accepts the same fields than :format, except %n is here the absolute value of the number.
+  You can customize the format with the `opts` keyword list.
 
+  - `:locale` (atom) --- Locale to be used for formatting. **Not implemented.**
+  - `:precision` (integer) --- Level of precision. *Default:* `2`
+  - `:unit` (string) --- Denomination of the currency. *Default:* `"$"`
+  - `:separator` (string) --- Separator between the integer and decimal part.
+  *Default:* `"."`
+  - `:delimiter` (string) --- Thousands delimiter. *Default:* `","`
+  - `:format` (string) --- Format for non-negative numbers. `%u` is the currency unit, `%n`
+  is the number. *Default:* `"%u%n"`
+  - `:negative_format` (string) --- Format for negative numbers. `%n` is the
+  absolute value of the number. *Default:* `"-%u%n"`
 
-    iex> Number.as_currency(1234567890.50)
-    "$1,234,567,890.50"
+  # Examples
 
-    iex> Number.as_currency(1234567890.506)
-    "$1,234,567,890.51"
+      iex> Number.as_currency(1234567890.50)
+      "$1,234,567,890.50"
 
-    iex> Number.as_currency(1234567890.506, precision: 3)
-    "$1,234,567,890.506"
+      iex> Number.as_currency(1234567890.506)
+      "$1,234,567,890.51"
 
-    iex> Number.as_currency(1234567890.506, locale: :fr)
-    "$1,234,567,890.51"
+      iex> Number.as_currency(1234567890.506, precision: 3)
+      "$1,234,567,890.506"
 
-    iex> Number.as_currency("123a456")
-    "$123a456"
+      iex> Number.as_currency(1234567890.506, locale: :fr)
+      "$1,234,567,890.51"
 
-    iex> Number.as_currency(-1234567890.50, negative_format: "(%u%n)")
-    "($1,234,567,890.50)"
+      iex> Number.as_currency("123a456")
+      "$123a456"
 
-    iex> Number.as_currency(1234567890.50, unit: "&pound;", separator: ",", delimiter: "")
-    "&pound;1234567890,50"
+      iex> Number.as_currency(-1234567890.50, negative_format: "(%u%n)")
+      "($1,234,567,890.50)"
 
-    iex> Number.as_currency(1234567890.50, unit: "&pound;", separator: ",", delimiter: "", format: "%n %u")
-    "1234567890,50 &pound;"
+      iex> Number.as_currency(1234567890.50, unit: "&pound;", separator: ",", delimiter: "")
+      "&pound;1234567890,50"
 
-    iex> Number.as_currency(1235551234, unsupported_option: "some_value")
-    ** (ArgumentError) invalid key unsupported_option
+      iex> Number.as_currency(1234567890.50, unit: "&pound;", separator: ",", delimiter: "", format: "%n %u")
+      "1234567890,50 &pound;"
 
-    iex> Number.as_currency!("123a456")
-    ** (ArithmeticError) bad argument in arithmetic expression
+      iex> Number.as_currency(1235551234, unsupported_option: "some_value")
+      ** (ArgumentError) invalid key unsupported_option
+
+      iex> Number.as_currency!("123a456")
+      ** (ArithmeticError) bad argument in arithmetic expression
   """
 
   @as_currency [
@@ -245,18 +261,6 @@ defmodule Crutches.Format.Number do
       negative_format: "-%u%n"
     ]
   ]
-
-  def as_currency!(number, opts \\ [])
-  def as_currency!(number, opts) when is_binary(number) do
-    case Float.parse(number) do
-      {float, ""} -> as_currency(float, opts)
-                _ -> raise ArithmeticError
-    end
-  end
-
-  def as_currency!(number, opts) do
-    as_currency number, opts
-  end
 
   def as_currency(number, opts \\ [])
   def as_currency(number, opts) when is_binary(number) do
@@ -285,54 +289,76 @@ defmodule Crutches.Format.Number do
     |> String.replace("%u", unit)
   end
 
-  @doc ~S"""
-    Formats a `number` as a percentage string (e.g., 65%). You can customize the
-    format in the `options` Dict
+  @doc ~s"""
+  Throwing version of `as_currency`.
 
-    The `as_percentage!` method raises an error if the input is not numeric.
+  Raises an `ArithmeticError` when you pass in anything other than a number.
+  """
 
-    # Options
+  def as_currency!(number, opts \\ [])
+  def as_currency!(number, opts) when is_binary(number) do
+    case Float.parse(number) do
+      {float, ""} -> as_currency(float, opts)
+                _ -> raise ArithmeticError
+    end
+  end
 
-     * `:locale` - Sets the locale to be used for formatting (defaults to current locale).
-     * `:precision` - Sets the precision of the number (defaults to 3).
-     * `:significant` - If true, precision will be the # of significant_digits. If false, the # of fractional digits (defaults to false).
-     * `:separator` - Sets the separator between the fractional and integer digits (defaults to “.”).
-     * `:delimiter` - Sets the thousands delimiter (defaults to “”).
-     * `:strip_insignificant_zeros` - If true removes insignificant zeros after the decimal separator (defaults to false).
-     * `:format` - Specifies the format of the percentage string The number field is %n (defaults to “%n%”).
+  def as_currency!(number, opts) do
+    as_currency number, opts
+  end
 
-    # Examples
+  @doc ~s"""
+  Formats `number` as a percentage string.
 
-        iex> Number.as_percentage(100)
-        "100.000%"
+  # Options
 
-        iex> Number.as_percentage("98")
-        "98.000%"
+  Pass these via the `opts` keyword list.
 
-        iex> Number.as_percentage(100, precision: 0)
-        "100%"
+  - `:locale` (atom) --- Locale to be used for formatting. *Not implemented.*
+  - `:precision` (integer) --- Precision of the number. *Default:* `3`
+  - `:significant` (boolean) --- Format significant digits? Otherwise fractional
+  digits are used. *Default:* `false`
+  - `:separator` (string) --- Separator between the fractional and integer
+  digits. *Default:* `"."`
+  - `:delimiter` (string) --- Thousands delimiter. *Default:* `""`
+  - `:strip_insignificant_zeros` (boolean) --- Remove insignificant zeros after
+  the decimal separator? *Default:* `false`
+  - `:format` (string) --- Format of the percentage string. `%n` is the number
+  field. *Default:* `"%n%"`
 
-        iex> Number.as_percentage(302.24398923423, precision: 5)
-        "302.24399%"
+  # Examples
 
-        iex> Number.as_percentage(1000, delimiter: ".", separator: ",")
-        "1.000,000%"
+      iex> Number.as_percentage(100)
+      "100.000%"
 
-        iex> Number.as_percentage(100, strip_insignificant_zeros: true)
-        "100.0%"
+      iex> Number.as_percentage("98")
+      "98.000%"
 
-        iex> Number.as_percentage("98a")
-        "98a%"
+      iex> Number.as_percentage(100, precision: 0)
+      "100%"
 
-        iex> Number.as_percentage(100, format: "%n  %")
-        "100.000  %"
+      iex> Number.as_percentage(302.24398923423, precision: 5)
+      "302.24399%"
 
-        iex> Number.as_percentage!("98a")
-        ** (ArithmeticError) bad argument in arithmetic expression
-    """
+      iex> Number.as_percentage(1000, delimiter: ".", separator: ",")
+      "1.000,000%"
+
+      iex> Number.as_percentage(100, strip_insignificant_zeros: true)
+      "100.0%"
+
+      iex> Number.as_percentage("98a")
+      "98a%"
+
+      iex> Number.as_percentage(100, format: "%n  %")
+      "100.000  %"
+
+      iex> Number.as_percentage!("98a")
+      ** (ArithmeticError) bad argument in arithmetic expression
+  """
 
   @as_percentage [
-    valid: [:locale, :precision, :significant, :separator, :delimiter, :strip_insignificant_zeros, :format],
+    valid: [:locale, :precision, :significant, :separator, :delimiter,
+      :strip_insignificant_zeros, :format],
     defaults: [
       locale: :en,
       precision: 3,
@@ -343,18 +369,6 @@ defmodule Crutches.Format.Number do
       format: "%n%"
     ]
   ]
-
-  def as_percentage!(number, opts \\ [])
-  def as_percentage!(number, opts) when is_binary(number) do
-    case Float.parse(number) do
-      {float, ""} -> as_percentage(float, opts)
-                _ -> raise ArithmeticError
-    end
-  end
-
-  def as_percentage!(number, opts) do
-    as_percentage(number, opts)
-  end
 
   def as_percentage(number, opts \\ [])
   def as_percentage(number, opts) when is_binary(number) do
@@ -378,5 +392,20 @@ defmodule Crutches.Format.Number do
 
   def format_as_percentage(binary, format) when is_binary(binary) do
     String.replace(format, "%n", String.lstrip(binary, ?-), global: false)
+  end
+
+  @doc ~s"""
+  Throwing version of `as_percentage`.
+  """
+  def as_percentage!(number, opts \\ [])
+  def as_percentage!(number, opts) when is_binary(number) do
+    case Float.parse(number) do
+      {float, ""} -> as_percentage(float, opts)
+                _ -> raise ArithmeticError
+    end
+  end
+
+  def as_percentage!(number, opts) do
+    as_percentage(number, opts)
   end
 end
