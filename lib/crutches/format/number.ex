@@ -420,91 +420,101 @@ defmodule Crutches.Format.Number do
   end
 
   @doc ~S"""
-  Pretty prints (formats and approximates) a `number` in a way it is more readable
-  by humans (eg.: 1200000000 becomes “1.2 Billion”). This is useful for numbers
-  that can get very large (and too hard to read).
+  Formats and approximates `number` for human readability.
+
+  `1200000000` becomes `"1.2 Billion"`. This is useful as larger numbers become
+  harder to read.
 
   See `as_human_size` if you want to print a file size.
 
   You can also define you own unit-quantifier names if you want to use other
-  decimal units (eg.: 1500 becomes “1.5 kilometers”, 0.150 becomes
+  decimal units (eg.: 1500 becomes "1.5 kilometers", 0.150 becomes
   “150 milliliters”, etc). You may define a wide range of unit quantifiers, even
   fractional ones (centi, deci, mili, etc).
 
-  The `as_human!` method raises an exception if the input is not a valid
-  number
-
   # Options
 
-    * `:locale` - Sets the locale to be used for formatting (defaults to current
-      locale).
-    * `:precision` - Sets the precision of the number (defaults to 3).
-    * `:significant` - If true, precision will be the # of significant_digits. If
-      false, the # of fractional digits (defaults to true)
-    * `:separator` - Sets the separator between the fractional and integer digits
-      (defaults to “.”).
-    * `:delimiter` - Sets the thousands delimiter (defaults to “”).
-    * `:strip_insignificant_zeros` - If true removes insignificant zeros after the
-      decimal separator (defaults to true)
-    * `:units` - A Hash of unit quantifier names. Or a string containing an i18n
-      scope where to find this hash. It might have the following keys:
-      + :unit, :ten, :hundred, :thousand, :million, :billion,
-        :trillion, :quadrillion, :deci, :centi, :milli, :micro, :nano, :pico,
-        :femto
-    * `:format` - Sets the format of the output string (defaults to “%n %u”).
-      The field types are:
-      +  %u - The quantifier (ex.: 'thousand')
-      +  %n - The number
+  - `:locale` (atom) --- Locale to be used for formatting. *Default:*
+  current locale.
+  - `:precision` (integer) --- Precision of the number. *Default:* `3`
+  - `:significant` - If true, precision will be the # of significant_digits. If
+  false, the # of fractional digits (defaults to true)
+  - `:separator` (string) --- Separator between the fractional and integer
+  digits. *Default:* `"."`
+  - `:delimiter` (string) --- Thousands delimiter. *Default:* `""`
+  -`:units` (keyword list/string) --- Keyword list of unit quantifier names,
+  *or* a string containing an i18n scope pointing to it.
+  - `:format` (string) --- Format of the output string. `%u` is the quantifier,
+  `%n` is the number. *Default:* `"%n %u"`
+
+  # i18n
+
+  This function takes a keyword list of quantifier names to use for formatting.
+  It supports the following keys:
+
+  - `:unit`
+  - `:ten`
+  - `:hundred`
+  - `:thousand`
+  - `:million`
+  - `:billion`
+  - `:trillion`
+  - `:quadrillion`
+  - `:deci`
+  - `:centi`
+  - `:milli`
+  - `:micro`
+  - `:nano`
+  - `:pico`
+  - `:femto`
 
   # Examples
 
-    iex> Number.as_human(123)
-    "123"
+      iex> Number.as_human(123)
+      "123"
 
-    iex> Number.as_human(1234)
-    "1.23 Thousand"
+      iex> Number.as_human(1234)
+      "1.23 Thousand"
 
-    iex> Number.as_human(12345)
-    "12.3 Thousand"
+      iex> Number.as_human(12345)
+      "12.3 Thousand"
 
-    iex> Number.as_human(1234567)
-    "1.23 Million"
+      iex> Number.as_human(1234567)
+      "1.23 Million"
 
-    iex> Number.as_human(1234567890)
-    "1.23 Billion"
+      iex> Number.as_human(1234567890)
+      "1.23 Billion"
 
-    iex> Number.as_human(1234567890123)
-    "1.23 Trillion"
+      iex> Number.as_human(1234567890123)
+      "1.23 Trillion"
 
-    iex> Number.as_human(1234567890123456)
-    "1.23 Quadrillion"
+      iex> Number.as_human(1234567890123456)
+      "1.23 Quadrillion"
 
-    iex> Number.as_human(1234567890123456789)
-    "1230 Quadrillion"
+      iex> Number.as_human(1234567890123456789)
+      "1230 Quadrillion"
 
-    iex> Number.as_human(489939, precision: 2)
-    "490 Thousand"
+      iex> Number.as_human(489939, precision: 2)
+      "490 Thousand"
 
-    iex> Number.as_human(489939, precision: 4)
-    "489.9 Thousand"
+      iex> Number.as_human(489939, precision: 4)
+      "489.9 Thousand"
 
-    iex> Number.as_human(1234567, precision: 4, significant: false)
-    "1.2346 Million"
+      iex> Number.as_human(1234567, precision: 4, significant: false)
+      "1.2346 Million"
 
-    iex> Number.as_human(1234567, precision: 1, separator: ",", significant: false)
-    "1,2 Million"
+      iex> Number.as_human(1234567, precision: 1, separator: ",", significant: false)
+      "1,2 Million"
 
-    iex> Number.as_human(500000000, precision: 5)
-    "500 Million"
+      iex> Number.as_human(500000000, precision: 5)
+      "500 Million"
 
-    iex> Number.as_human(12345012345, significant: false)
-    "12.345 Billion"
+      iex> Number.as_human(12345012345, significant: false)
+      "12.345 Billion"
 
-    iex> Number.as_human!("abc")
-    ** (ArithmeticError) bad argument in arithmetic expression
-
+      iex> Number.as_human!("abc")
+      ** (ArithmeticError) bad argument in arithmetic expression
   """
-
   @as_human [
     valid: [:locale, :precision, :significant, :separator, :delimiter,
       :strip_insignificant_zeros, :units, :format],
@@ -535,18 +545,6 @@ defmodule Crutches.Format.Number do
     ]
   ]
 
-  def as_human!(number, opts \\ [])
-  def as_human!(number, opts) when is_binary(number) do
-    case Float.parse(number) do
-      {num, ""} -> as_human(num, opts)
-              _ -> raise(ArithmeticError, message: "bad argument in arithmetic expression")
-    end
-  end
-
-  def as_human!(number, opts) when is_number(number) do
-    as_human(number, opts)
-  end
-
   def as_human(number, opts \\ [])
   def as_human(number, opts) when is_number(number) do
     opts = Option.combine!(opts, @as_human)
@@ -554,9 +552,8 @@ defmodule Crutches.Format.Number do
 
     precision = opts[:precision]
 
-    precision = case precision do
-      x when x >= 0 -> x
-      _ -> 0
+    if precision < 0 do
+      precision = 0
     end
 
     delimited_opts = Keyword.take(opts, @as_delimited[:valid])
@@ -574,7 +571,7 @@ defmodule Crutches.Format.Number do
     format_as_human(fract_num, opts[:units][unit], opts[:format])
   end
 
-  def closest_size_and_sign(number) when is_number(number) do
+  defp closest_size_and_sign(number) when is_number(number) do
     tenth_exp =
       number
       |> abs
@@ -639,9 +636,10 @@ defmodule Crutches.Format.Number do
   end
 
   defp strip_trailing_zeroes(number, strip) do
-    case strip do
-      true  -> strip_trailing_zeroes(number)
-      false -> number
+    if strip do
+      strip_trailing_zeroes(number)
+    else
+      number
     end
   end
 
@@ -660,5 +658,20 @@ defmodule Crutches.Format.Number do
   defp format_as_human(binary, unit, format) when is_binary(binary) do
     str = String.replace(format, "%n", binary, global: false)
     String.replace(str, "%u", unit, global: false) |> String.strip
+  end
+
+  @doc ~S"""
+  Throwing version of `as_human`, raises if the input is not a valid number.
+  """
+  def as_human!(number, opts \\ [])
+  def as_human!(number, opts) when is_binary(number) do
+    case Float.parse(number) do
+      {num, ""} -> as_human(num, opts)
+              _ -> raise(ArithmeticError, message: "bad argument in arithmetic expression")
+    end
+  end
+
+  def as_human!(number, opts) when is_number(number) do
+    as_human(number, opts)
   end
 end
