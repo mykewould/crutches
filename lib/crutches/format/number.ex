@@ -390,7 +390,7 @@ defmodule Crutches.Format.Number do
     |> format_as_percentage(opts[:format])
   end
 
-  def format_as_percentage(binary, format) when is_binary(binary) do
+  defp format_as_percentage(binary, format) when is_binary(binary) do
     String.replace(format, "%n", String.lstrip(binary, ?-), global: false)
   end
 
