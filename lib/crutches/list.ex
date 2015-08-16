@@ -161,10 +161,9 @@ defmodule Crutches.List do
   def shorten(list, amount) do
     shorten(list, amount, length(list))
   end
-  defp shorten(list, amount, len) when len < amount do
-    nil
-  end
-  defp shorten(list, amount, len) do
+
+  def shorten(_, amount, len) when len < amount, do: nil
+  def shorten(list, amount, len) do
     Enum.take(list, len - amount)
   end
 
