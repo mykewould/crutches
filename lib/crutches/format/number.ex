@@ -442,6 +442,8 @@ defmodule Crutches.Format.Number do
   - `:separator` (string) --- Separator between the fractional and integer
   digits. *Default:* `"."`
   - `:delimiter` (string) --- Thousands delimiter. *Default:* `""`
+  - `:strip_insignificant_zeros` (boolean) --- Remove insignificant zeros after
+  the decimal separator? *Default:* `true`
   -`:units` (keyword list/string) --- Keyword list of unit quantifier names,
   *or* a string containing an i18n scope pointing to it.
   - `:format` (string) --- Format of the output string. `%u` is the quantifier,
