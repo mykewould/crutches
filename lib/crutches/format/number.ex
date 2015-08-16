@@ -561,7 +561,7 @@ defmodule Crutches.Format.Number do
     fract_num =
       abs(number) / :math.pow(10, exp)
       |> rounded_or_significant(opts[:significant], precision)
-      |> strip_trailing_zeroes(opts[:strip_insignificant_zeros])
+      |> strip_trailing_zeros(opts[:strip_insignificant_zeros])
       |> as_delimited(delimited_opts)
 
     if sign < 0 do
@@ -635,18 +635,18 @@ defmodule Crutches.Format.Number do
     end
   end
 
-  defp strip_trailing_zeroes(number, strip) do
+  defp strip_trailing_zeros(number, strip) do
     if strip do
-      strip_trailing_zeroes(number)
+      strip_trailing_zeros(number)
     else
       number
     end
   end
 
-  defp strip_trailing_zeroes(number) do
+  defp strip_trailing_zeros(number) do
     if String.contains?(number, ".") do
       case String.reverse(number) do
-        "0" <> number -> String.reverse(number) |> strip_trailing_zeroes
+        "0" <> number -> String.reverse(number) |> strip_trailing_zeros
         "." <> number -> String.reverse(number)
         number -> String.reverse(number)
       end
