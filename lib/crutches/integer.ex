@@ -80,7 +80,8 @@ defmodule Crutches.Integer do
   Integer.digits copied straight from the Elixir 1.1 standard library, for Elixir < v1.1
   """
   try do
-    Integer.digits(58127) == [5, 8, 1, 2, 7]
+    Elixir.Integer.digits(1140392)
+    defdelegate digits(n, base), to: Elixir.Integer
   rescue
     UndefinedFunctionError ->
       def digits(n, base \\ 10) when is_integer(n)    and n >= 0

@@ -85,6 +85,96 @@ defmodule Crutches.Format.Number do
     |> to_string
   end
 
+  @doc ~S"""
+  Formats a `number` with the specified level of :precision (e.g., 112.32 has a
+  precision of 2 if `:significant` is false, and 5 if `:significant` is true). You
+  can customize the format in the `options` Dict.
+
+  # Options
+
+    * `:locale` - Sets the locale to be used for formatting (defaults to current locale).
+    * `:precision` - Sets the precision of the number (defaults to 3).
+    * `:significant` - If true, precision will be the # of significant_digits. If false, the # of fractional digits (defaults to false).
+    * `:separator` - Sets the separator between the fractional and integer digits (defaults to “.”).
+    * `:delimiter` - Sets the thousands delimiter (defaults to “”).
+    * `:strip_insignificant_zeros` - If true removes insignificant zeros after the decimal separator (defaults to false).
+
+  # Examples
+
+      iex> Number.as_rounded(111.2345)
+      "111.235"
+
+      iex> Number.as_rounded(111.2345, precision: 2)
+      "111.23"
+
+      iex> Number.as_rounded(13, precision: 5)
+      "13.00000"
+
+      iex> Number.as_rounded(389.32314, precision: 0)
+      "389"
+
+      iex> Number.as_rounded(111.2345, significant: true)
+      "111"
+
+      iex> Number.as_rounded(111.2345, precision: 1, significant: true)
+      "100"
+
+      iex> Number.as_rounded(13, precision: 5, significant: true)
+      "13.000"
+
+      # iex> Number.as_rounded(111.234, locale: :fr)
+      # "111,234"
+
+      iex> Number.as_rounded(13, precision: 5, significant: true, strip_insignificant_zeros: true)
+      "13"
+
+      iex> Number.as_rounded(389.32314, precision: 4, significant: true)
+      "389.3"
+
+      iex> Number.as_rounded(1111.2345, precision: 2, separator: ",", delimiter: ".")
+      "1.111,23"
+
+  """
+  @as_rounded [
+    valid: ~w(precision significant separator delimiter strip_insignificant_zeros)a,
+    defaults: [
+      precision: 3,
+      significant: false,
+      separator: ".",
+      delimiter: "",
+      strip_insignificant_zeros: false
+    ]
+  ]
+
+  def as_rounded(number, opts \\ @as_rounded[:defaults])
+  def as_rounded(number, opts) when is_binary(number) do
+    number |> String.to_float |> as_rounded(opts)
+  end
+
+  def as_rounded(number, opts) when is_integer(number) do
+    number |> :erlang.float |> as_rounded(opts)
+  end
+  def as_rounded(number, opts) when is_float(number) do
+    opts = Option.combine!(opts, @as_rounded)
+
+    number
+    |> prepare_as_rounded(opts[:precision], opts[:significant])
+    |> strip_trailing_zeros(opts[:strip_insignificant_zeros] || opts[:precision] == 0)
+    |> as_delimited(Keyword.take(opts, @as_delimited[:valid]))
+  end
+
+  defp prepare_as_rounded(number, precision, true) do
+    number |> make_significant(precision)
+  end
+  defp prepare_as_rounded(number, precision, false) do
+    number = Float.round(number, precision)
+    if precision > 0 do
+      :io_lib.format("~.#{precision}f", [number]) |> List.to_string
+    else
+      number |> trunc |> Integer.to_string
+    end
+  end
+
   @doc ~s"""
   Formats a `number` as a US phone number.
 
