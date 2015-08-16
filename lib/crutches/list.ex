@@ -158,11 +158,14 @@ defmodule Crutches.List do
   """
   @spec shorten(list(any), integer) :: list(any)
   def shorten(list, amount \\ 1)
-  def shorten(list, amount) when length(list) < amount, do: nil
-  def shorten(list, amount) when length(list) == amount, do: []
-  def shorten([head | tail], amount) when length(tail) == amount, do: [head]
-  def shorten([head | tail], amount) when length(tail) > amount do
-    [head | shorten(tail, amount)]
+  def shorten(list, amount) do
+    shorten(list, amount, length(list))
+  end
+  defp shorten(list, amount, len) when len < amount do
+    nil
+  end
+  defp shorten(list, amount, len) do
+    Enum.take(list, len - amount)
   end
 
   @doc ~S"""
