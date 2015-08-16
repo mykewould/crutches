@@ -20,7 +20,7 @@ defmodule Crutches.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:logger, :yamerl]]
+    [applications: [:logger]]
   end
 
   # Dependencies can be Hex packages:
@@ -35,8 +35,6 @@ defmodule Crutches.Mixfile do
   defp deps do
     [{:inch_ex, only: :docs},
      {:ex_doc,  only: :docs},
-     {:earmark, only: :docs},
-     {:yamerl, github: "yakaz/yamerl", tag: "v0.3.2-1"},
-     {:linguist, "~> 0.1.5"}]
+     {:earmark, only: :docs}]
   end
 end
