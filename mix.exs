@@ -11,7 +11,7 @@ defmodule Crutches.Mixfile do
      description: "An Elixir toolbelt freely inspired from Ruby's ActiveSupport",
      package: [contributors: ["Michael Wood", "Kash Nouroozi", "Maurizio Del Corno",
                               "nawns", "Laurens Duijvesteijn", "Joel Meador",
-                              "Sonny Scroggin"],
+                              "Sonny Scroggin", "Louis Pilfold"],
                licenses: ["MIT"],
                links: %{"GitHub" => "https://github.com/mykewould/crutches"}]]
   end
@@ -33,8 +33,9 @@ defmodule Crutches.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    [{:inch_ex, only: :docs},
-     {:ex_doc,  only: :docs},
-     {:earmark, only: :docs}]
+    [{:inch_ex,    only: :docs},
+     {:ex_doc,     only: :docs},
+     {:earmark,    only: :docs},
+     {:benchfella, only: :dev}]
   end
 end
