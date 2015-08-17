@@ -33,9 +33,7 @@ defmodule Crutches.Enum do
   end
 
   @spec without(map, list(any)) :: map
-  def without(collection, elements) when is_map(collection) do
-    Map.drop collection, elements
-  end
+  defdelegate without(map, keys), to: Map, as: :drop
 
   @doc ~S"""
   Shorthand for length(collection) > 1
