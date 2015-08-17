@@ -112,25 +112,22 @@ defmodule Crutches.List do
       iex> List.split([1, 2, 3, 4, 5, 6, 7, 8], fn(x) -> rem(x, 2) == 0 end)
       [[1], [3], [5], [7], []]
 
-      iex> List.split(1..15, &(rem(&1,3) == 0))
+      iex> List.split(Enum.to_list(1..15), &(rem(&1,3) == 0))
       [[1, 2], [4, 5], [7, 8], [10, 11], [13, 14], []]
   """
   @spec split(list(any), any) :: list(any)
-  def split(collection, x) do
-    {head, acc} = do_split(collection, x)
-    Enum.reverse(acc, [Enum.reverse(head)])
+  def split([], _), do: [[]]
+  def split(collection, predicate) when not is_function(predicate) do
+    split(collection, &(&1 == predicate))
   end
-
-  defp do_split(collection, predicate) when is_function(predicate) do
-    collection
-    |> Stream.map(fn (elem) -> {predicate.(elem), elem} end)
-    |> Enum.reduce {[], []}, fn
-      {true,  _},    {head, acc} -> {[], [Enum.reverse(head) | acc]}
-      {false, elem}, {head, acc} -> {[elem | head], acc}
+  def split(collection, predicate) do
+    {head, tail} = List.foldr collection, {[], []}, fn elem, {head, acc} ->
+      case predicate.(elem) do
+        true  -> {[], [head | acc]}
+        false -> {[elem | head], acc}
+      end
     end
-  end
-  defp do_split(collection, elem) do
-    do_split(collection, fn (k) -> k == elem end)
+    [head] ++ tail
   end
 
   @doc ~S"""
