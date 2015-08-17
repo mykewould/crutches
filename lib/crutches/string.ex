@@ -40,15 +40,7 @@ defmodule Crutches.String do
       ["UsersSection.Commission.Department", "users_section/commission/department"],
 
   """
-  @spec underscore(String.t) :: String.t
-  def underscore(string) do
-    string
-    |> replace(~r/\./, "/")
-    |> replace(~r/([A-Z]+)([A-Z][a-z])/, "\\1_\\2")
-    |> replace(~r/([a-z\d])([A-Z])/, "\\1_\\2")
-    |> replace(~r/-/, "_")
-    |> downcase
-  end
+  defdelegate underscore(string), to: Mix.Utils
 
   @doc ~S"""
   Converts `string` to CamelCase.
@@ -68,13 +60,7 @@ defmodule Crutches.String do
       "Area51Controller"
 
   """
-  @spec camelize(String.t) :: String.t
-  def camelize(string) do
-    string
-    |> split("_")
-    |> Enum.map(&capitalize/1)
-    |> Enum.reduce(&(&2 <> &1))
-  end
+  defdelegate camelize(string), to: Mix.Utils
 
   # Access
 
