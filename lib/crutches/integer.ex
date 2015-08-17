@@ -30,14 +30,14 @@ defmodule Crutches.Integer do
       "rd"
   """
   @spec ordinal(integer) :: String.t
-  def ordinal(n) when n === 1, do: "st"
-  def ordinal(n) when n === 2, do: "nd"
-  def ordinal(n) when n === 3, do: "rd"
   def ordinal(n) when is_integer(n) do
     cond do
-      n in 0..13 -> "th"
+      n == 1      -> "st"
+      n == 2      -> "nd"
+      n == 3      -> "rd"
+      n in 0..13  -> "th"
       n in 14..99 -> n |> rem(10) |> abs |> ordinal
-      true       -> n |> rem(100) |> abs |> ordinal
+      true        -> n |> rem(100) |> abs |> ordinal
     end
   end
 
@@ -57,7 +57,7 @@ defmodule Crutches.Integer do
       "-8th"
   """
   @spec ordinalize(integer) :: String.t
-  def ordinalize(n) when is_integer(n), do: to_string(n) <> ordinal(n)
+  def ordinalize(n) when is_integer(n), do: Integer.to_string(n) <> ordinal(n)
 
   @doc ~S"""
   Check whether `n` is evenly divisible by `divisor`.
@@ -74,5 +74,5 @@ defmodule Crutches.Integer do
       true
   """
   @spec multiple_of?(integer, integer) :: boolean
-  def multiple_of?(n, divisor), do: rem(n, divisor) == 0
+  def multiple_of?(n, divisor) when is_integer(n), do: rem(n, divisor) == 0
 end
