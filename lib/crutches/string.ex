@@ -1,4 +1,5 @@
 defmodule Crutches.String do
+  alias Crutches.Option
   import String, only: [
     replace: 3,
     downcase: 1,
@@ -210,5 +211,82 @@ defmodule Crutches.String do
 
   def remove(string, pattern) do
     replace(string, pattern, "")
+  end
+
+  @doc ~S"""
+  Truncates a given `text` after a given `length` if `text` is longer than `length`:
+
+  Truncates a given text after a given `len`gth if text is longer than `len`th.
+  The last characters will be replaced with the `:omission` (defaults to “...”) for a total length not exceeding `len`.
+
+  Pass a `:separator` to truncate text at a natural break (the first occurence of that separator before the provided length).
+
+  ## Examples
+
+      iex> String.truncate("Once upon a time in a world far far away", 27)
+      "Once upon a time in a wo..."
+
+      iex> String.truncate("Once upon a time in a world far far away", 27, separator: " ")
+      "Once upon a time in a..."
+
+      iex> String.truncate("Once upon a time in a world far far away", 27, separator: ~r/\s/)
+      "Once upon a time in a..."
+
+      iex> String.truncate("Once upon a time in a world far far away", 35, separator: "far ")
+      "Once upon a time in a world far..."
+
+      iex> String.truncate("And they found that many people were sleeping better.", 25, omission: "... (continued)")
+      "And they f... (continued)"
+
+      iex> String.truncate("Supercalifragilisticexpialidocious", 24, separator: ~r/\s/)
+      "Supercalifragilistice..."
+  """
+  @truncate [
+    valid: ~w(separator omission)a,
+    defaults: [
+      separator: nil,
+      omission: "..."
+    ]
+  ]
+  def truncate(string, len, opts \\ [])
+  def truncate(string, len, opts) when is_binary(string) and is_integer(len) do
+    opts = Option.combine!(opts, @truncate)
+
+    if String.length(string) > len do
+      length_with_room = len - String.length(opts[:omission])
+      do_truncate(string, length_with_room, opts[:separator], opts[:omission])
+    else
+      string
+    end
+  end
+
+  defp do_truncate(string, length, sep, omission) when is_nil(sep) do
+    String.slice(string, 0, length) <> omission
+  end
+  defp do_truncate(string, length, sep, omission) when is_binary(sep) do
+    sep_size = String.length(sep)
+    chunk_indexes =
+      string
+      |> String.codepoints
+      |> Enum.take(length)
+      |> Enum.with_index
+      |> Enum.chunk(sep_size, sep_size, [])
+      |> Enum.reverse
+      |> Enum.find(fn chars ->
+        str = chars |> Enum.map(&elem(&1, 0)) |> Enum.join("")
+        str == sep
+      end)
+    {_,index} = if chunk_indexes, do: List.last(chunk_indexes), else: {nil, length}
+
+    do_truncate(string, index, nil, omission)
+  end
+  defp do_truncate(string, length, sep, omission) do
+    case Regex.scan(sep, string, return: :index) do
+      [_|_] = captures ->
+        [{index,_}] = captures |> Enum.reverse |> Enum.find(fn [{i, _}] -> i <= length end)
+        do_truncate(string, index, nil, omission)
+      [] ->
+        do_truncate(string, length, nil, omission)
+    end
   end
 end
