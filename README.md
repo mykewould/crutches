@@ -1,57 +1,82 @@
-Crutches
-=======
+# Crutches [![Build Status]][build-link] [![Docs Status]][docs-ci-link] [![Hex Version]][version-link] ![License]
 
-[![Build Status](https://travis-ci.org/mykewould/crutches.svg?branch=master)](https://travis-ci.org/mykewould/crutches)
-[![Hex version](https://img.shields.io/hexpm/v/crutches.svg)](https://hex.pm/packages/crutches)
-[![Inline docs](http://inch-ci.org/github/mykewould/crutches.svg?branch=master)](http://inch-ci.org/github/mykewould/crutches)
+**Alpha software.** Utility library for Elixir, inspired by ActiveSupport.
 
-This is the start of an Elixir port of the [ActiveSupport Rubygem]. [Contributions
-welcome].
+ - [Documentation][docs]
+ - [License][license] &mdash; MIT
+ - [How to contribute][contributing-info] &mdash; We don't bite. Join in on
+   the fun!
 
- [ActiveSupport Rubygem]:https://github.com/rails/rails/tree/master/activesupport
- [Contributions welcome]:https://github.com/mykewould/crutches#new-to-elixir
+## Installation
 
-Contributions are especially welcomed! Take a look at [CONTRIBUTING.md] for
-more information.
+You can get Crutches from Hex. Add the following to your `mix.exs` file and run
+`mix deps.get` afterwards:
 
-### Compatibility and versioning
+```elixir
+defp deps do
+  [{:crutches, "~> 0.0.4"}]
+end
+```
 
-We test against the following combinations of Erlang/OTP and Elixir. Other
-combinations are not officially supported.
+## Usage
 
- - Erlang/OTP `18.0` and Elixir `1.0.5`
+If you want to import all functions provided by Crutches, `use` it in your module:
 
-This project is still alpha software. APIs and supported Elixir and/or Erlang
-versions may change at a moments notice. Use with discretion.
+```elixir
+defmodule Foo do
+  use Crutches
+end
+```
 
-### Documentation
+If you only need a specific part of the library, you can `import` it:
 
-The following places contain documentation on Crutches:
+```elixir
+defmodule Bar do
+  import Crutches.Option
+end
+```
 
- - [API reference] on Hexdocs, the standard Elixir documentation hoster.
- - [Wiki]&mdash;still under construction.
+## Project status, compatibility and versioning
 
- [API reference]:http://hexdocs.pm/crutches/
- [Wiki]:https://github.com/mykewould/crutches/wiki
+**Alpha software.** APIs and supported Elixir or Erlang versions may change without
+notice. Use with discretion.
 
-### New to Elixir?
+We specifically test our code against the following combinations of Erlang/OTP and
+Elixir:
 
-This library is a great for Elixir beginners to contribute to. We are porting
-over ActiveSupport, an addition to the standard library of the Ruby programming
-language. Most of the function documentation and specs have been written already.
-This allows the contributor to focus on the syntax and nuances of Elixir. The
-bonus here is that the contributor will be helping an open source project while
-learning the basics.
+| Erlang | Elixir 	 |
+|------- |--------- |
+| `18.0`	| `1.0.5` 	|
 
-Take a look at [CONTRIBUTING.md] for more information on how you can get
-started.
+## Learn Elixir with us!
 
-[CONTRIBUTING.md]: https://github.com/mykewould/crutches/blob/master/CONTRIBUTING.md
+Crutches is a great for Elixir beginners to contribute to. We are writing
+convenience functions as an addition to the Elixir standard library, a lot of which
+are inspired by ActiveSupport (a similar project from the Ruby world).
 
-#### Why ActiveSupport?
+The great thing about a utility library is that it is easy to contribute without
+having to know a lot about the entire codebase. You can easily add a new function
+in a vacuum, without having to know about the rest of the codebase. Furthermore,
+we provide a list of features to be implemented, complete with tests, so you can get
+started right away, even if you don't have any ideas.
 
-ActiveSupport has some great goodies that are useful in web application
-development. Furthermore the design pattern for ActiveSupport, and it's use
-cases, are not hard to understand. If you are coming from the Rails community,
-being a contributor on this project shouldn't be overly difficult. And if you're
-not, just give it a try!
+We want to be a safe place for anyone to get started with Elixir or with contributing
+to an open source project. If you see anything that isn't proper in your eyes, then be
+sure to let one of the collaborators know!
+
+Sounds good? Take a look at the [contributing information][contributing-info]
+to get started. If anything is unclear, or if you are unsure about something, feel free
+to contact one of the collaborators.
+
+ [docs]:http://hexdocs.pm/crutches/
+ [contributing-info]: https://github.com/mykewould/crutches/blob/master/CONTRIBUTING.md
+ [license]:https://github.com/mykewould/crutches/blob/master/LICENSE
+ 
+ [Build Status]:https://travis-ci.org/mykewould/crutches.svg?branch=master
+ [Hex Version]:https://img.shields.io/hexpm/v/crutches.svg?label=hex%20version
+ [Docs Status]:http://inch-ci.org/github/mykewould/crutches.svg?branch=master
+ [License]:https://img.shields.io/hexpm/l/crutches.svg
+
+ [build-link]:https://travis-ci.org/mykewould/crutches
+ [version-link]:https://hex.pm/packages/crutches
+ [docs-ci-link]:http://inch-ci.org/github/mykewould/crutches
