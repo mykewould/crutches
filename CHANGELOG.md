@@ -3,7 +3,7 @@ All notable changes to Crutches will be documented in this file.
 
 ## [Unreleased](https://github.com/mykewould/crutches/tree/HEAD)
 
-[Full Changelog](https://github.com/mykewould/crutches/compare/v0.0.4...HEAD)
+[Full Changelog](https://github.com/mykewould/crutches/compare/v0.0.5...HEAD)
 
 ## [0.0.5] - 2015-08-25
 
@@ -111,6 +111,7 @@ All notable changes to Crutches will be documented in this file.
   String type.
 - `String.underscore/1`
 
+[0.0.5]: https://github.com/mykewould/crutches/compare/v0.0.4...v0.0.5
 [0.0.4]: https://github.com/mykewould/crutches/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/mykewould/crutches/compare/v0.0.2...v0.0.3
 [0.0.2]: https://github.com/mykewould/crutches/compare/v0.0.1...v0.0.2
