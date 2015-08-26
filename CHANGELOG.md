@@ -13,6 +13,7 @@ All notable changes to Crutches will be documented in this file.
 
 **Closed issues:**
 
+- Crutches.Range.overlaps? [\#73](https://github.com/mykewould/crutches/issues/73)
 - Integer.ordinal/ordinalize =\> Format.Integer.ordinal/ordinalize? [\#70](https://github.com/mykewould/crutches/issues/70)
 - List.to\_sentence =\> Format.List.as\_sentence? [\#69](https://github.com/mykewould/crutches/issues/69)
 - Crutches.String.truncate [\#63](https://github.com/mykewould/crutches/issues/63)
@@ -32,6 +33,7 @@ All notable changes to Crutches will be documented in this file.
 
 **Merged pull requests:**
 
+- Added some Crutches.Range functions. [\#74](https://github.com/mykewould/crutches/pull/74) ([jdl](https://github.com/jdl))
 - Moved Integer.ordinal/ordinalize to Format.Integer \(\#70\) [\#71](https://github.com/mykewould/crutches/pull/71) ([knrz](https://github.com/knrz))
 - Inefficient List.shorten [\#66](https://github.com/mykewould/crutches/pull/66) ([lpil](https://github.com/lpil))
 - Added String.truncate [\#65](https://github.com/mykewould/crutches/pull/65) ([knrz](https://github.com/knrz))
