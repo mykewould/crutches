@@ -3,7 +3,7 @@ defmodule Crutches.Mixfile do
 
   def project do
     [app: :crutches,
-     version: "0.0.4",
+     version: "0.0.5",
      elixir: "~> 1.0",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,

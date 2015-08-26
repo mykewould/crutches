@@ -5,6 +5,8 @@ All notable changes to Crutches will be documented in this file.
 
 [Full Changelog](https://github.com/mykewould/crutches/compare/v0.0.4...HEAD)
 
+## [0.0.5] - 2015-08-25
+
 **Implemented enhancements:**
 
 - Convert Crutches.Helpers.Number.number\_to to Crutches.Format.Number.as\_ [\#45](https://github.com/mykewould/crutches/issues/45)
