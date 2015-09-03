@@ -175,6 +175,40 @@ defmodule Crutches.Format.Number do
     end
   end
 
+  defp make_significant(number, precision) do
+    digits = (:math.log10(number) + 1) |> Float.floor |> trunc
+    multiplier = :math.pow(10, digits - precision)
+    extra_precision = precision - digits
+
+    result = Float.round(number / multiplier) * multiplier
+
+    if extra_precision > 0 do
+      :io_lib.format("~.#{extra_precision}f", [result]) |> List.to_string
+    else
+      result |> trunc |> Integer.to_string
+    end
+  end
+
+  defp strip_trailing_zeros(number, strip) do
+    if strip do
+      strip_trailing_zeros(number)
+    else
+      number
+    end
+  end
+
+  defp strip_trailing_zeros(number) do
+    if String.contains?(number, ".") do
+      case String.reverse(number) do
+        "0" <> number -> String.reverse(number) |> strip_trailing_zeros
+        "." <> number -> String.reverse(number)
+        number -> String.reverse(number)
+      end
+    else
+      number
+    end
+  end
+
   @doc ~s"""
   Formats a `number` as a US phone number.
 
@@ -642,19 +676,9 @@ defmodule Crutches.Format.Number do
     opts = Option.combine!(opts, @as_human)
     {exp, unit, sign} = closest_size_and_sign(number)
 
-    precision = opts[:precision]
-
-    if precision < 0 do
-      precision = 0
-    end
-
-    delimited_opts = Keyword.take(opts, @as_delimited[:valid])
-
     fract_num =
       abs(number) / :math.pow(10, exp)
-      |> rounded_or_significant(opts[:significant], precision)
-      |> strip_trailing_zeros(opts[:strip_insignificant_zeros])
-      |> as_delimited(delimited_opts)
+      |> as_rounded(Keyword.take(opts, @as_rounded[:valid]))
 
     if sign < 0 do
       fract_num = "-" <> fract_num
@@ -698,55 +722,6 @@ defmodule Crutches.Format.Number do
     end
   end
 
-  defp rounded_or_significant(number, significant, precision) do
-    case significant do
-      true ->
-        make_significant(number, precision)
-      false ->
-        number = Float.round(number, precision)
-
-        if precision > 0 do
-          :io_lib.format("~.#{precision}f", [number]) |> List.to_string
-        else
-          number |> trunc |> Integer.to_string
-        end
-    end
-  end
-
-  defp make_significant(number, precision) do
-    digits = (:math.log10(number) + 1) |> Float.floor |> trunc
-    multiplier = :math.pow(10, digits - precision)
-    extra_precision = precision - digits
-
-    result = Float.round(number / multiplier) * multiplier
-
-    if extra_precision > 0 do
-      :io_lib.format("~.#{extra_precision}f", [result]) |> List.to_string
-    else
-      result |> trunc |> Integer.to_string
-    end
-  end
-
-  defp strip_trailing_zeros(number, strip) do
-    if strip do
-      strip_trailing_zeros(number)
-    else
-      number
-    end
-  end
-
-  defp strip_trailing_zeros(number) do
-    if String.contains?(number, ".") do
-      case String.reverse(number) do
-        "0" <> number -> String.reverse(number) |> strip_trailing_zeros
-        "." <> number -> String.reverse(number)
-        number -> String.reverse(number)
-      end
-    else
-      number
-    end
-  end
-
   defp format_as_human(binary, unit, format) when is_binary(binary) do
     str = String.replace(format, "%n", binary, global: false)
     String.replace(str, "%u", unit, global: false) |> String.strip
@@ -765,5 +740,128 @@ defmodule Crutches.Format.Number do
 
   def as_human!(number, opts) when is_number(number) do
     as_human(number, opts)
+  end
+
+  @doc ~S"""
+  Formats the bytes in `number` into a more understandable representation (e.g.,
+  giving it 1500 yields 1.5 KB). This method is useful for reporting file sizes to
+  users. You can customize the format in the `options` Dict.
+
+  See `as_human` if you want to pretty-print a generic number.
+
+  # Options
+
+   * `:locale` - Sets the locale to be used for formatting (defaults to current locale).
+   * `:precision` - Sets the precision of the number (defaults to 3).
+   * `:significant` - If true, precision will be the # of significant_digits. If false, the # of fractional digits (defaults to true)
+   * `:separator` - Sets the separator between the fractional and integer digits (defaults to “.”).
+   * `:delimiter` - Sets the thousands delimiter (defaults to “”).
+   * `:strip_insignificant_zeros` - If true removes insignificant zeros after the decimal separator (defaults to true)
+   * `:prefix` - If :si formats the number using the SI prefix (defaults to :binary)
+
+  # Examples
+
+      iex> Number.as_human_size(123)
+      "123 Bytes"
+
+      iex> Number.as_human_size(1234)
+      "1.21 KB"
+
+      iex> Number.as_human_size(12345)
+      "12.1 KB"
+
+      iex> Number.as_human_size(1234567)
+      "1.18 MB"
+
+      iex> Number.as_human_size(1234567890)
+      "1.15 GB"
+
+      iex> Number.as_human_size(1234567890123)
+      "1.12 TB"
+
+      iex> Number.as_human_size(1234567, precision: 2)
+      "1.2 MB"
+
+      iex> Number.as_human_size(483989, precision: 2)
+      "470 KB"
+
+      iex> Number.as_human_size(1234567, precision: 2, separator: ",")
+      "1,2 MB"
+
+      iex> Number.as_human_size(1234567890123, precision: 5)
+      "1.1228 TB"
+
+      iex> Number.as_human_size(524288000, precision: 5)
+      "500 MB"
+
+      iex> Number.as_human_size!("abc")
+      ** (ArithmeticError) bad argument in arithmetic expression
+
+  """
+  @as_human_size [
+    valid: [:precision, :significant, :separator, :delimiter,
+      :strip_insignificant_zeros, :units, :format],
+    defaults: [
+      precision: 3,
+      significant: true,
+      separator: ".",
+      delimiter: "",
+      strip_insignificant_zeros: true,
+      units: [
+        tb: "TB",
+        gb: "GB",
+        mb: "MB",
+        kb: "KB",
+        b: "Bytes",
+      ],
+      prefix: false
+    ]
+  ]
+
+  def as_human_size(number, opts \\ [])
+  def as_human_size(number, opts) when is_integer(number) and number > 0 do
+    opts = Option.combine!(opts, @as_human_size)
+    {exp, unit} = closest_bytes_size(number)
+
+    fract_num =
+      abs(number) / :math.pow(1024, exp)
+      |> as_rounded(Keyword.take(opts, @as_rounded[:valid]))
+
+    "#{fract_num} #{opts[:units][unit]}"
+  end
+
+  defp closest_bytes_size(number) when is_integer(number) and number > 0 do
+    tenth_exp =
+      number
+      |> abs
+      |> log1024
+      |> trunc
+
+    cond do
+      tenth_exp >= 4 -> {4, :tb}
+      tenth_exp >= 3 -> {3, :gb}
+      tenth_exp >= 2 -> {2, :mb}
+      tenth_exp >= 1 -> {1, :kb}
+      tenth_exp >= 0 -> {0, :b}
+    end
+  end
+
+  defp log1024(number) do
+    :math.log(number) / :math.log(1024)
+  end
+
+  @doc ~S"""
+  Throwing version of `as_human_size`, raises if the input is not a valid number.
+  """
+  def as_human_size!(number, opts \\ [])
+  def as_human_size!(number, opts) when is_binary(number) do
+    case Integer.parse(number) do
+      {num, ""} -> as_human_size(num, opts)
+              _ -> raise(ArithmeticError, message: "bad argument in arithmetic expression")
+    end
+  end
+
+  def as_human_size!(number, opts) when is_integer(number) do
+    as_human_size(number, opts)
   end
 end
