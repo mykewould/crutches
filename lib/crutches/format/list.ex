@@ -1,5 +1,16 @@
 defmodule Crutches.Format.List do
   alias Crutches.Option
+
+  @moduledoc ~S"""
+  Formatting helper functions for lists.
+
+  This module contains various helper functions that should be of use to you
+  when writing user interfaces or other parts of your application that have
+  to deal with lists formatting.
+
+  simply call the desired function with any relevant options that you may need.
+  """
+
   @doc ~S"""
   Converts the array to a comma-separated sentence where the last element is
   joined by the connector word.
