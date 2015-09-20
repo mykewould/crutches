@@ -1,4 +1,9 @@
 defmodule Crutches.Integer do
+  @moduledoc ~S"""
+  Convenience functions for Integers.
+  """
+
+
   @doc ~S"""
   Check whether `n` is evenly divisible by `divisor`.
 
