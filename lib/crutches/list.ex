@@ -152,8 +152,18 @@ defmodule Crutches.List do
     |> Enum.map(fun)
   end
 
-  def in_groups(collection, number, elem \\ nil)
+  @doc ~S"""
+  +List.in_groups/3+ accept both an element or a function as +elem+ parameter.
+  When the +elem+ is not a function, the +elem+ will be used to fill the empty
+  slots in the list. When +elem+ is a function, it will map every *list* created.
+  When +elem+ is +false+, it will not fill the list.
 
+  ## Examples
+
+      iex>List.in_groups(~w(1 2 3 4 5 6 7 8), 3, "a")
+      [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "a"]]
+  """
+  def in_groups(collection, number, elem \\ nil)
   def in_groups(collection, number, elem) when is_function(elem) do
     in_groups(collection, number, nil, elem)
   end
