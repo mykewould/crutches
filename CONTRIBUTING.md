@@ -78,6 +78,9 @@ You don't see an issue about a method that should be implemented and that could
 be helpful for anyone? Open an issue! Issues are very welcome because help the
 growth of this library.
 
+If you don't know where to start, you can get some ideas from 
+[Active Support features]:https://github.com/mykewould/crutches/blob/master/active-support.md
+
 ## Contribute with discussion
 
 This contribution is perhaps the most important. Reply to issue! Give your
