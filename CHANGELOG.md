@@ -19,6 +19,11 @@ All notable changes made to Crutches will be documented in this file.
  - Delegate `String.camelize/1` and `String.underscore/1` to `Mix.Utils`, [#68],
    ([druzn3k])
  - Test against Elixir v1.1.0, [`37d466f6`][37d466f6], ([duijf])
+ - Reformat `CHANGELOG.md`, ([duijf])
+
+### Fixed
+
+ - `__using__` macro in main module, [`8e933327`][8e933327], ([duijf])
 
 ## [0.0.5] - 2015-08-25
 
@@ -161,6 +166,8 @@ All notable changes made to Crutches will be documented in this file.
 [#8]:https://github.com/mykewould/crutches/pull/8
 
 [37d466f6]:https://github.com/mykewould/crutches/commit/37d466f6a27096187ae20d341a31721079645a23
+[8e933327]:https://github.com/mykewould/crutches/commit/8e933327f409368545825b781d97c7415e02a2d9
+
 
 [1.0.0]: https://github.com/mykewould/crutches/compare/v0.0.5...v1.0.0
 [0.0.5]: https://github.com/mykewould/crutches/compare/v0.0.4...v0.0.5
