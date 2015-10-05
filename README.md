@@ -14,7 +14,7 @@ You can get Crutches from Hex. Add the following to your `mix.exs` file and run
 
 ```elixir
 defp deps do
-  [{:crutches, "~> 0.0.5"}]
+  [{:crutches, "~> 1.0.0"}]
 end
 ```
 
