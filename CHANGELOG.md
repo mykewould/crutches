@@ -123,7 +123,7 @@ All notable changes made to Crutches will be documented in this file.
 [druzn3k]:https://github.com/druzn3k
 [jesuspc]:https://github.com/jesuspc
 [Axxiss]:https://github.com/Axxiss
-[doomsport]:https://github.com/doomspork
+[doomspork]:https://github.com/doomspork
 [caryanne]:https://github.com/caryanne
 [mykewould]:https://github.com/mykewould
 
@@ -133,6 +133,7 @@ All notable changes made to Crutches will be documented in this file.
 [#74]:https://github.com/mykewould/crutches/pull/74
 [#73]:https://github.com/mykewould/crutches/issues/73
 [#71]:https://github.com/mykewould/crutches/pull/71
+[#70]:https://github.com/mykewould/crutches/pull/70
 [#68]:https://github.com/mykewould/crutches/pull/68
 [#66]:https://github.com/mykewould/crutches/pull/66
 [#65]:https://github.com/mykewould/crutches/pull/65
