@@ -1,96 +1,96 @@
-# Change Log
-All notable changes to Crutches will be documented in this file.
+# CHANGELOG
 
-## [Unreleased](https://github.com/mykewould/crutches/tree/HEAD)
+All notable changes made to Crutches will be documented in this file.
 
-[Full Changelog](https://github.com/mykewould/crutches/compare/v0.0.5...HEAD)
+## [1.0.0] - 2015-10-05
+
+### Added
+
+ - `Format.Number.as_human_size/2`, [#77], ([druzn3k])
+ - Add ActiveSupport feature list, [#80], ([Axxiss])
+
+### Enhanced
+
+ - Add documentation for `List.in_groups/3`, `Crutches.Format.List` and
+   `Crutches.Integer`, [#79], ([druzn3k])
+
+### Changed
+
+ - Delegate `String.camelize/1` and `String.underscore/1` to `Mix.Utils`, [#68],
+   ([druzn3k])
+ - Test against Elixir v1.1.0, [`37d466f6`][37d466f6], ([duijf])
 
 ## [0.0.5] - 2015-08-25
 
-**Implemented enhancements:**
+### Added
 
-- Convert Crutches.Helpers.Number.number\_to to Crutches.Format.Number.as\_ [\#45](https://github.com/mykewould/crutches/issues/45)
+ - `Range.overlaps?/2`, [#74], ([jdl])
+ - `Range.intersection/2`, [#74], ([jdl])
+ - `Range.union/2`, [#74], ([jdl])
+ - `String.truncate/1`, [#65], ([knrz])
+ - `Option` module, [#43], ([duijf])
+ - `Format.Number.as_rounded/2`, [#64], ([knrz])
+ - `Format.Number.as_human/2`, [#61], ([druzn3k])
+ - `Format.Number.as_percentage/2`, [#59], ([Axxiss])
+ - `Format.Number.as_currency/2`, [#51], ([jesuspc])
+ - `Format.Number.as_phone/2`, [#35], ([jesuspc])
+ - `CHANGELOG.md`, [#58], ([duijf])
+ - Added Gitter webhook to Travis, [#54], ([duijf])
+ - `Map.deep_key_change/2`, [#48], ([mykewould])
+ - `List.in_groups/4`, [#33], ([druzn3k])
 
-**Closed issues:**
+### Enhanced
 
-- Crutches.Range.overlaps? [\#73](https://github.com/mykewould/crutches/issues/73)
-- Integer.ordinal/ordinalize =\> Format.Integer.ordinal/ordinalize? [\#70](https://github.com/mykewould/crutches/issues/70)
-- List.to\_sentence =\> Format.List.as\_sentence? [\#69](https://github.com/mykewould/crutches/issues/69)
-- Crutches.String.truncate [\#63](https://github.com/mykewould/crutches/issues/63)
-- Make use of Option.combine instead of Option.validate! [\#56](https://github.com/mykewould/crutches/issues/56)
-- Renaming Number.number\_to\_XYZ to Number.format\_as\_XYZ [\#44](https://github.com/mykewould/crutches/issues/44)
-- Options.combine! [\#42](https://github.com/mykewould/crutches/issues/42)
-- Crutches.Format.to\_json [\#31](https://github.com/mykewould/crutches/issues/31)
-- Crutches.Format.to\_xml [\#30](https://github.com/mykewould/crutches/issues/30)
-- number\_to\_phone [\#28](https://github.com/mykewould/crutches/issues/28)
-- Crutches.Format.Number.as\_percentage [\#27](https://github.com/mykewould/crutches/issues/27)
-- Crutches.Format.Number.as\_human [\#25](https://github.com/mykewould/crutches/issues/25)
-- Crutches.Format.Number.as\_currency [\#23](https://github.com/mykewould/crutches/issues/23)
-- Wiki Design: Discussion [\#22](https://github.com/mykewould/crutches/issues/22)
-- Got an idea? [\#20](https://github.com/mykewould/crutches/issues/20)
-- Array\#in\_groups =\> List.in\_groups [\#12](https://github.com/mykewould/crutches/issues/12)
-- Array\#to\_xml =\> List.to\_xml [\#7](https://github.com/mykewould/crutches/issues/7)
+ - `List.shorten` performance enhancements, [#66], ([lpil])
+ - `Format.Number.as_delimited` refactor, [#57], ([duijf])
+ - Project documentation, [#37], [#39], ([druzn3k], [duijf])
 
-**Merged pull requests:**
+### Changed
 
-- Added some Crutches.Range functions. [\#74](https://github.com/mykewould/crutches/pull/74) ([jdl](https://github.com/jdl))
-- Moved Integer.ordinal/ordinalize to Format.Integer \(\#70\) [\#71](https://github.com/mykewould/crutches/pull/71) ([knrz](https://github.com/knrz))
-- Inefficient List.shorten [\#66](https://github.com/mykewould/crutches/pull/66) ([lpil](https://github.com/lpil))
-- Added String.truncate [\#65](https://github.com/mykewould/crutches/pull/65) ([knrz](https://github.com/knrz))
-- As rounded [\#64](https://github.com/mykewould/crutches/pull/64) ([knrz](https://github.com/knrz))
-- Dependencies cleanup [\#62](https://github.com/mykewould/crutches/pull/62) ([druzn3k](https://github.com/druzn3k))
-- implemented Number\#as\_human [\#61](https://github.com/mykewould/crutches/pull/61) ([druzn3k](https://github.com/druzn3k))
-- Crutches.Format.Number refactoring [\#60](https://github.com/mykewould/crutches/pull/60) ([druzn3k](https://github.com/druzn3k))
-- Add Number.as\_percentage function [\#59](https://github.com/mykewould/crutches/pull/59) ([Axxiss](https://github.com/Axxiss))
-- Add CHANGELOG.md [\#58](https://github.com/mykewould/crutches/pull/58) ([duijf](https://github.com/duijf))
-- Refactor `as\_delimited` [\#57](https://github.com/mykewould/crutches/pull/57) ([duijf](https://github.com/duijf))
-- Correct markdown links [\#55](https://github.com/mykewould/crutches/pull/55) ([doomspork](https://github.com/doomspork))
-- Add Travis webhook [\#54](https://github.com/mykewould/crutches/pull/54) ([duijf](https://github.com/duijf))
-- \[23\] Format.Number includes \#as\_currency function [\#51](https://github.com/mykewould/crutches/pull/51) ([jesuspc](https://github.com/jesuspc))
-- Fixed typo [\#50](https://github.com/mykewould/crutches/pull/50) ([caryanne](https://github.com/caryanne))
-- Feature/fix integer ordinal [\#49](https://github.com/mykewould/crutches/pull/49) ([joeyates](https://github.com/joeyates))
-- Recursive key change for Maps [\#48](https://github.com/mykewould/crutches/pull/48) ([mykewould](https://github.com/mykewould))
-- converted Crutches.Helpers.Number in Crutches.Format.Number [\#46](https://github.com/mykewould/crutches/pull/46) ([druzn3k](https://github.com/druzn3k))
-- WIP Crutches.Option module [\#43](https://github.com/mykewould/crutches/pull/43) ([duijf](https://github.com/duijf))
-- WIP Dialyzer fixes [\#41](https://github.com/mykewould/crutches/pull/41) ([duijf](https://github.com/duijf))
-- Improve the project's general documentation [\#39](https://github.com/mykewould/crutches/pull/39) ([duijf](https://github.com/duijf))
-- \[28\] The default mechanism for option resolution is used now at Helpe… [\#38](https://github.com/mykewould/crutches/pull/38) ([jesuspc](https://github.com/jesuspc))
-- Improved Project Documentation [\#37](https://github.com/mykewould/crutches/pull/37) ([druzn3k](https://github.com/druzn3k))
-- \[28\] Number helper includes now a number\_to\_phone\2 function [\#35](https://github.com/mykewould/crutches/pull/35) ([jesuspc](https://github.com/jesuspc))
-- Implemented List\#in\_groups [\#33](https://github.com/mykewould/crutches/pull/33) ([druzn3k](https://github.com/druzn3k))
+ - `Integer.ordinal` =\> `Format.Integer`, [#70], ([knrz])
+ - `List.to_sentence` =\> `Format.List.as_sentence?`
+ - `Keyword.*` =\> `Option.*`, [#43], ([duijf])
+ - `Helpers.Number` =\> `Format.Number`, [#46], ([druzn3k])
+ - `Integer.*` =\> `Format.Integer.*`, [#71], ([knrz])
+ - Dependencies cleanup, [#62], ([druzn3k])
+ - `Number.*` uses `Option.*`, [#38], ([jesuspc])
 
+### Fixed
+
+ - Fix markdown links in `REAMDE.md`, [#55], ([doomspork])
+ - Fix typo in `README.md`, [#50], ([caryanne])
+ - Incorrect results in `Integer.ordinal`, [#49], ([joeyates])
+ - Dialyzer types, [#41], ([duijf])
 
 ## [0.0.4] - 2015-07-26
+
 ### Added
-- `List.shorten/2`, [#11](https://github.com/mykewould/crutches/pull/11)
-- `List.to/2`, [#14](https://github.com/mykewould/crutches/pull/14)
-- `List.split/2`, [#14](https://github.com/mykewould/crutches/pull/14)
-- `Integer.ordinal/1` and `Integer.ordinalize/1`,
-  [#18](https://github.com/mykewould/crutches/pull/18)
-- `Enum.many/1`, [#18](https://github.com/mykewould/crutches/pull/18)
-- `Integer.multiple_of?/2`, [#18](https://github.com/mykewould/crutches/pull/18)
-- `Keyword.all_keys_valid?/2`, [#21](https://github.com/mykewould/crutches/pull/21)
-- `Keyword.validate_keys/2` and `Keyword.validate_keys!/2`, [#21](https://github.com/mykewould/crutches/pull/21)
+- `List.shorten/2`, [#11]
+- `List.to/2`, [#14]
+- `List.split/2`, [#14]
+- `Integer.ordinal/1` and `Integer.ordinalize/1`, [#18]
+- `Enum.many/1`, [#18]
+- `Integer.multiple_of?/2`, [#18]
+- `Keyword.all_keys_valid?/2`, [#21]
+- `Keyword.validate_keys/2` and `Keyword.validate_keys!/2`, [#21]
 - Travis and Inch Continuous Integration suites and badges
 
 ### Fixed
-- Tests for the `Crutches.String` module,
-  [#14](https://github.com/mykewould/crutches/pull/14)
+- Tests for the `Crutches.String` module, [#14]
 
 ### Changed
 - Refactor of `List.to_sentence/2`
 - Ask contributors to let others know when they are working on something in the
   REAMDE.
-- `List.without/2` is now `Enum.without/2`,
-  [#18](https://github.com/mykewould/crutches/pull/18)
+- `List.without/2` is now `Enum.without/2`, [#18]
 - Remove list of functions in the README to Hexdocs.
 
 ## [0.0.3] - 2015-07-17
+
 ### Added
-- `List` module and `Crutches.List.without/2`,
-  [#8](https://github.com/mykewould/crutches/pull/8)
-- `List.from/2`, [#9](https://github.com/mykewould/crutches/pull/9)
-- `List.to_sentence`, [#10](https://github.com/mykewould/crutches/pull/10)
+- `List` module and `Crutches.List.without/2`, [#8]
+- `List.from/2`, [#9]
+- `List.to_sentence`, [#10]
 - `String.to/2`
 - `String.squish/1`
 - `String.remove/2`
@@ -107,13 +107,63 @@ All notable changes to Crutches will be documented in this file.
 ## 0.0.1 - 2015-06-26
 ### Added
 - A new Elixir project skeleton
-- `String` module for functions pertaining to operations on Elixir's
-  String type.
+- `String` module for functions pertaining to operations on Elixir's String
+  type.
 - `String.underscore/1`
 
+[lpil]:https://github.com/lpil
+[jdl]:https://github.com/jdl
+[knrz]:https://github.com/knrz
+[duijf]:https://github.com/duijf
+[druzn3k]:https://github.com/druzn3k
+[jesuspc]:https://github.com/jesuspc
+[Axxiss]:https://github.com/Axxiss
+[doomsport]:https://github.com/doomspork
+[caryanne]:https://github.com/caryanne
+[mykewould]:https://github.com/mykewould
+
+[#80]:https://github.com/mykewould/crutches/pull/80
+[#79]:https://github.com/mykewould/crutches/pull/79
+[#77]:https://github.com/mykewould/crutches/pull/77
+[#74]:https://github.com/mykewould/crutches/pull/74
+[#73]:https://github.com/mykewould/crutches/issues/73
+[#71]:https://github.com/mykewould/crutches/pull/71
+[#68]:https://github.com/mykewould/crutches/pull/68
+[#66]:https://github.com/mykewould/crutches/pull/66
+[#65]:https://github.com/mykewould/crutches/pull/65
+[#64]:https://github.com/mykewould/crutches/pull/64
+[#62]:https://github.com/mykewould/crutches/pull/62
+[#61]:https://github.com/mykewould/crutches/pull/61
+[#59]:https://github.com/mykewould/crutches/pull/59
+[#58]:https://github.com/mykewould/crutches/pull/58
+[#57]:https://github.com/mykewould/crutches/pull/57
+[#55]:https://github.com/mykewould/crutches/pull/55
+[#54]:https://github.com/mykewould/crutches/pull/54
+[#51]:https://github.com/mykewould/crutches/pull/51
+[#50]:https://github.com/mykewould/crutches/pull/50
+[#49]:https://github.com/mykewould/crutches/pull/49
+[#48]:https://github.com/mykewould/crutches/pull/48
+[#46]:https://github.com/mykewould/crutches/pull/46
+[#45]:https://github.com/mykewould/crutches/issues/45
+[#43]:https://github.com/mykewould/crutches/pull/43
+[#41]:https://github.com/mykewould/crutches/pull/41
+[#39]:https://github.com/mykewould/crutches/pull/39
+[#38]:https://github.com/mykewould/crutches/pull/38
+[#37]:https://github.com/mykewould/crutches/pull/37
+[#35]:https://github.com/mykewould/crutches/pull/35
+[#33]:https://github.com/mykewould/crutches/pull/33
+[#21]:https://github.com/mykewould/crutches/pull/21
+[#18]:https://github.com/mykewould/crutches/pull/18
+[#14]:https://github.com/mykewould/crutches/pull/14
+[#11]:https://github.com/mykewould/crutches/pull/11
+[#10]:https://github.com/mykewould/crutches/pull/10
+[#9]:https://github.com/mykewould/crutches/pull/9
+[#8]:https://github.com/mykewould/crutches/pull/8
+
+[37d466f6]:https://github.com/mykewould/crutches/commit/37d466f6a27096187ae20d341a31721079645a23
+
+[1.0.0]: https://github.com/mykewould/crutches/compare/v0.0.5...v1.0.0
 [0.0.5]: https://github.com/mykewould/crutches/compare/v0.0.4...v0.0.5
 [0.0.4]: https://github.com/mykewould/crutches/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/mykewould/crutches/compare/v0.0.2...v0.0.3
 [0.0.2]: https://github.com/mykewould/crutches/compare/v0.0.1...v0.0.2
-
-\* *This Change Log was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*

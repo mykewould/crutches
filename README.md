@@ -57,6 +57,7 @@ and Elixir:
 | Erlang | Elixir 	|
 |------- |--------- |
 | `18.0` | `1.0.5` 	|
+| `18.0` | `1.1.0` 	|
 
 ## Learn Elixir with us!
 
