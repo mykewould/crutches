@@ -29,13 +29,23 @@ defmodule Foo do
 end
 ```
 
-If you only need a specific part of the library, you can `import` it:
+The above aliases `Crutches` as `C` and `Crutches.Format` as `F`. All modules
+and functions in the library will be available to you. Take a look at the [API
+reference][docs] for a list of modules.
+
+If you only need a specific part of the library, you can `import` or `alias`
+it:
 
 ```elixir
 defmodule Bar do
   import Crutches.Option
+  # Or:
+  alias Crutches.Option
 end
 ```
+
+Again, refer to the [API reference][docs] for a list of modules and functions
+that you can find in Crutches.
 
 ## Project status, compatibility and versioning
 
