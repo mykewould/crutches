@@ -1,5 +1,5 @@
 defmodule Crutches.Option do
-  @moduledoc ~S"""
+  @moduledoc """
   Convenience functions for dealing with funciton option handling.
 
   This provides a mechanism for declaring default options and merging these with
@@ -44,7 +44,16 @@ defmodule Crutches.Option do
       end
   """
 
-  @doc ~S"""
+  @type key :: atom
+  @type value :: any
+
+  @type t :: [{key, value}]
+  @type t(value) :: [{key, value}]
+
+  @type ok(value) :: {:ok, value}
+  @type error ::{:error, any}
+
+  @doc """
   Validates the `opts` keyword list according to `config`, combines defaults.
 
   For intended use see the module documentation.
@@ -69,12 +78,12 @@ defmodule Crutches.Option do
       {:error, [:boom]}
 
   """
-  @spec combine(list(any), list(any)) :: list(any)
+  @spec combine(t, t([atom]) | t(t)) :: ok(t) | error
   def combine(opts, config) do
     combine(opts, config, &Elixir.Keyword.merge(&1, &2))
   end
 
-  @doc ~S"""
+  @doc """
   This function is the same as `combine/2`, except it returns `options` on
   validation succes and throws `ArgumentError` on validation failure.
 
@@ -89,11 +98,12 @@ defmodule Crutches.Option do
       ** (ArgumentError) invalid key boom
 
   """
+  @spec combine!(t, t([atom]) | t(t)) :: t
   def combine!(opts, config) do
     combine!(opts, config, &Elixir.Keyword.merge(&1, &2))
   end
 
-  @doc ~S"""
+  @doc """
   Validate `opts` according to `config`, combines according to `combinator`
 
   Behavior is the same as `combine/2`, except that you can specify how `opts`
@@ -113,6 +123,7 @@ defmodule Crutches.Option do
       {:ok, nil}
 
   """
+  @spec combine(t, t | t(t), (t, t -> t)) :: ok(t) | error
   def combine(opts, config, combinator) do
     case validate(opts, config[:valid]) do
       {:ok, _} -> {:ok, combinator.(config[:defaults], opts)}
@@ -130,6 +141,7 @@ defmodule Crutches.Option do
       iex> Option.combine!([baz: "fail"], config, combinator)
       ** (ArgumentError) invalid key baz
   """
+  @spec combine!(t, t | t(t), (t, t -> t)) :: t
   def combine!(opts, config, combinator) do
     case combine(opts, config, combinator) do
       {:ok, opts} -> opts
@@ -154,6 +166,7 @@ defmodule Crutches.Option do
       {:error, [:bad]}
 
   """
+  @spec validate(t, [atom]) :: ok([]) | error
   def validate(opts, valid) do
     if Enum.empty?(invalid_options(opts, valid)) do
       {:ok, []}
@@ -176,6 +189,7 @@ defmodule Crutches.Option do
       iex> Option.validate!([good: ""], [:good])
       true
   """
+  @spec validate!(t, [atom]) :: true
   def validate!(opts, valid) do
     case validate(opts, valid) do
       {:ok, _} -> true
@@ -197,6 +211,7 @@ defmodule Crutches.Option do
       iex> Option.all_valid?([good: "", good_opt: "."], [:good, :good_opt])
       true
   """
+  @spec all_valid?(t, [atom]) :: boolean
   def all_valid?(opts, valid) do
     Enum.empty?(invalid_options(opts, valid))
   end
