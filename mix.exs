@@ -3,13 +3,13 @@ defmodule Crutches.Mixfile do
 
   def project do
     [app: :crutches,
-     version: "0.0.5",
+     version: "1.0.0",
      elixir: "~> 1.0",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps,
      description: "An Elixir toolbelt freely inspired from Ruby's ActiveSupport",
-     package: [contributors: ["Michael Wood", "Kash Nouroozi", "Maurizio Del Corno",
+     package: [maintainers: ["Michael Wood", "Kash Nouroozi", "Maurizio Del Corno",
                               "nawns", "Laurens Duijvesteijn", "Joel Meador",
                               "Sonny Scroggin", "Louis Pilfold", "Alexis Mas"],
                licenses: ["MIT"],
