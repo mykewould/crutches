@@ -6,6 +6,9 @@ defmodule Crutches.Enum do
   Simply call any function (with any options if applicable) to make use of it.
   """
 
+  @type t :: Enumerable.t
+  @type element :: any
+
   @doc ~S"""
   Returns a copy of the `collection` without the specified `elements`.
 
@@ -65,4 +68,35 @@ defmodule Crutches.Enum do
   @spec many?(map) :: boolean
   def many?(%{}), do: false
   def many?(collection) when is_map(collection), do: map_size(collection) > 1
+
+  @doc """
+  Invokes the given `fun` for each item in the enumerable and returns `true` if
+  none of the invocations return a truthy value.
+  Returns `false` otherwise.
+
+  ## Examples
+
+      iex> Enum.none?([2, 4, 6], fn(x) -> rem(x, 2) == 1 end)
+      true
+
+      iex> Enum.none?([2, 3, 4], fn(x) -> rem(x, 2) == 1 end)
+      false
+
+  If no function is given, it defaults to checking if all items in the
+  enumerable are a falsy value.
+
+      iex> Enum.none?([false, false, false])
+      true
+
+      iex> Enum.none?([false, true, false])
+      false
+  """
+  @spec none?(t) :: boolean
+  @spec none?(t, (element -> as_boolean(term))) :: boolean
+
+  def none?(enumerable, fun \\ fn(x) -> x end)
+
+  def none?(enumerable, fun) do
+    not Enum.any?(enumerable, fun)
+  end
 end
