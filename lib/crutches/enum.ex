@@ -99,4 +99,35 @@ defmodule Crutches.Enum do
   def none?(enumerable, fun) do
     not Enum.any?(enumerable, fun)
   end
+
+  @doc """
+  Invokes the given `fun` for each item in the enumerable and returns `true` if
+  exactly one invocation returns a truthy value.
+  Returns `false` otherwise.
+
+  ## Examples
+
+      iex> Enum.one?([1, 2, 3], fn(x) -> rem(x, 2) == 0 end)
+      true
+
+      iex> Enum.one?([1, 3, 5], fn(x) -> rem(x, 2) == 0 end)
+      false
+
+      iex> Enum.one?([2, 4, 6], fn(x) -> rem(x, 2) == 0 end)
+      false
+
+  If no function is given, it defaults to checking if exactly one item in the
+  enumerable is a truthy value.
+
+      iex> Enum.one?([1, 2, 3])
+      false
+
+      iex> Enum.one?([1, nil, false])
+      true
+  """
+  @spec one?(t) :: boolean
+  @spec one?(t, (element -> as_boolean(term))) :: boolean
+  def one?(enumerable, fun \\ fn(x) -> x end) do
+    match? [_], Stream.filter(enumerable, fun) |> Enum.take(2)
+  end
 end
