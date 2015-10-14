@@ -11,7 +11,8 @@ defmodule Crutches.Mixfile do
      description: "An Elixir toolbelt freely inspired from Ruby's ActiveSupport",
      package: [maintainers: ["Michael Wood", "Kash Nouroozi", "Maurizio Del Corno",
                               "nawns", "Laurens Duijvesteijn", "Joel Meador",
-                              "Sonny Scroggin", "Louis Pilfold", "Alexis Mas"],
+                              "Sonny Scroggin", "Louis Pilfold", "Alexis Mas",
+                              "Bryan Enders"],
                licenses: ["MIT"],
                links: %{"GitHub" => "https://github.com/mykewould/crutches"}]]
   end

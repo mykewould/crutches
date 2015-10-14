@@ -2,6 +2,13 @@
 
 All notable changes made to Crutches will be documented in this file.
 
+## Unreleased
+
+### Added
+
+ - `Enum.none?/1` and `Enum.none?/2` [#82], ([endersstocker])
+ - `Enum.one?/1` and `Enum.one?/2` [#83], ([endersstocker])
+
 ## [1.0.0] - 2015-10-05
 
 ### Added
@@ -126,7 +133,10 @@ All notable changes made to Crutches will be documented in this file.
 [doomspork]:https://github.com/doomspork
 [caryanne]:https://github.com/caryanne
 [mykewould]:https://github.com/mykewould
+[endersstocker]:https://github.com/endersstocker
 
+[#83]:https://github.com/mykewould/crutches/pull/83
+[#82]:https://github.com/mykewould/crutches/pull/82
 [#80]:https://github.com/mykewould/crutches/pull/80
 [#79]:https://github.com/mykewould/crutches/pull/79
 [#77]:https://github.com/mykewould/crutches/pull/77
