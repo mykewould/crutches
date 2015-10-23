@@ -1,8 +1,9 @@
 defmodule Crutches do
   @moduledoc """
-  Crutches is an addition to the Elixir standard library, inspired by
-  ActiveSupport. We include a number of utilities that we feel are missing in
-  the Elixir standard library.
+  Utility library for Elixir, designed to complement the standard library
+  bundled with the language. This project aims to provide extra functions that
+  can be useful in most projects, but haven't made it into the standard library
+  yet. Similar to and inspired by [ActiveSupport](https://github.com/rails/rails/tree/master/activesupport)
 
   Get Crutches by adding the following to your `mix.exs` and afterwards, run
   `mix deps.get`:
