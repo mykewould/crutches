@@ -1,6 +1,6 @@
 # Crutches [![Build Status]][build-link] [![Docs Status]][docs-ci-link] [![Hex Version]][version-link] ![License]
 
-Utility library for Elixir, inspired by ActiveSupport.
+Utility library for Elixir, inspired by [ActiveSupport][ActiveSupport].
 
  - [Documentation][docs]
  - [License][license] &mdash; MIT
@@ -63,7 +63,7 @@ and Elixir:
 
 Crutches is a great for Elixir beginners to contribute to. We are writing
 convenience functions as an addition to the Elixir standard library, a lot of
-which are inspired by ActiveSupport (a similar project from the Ruby world).
+which are inspired by [ActiveSupport][ActiveSupport] (a similar project from the Ruby world).
 
 The great thing about a utility library is that it is easy to contribute
 without having to know a lot about the entire codebase. You can easily add a
@@ -93,3 +93,4 @@ feel free to contact one of the collaborators.
  [docs-ci-link]:http://inch-ci.org/github/mykewould/crutches
 
  [semver]:http://semver.org/
+ [ActiveSupport]:https://github.com/rails/rails/tree/master/activesupport
