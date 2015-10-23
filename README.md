@@ -1,6 +1,9 @@
 # Crutches [![Build Status]][build-link] [![Docs Status]][docs-ci-link] [![Hex Version]][version-link] ![License]
 
-Utility library for Elixir, inspired by [ActiveSupport][ActiveSupport].
+Utility library for Elixir, designed to complement the standard library bundled
+with the language. This project aims to provide extra functions that can be
+useful in most projects, but haven't made it into the standard library yet.
+Similar to and inspired by [ActiveSupport][ActiveSupport].
 
  - [Documentation][docs]
  - [License][license] &mdash; MIT
