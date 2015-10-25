@@ -7,6 +7,9 @@ defmodule Crutches.ListBench do
   bench "from/2 from the head" do
     List.from @list, 0
   end
+  bench "stdlib slice/3 from the head" do
+    Enum.slice @list, 0, 2000
+  end
 
   bench "from/2 from the middle" do
     List.from @list, 987
