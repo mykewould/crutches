@@ -24,6 +24,7 @@ defmodule Crutches.Integer do
   @doc ~S"""
   Integer.digits copied straight from the Elixir 1.1 standard library, for Elixir < v1.1
   """
+  # TODO remove this when we drop support for Elixir < 1.1
   try do
     Elixir.Integer.digits(1140392)
     defdelegate digits(n, base), to: Elixir.Integer
