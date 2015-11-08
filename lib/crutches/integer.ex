@@ -21,8 +21,19 @@ defmodule Crutches.Integer do
   @spec multiple_of?(integer, integer) :: boolean
   def multiple_of?(n, divisor) when is_integer(n), do: rem(n, divisor) == 0
 
-  @doc ~S"""
-  Integer.digits copied straight from the Elixir 1.1 standard library, for Elixir < v1.1
+  @doc """
+  Returns the ordered digits for the given non-negative integer.
+
+  An optional base value may be provided representing the radix for the returned
+  digits.
+
+  ## Examples
+
+      iex> Integer.digits(101)
+      [1, 0, 1]
+
+      iex> Integer.digits(58127, 2)
+      [1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1]
   """
   # TODO remove this when we drop support for Elixir < 1.1
   try do
