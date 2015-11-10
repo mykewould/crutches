@@ -1,4 +1,5 @@
 defmodule Crutches.Map do
+  require Logger
   @moduledoc ~s"""
   Convenience functions for maps.
 
@@ -7,6 +8,8 @@ defmodule Crutches.Map do
   """
 
   @doc """
+  ## WARNING: Will be removed in 2.0. Please use Kernel.get_in/2 and Kernel.put_in/3 instead.
+
   Travel through `map` according to a specified `path`.
 
   The `path` is either a list or a string.  Pass in a string if the keys in
@@ -31,12 +34,14 @@ defmodule Crutches.Map do
   """
 
   def get_path(map, path) when is_map(map) and is_binary(path) do
+    Logger.warn "Crutches: Map.get_path/2 is deprecated. Please use Elixir's Kernel.get_in/2."
     path
     |> String.split(".")
     |> Enum.reduce map, &Map.get(&2, &1)
   end
 
   def get_path(map, path) when is_map(map) and is_atom(path) do
+    Logger.warn "Crutches: Map.get_path/2 is deprecated. Please use Elixir's Kernel.get_in/2."
     path
     |> Atom.to_string
     |> String.split(".")
@@ -44,6 +49,8 @@ defmodule Crutches.Map do
   end
 
   @doc """
+  ## WARNING: Will be removed in 2.0. Please use Kernel.get_in/2 and Kernel.put_in/3 instead.
+
   The fetch version of get_path, where if the key is found returns
   `{:ok, value}`, and if not then `:error`.
 
@@ -56,6 +63,7 @@ defmodule Crutches.Map do
       :error
   """
   def fetch_path(map, path) when is_map(map) do
+    Logger.warn "Crutches: Map.fetch_path/2 is deprecated. Please use Elixir's Kernel.get_in/2."
     try do
       {:ok, fetch_path!(map, path)}
     rescue
@@ -64,6 +72,8 @@ defmodule Crutches.Map do
   end
 
   @doc """
+  ## WARNING: Will be removed in 2.0. Please use Kernel.get_in/2 and Kernel.put_in/3 instead.
+
   Throwing version of fetch_path, that returns the value if the path has been
   successfully traversed, and if not then throws an error.
 
@@ -76,12 +86,14 @@ defmodule Crutches.Map do
       "ugly"
   """
   def fetch_path!(map, path) when is_map(map) and is_binary(path) do
+    Logger.warn "Crutches: Map.fetch_path/2 is deprecated. Please use Elixir's Kernel.get_in/2."
     path
     |> String.split(".")
     |> Enum.reduce map, &Map.fetch!(&2, &1)
   end
 
   def fetch_path!(map, path) when is_map(map) and is_atom(path) do
+    Logger.warn "Crutches: Map.fetch_path/2 is deprecated. Please use Elixir's Kernel.get_in/2."
     path
     |> Atom.to_string
     |> String.split(".")
