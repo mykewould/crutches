@@ -175,7 +175,7 @@ defmodule Crutches.List do
 
     {result, _} =
       Enum.to_list(1..number)
-      |> Enum.reduce {[], collection}, fn(x, acc) ->
+      |> Enum.reduce({[], collection}, fn(x, acc) ->
         {list, kollection} = acc
 
         if x <= group_rem do
@@ -193,7 +193,7 @@ defmodule Crutches.List do
               end
           end
         end
-      end
+      end)
 
       Enum.reverse(result)
   end

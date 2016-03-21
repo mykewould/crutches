@@ -37,7 +37,7 @@ defmodule Crutches.Map do
     Logger.warn "Crutches: Map.get_path/2 is deprecated. Please use Elixir's Kernel.get_in/2."
     path
     |> String.split(".")
-    |> Enum.reduce map, &Map.get(&2, &1)
+    |> Enum.reduce(map, &Map.get(&2, &1))
   end
 
   def get_path(map, path) when is_map(map) and is_atom(path) do
@@ -45,7 +45,7 @@ defmodule Crutches.Map do
     path
     |> Atom.to_string
     |> String.split(".")
-    |> Enum.reduce map, &Map.get(&2, String.to_atom(&1))
+    |> Enum.reduce(map, &Map.get(&2, String.to_atom(&1)))
   end
 
   @doc """
@@ -89,7 +89,7 @@ defmodule Crutches.Map do
     Logger.warn "Crutches: Map.fetch_path/2 is deprecated. Please use Elixir's Kernel.get_in/2."
     path
     |> String.split(".")
-    |> Enum.reduce map, &Map.fetch!(&2, &1)
+    |> Enum.reduce(map, &Map.fetch!(&2, &1))
   end
 
   def fetch_path!(map, path) when is_map(map) and is_atom(path) do
@@ -97,7 +97,7 @@ defmodule Crutches.Map do
     path
     |> Atom.to_string
     |> String.split(".")
-    |> Enum.reduce map, &Map.fetch!(&2, String.to_atom(&1))
+    |> Enum.reduce(map, &Map.fetch!(&2, String.to_atom(&1)))
   end
 
   @doc ~S"""
@@ -117,9 +117,9 @@ defmodule Crutches.Map do
   defp dkeys_update(map, _, acc) when map == %{}, do: acc
   defp dkeys_update(map, fun, acc) do
     key = Map.keys(map) |> List.first
-    case is_map(map[key]) do
-      true -> value = dkeys_update(map[key], fun)
-         _ -> value = map[key]
+    value = case is_map(map[key]) do
+      true -> dkeys_update(map[key], fun)
+         _ -> map[key]
     end
     dkeys_update(Map.delete(map, key), fun, Map.put(acc, fun.(key), value))
   end
