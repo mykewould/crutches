@@ -71,7 +71,7 @@ defmodule Crutches.Option do
 
       iex> config = [valid: ~w(foo bar)a, defaults: [foo: "some", bar: "value"]]
       iex> Option.combine([foo: "another"], config)
-      {:ok, [foo: "another", bar: "value"]}
+      {:ok, [bar: "value", foo: "another"]}
 
       iex> config = [valid: ~w(bar baz)a, defaults: [bar: "good", baz: "values"]]
       iex> Option.combine([boom: "this blows up"], config)
@@ -91,7 +91,7 @@ defmodule Crutches.Option do
 
       iex> config = [valid: ~w(foo bar)a, defaults: [foo: "some", bar: "value"]]
       iex> Option.combine!([foo: "another"], config)
-      [foo: "another", bar: "value"]
+      [bar: "value", foo: "another"]
 
       iex> config = [valid: ~w(bar baz)a, defaults: [bar: "good", baz: "values"]]
       iex> Option.combine!([boom: "this blows up"], config)
