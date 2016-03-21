@@ -118,17 +118,21 @@ defmodule Crutches.Option do
   Contrived example showing of the use of `combinator`.
 
       iex> config = [valid: ~w(foo bar)a, defaults: [foo: "some", bar: "value"]]
-      iex> combinator = fn(_, _) -> nil end
+      iex> combinator = &Keyword.merge/2
       iex> Option.combine([foo: "again"], config, combinator)
-      {:ok, nil}
+      {:ok, [bar: "value", foo: "again"]}
 
   """
   @spec combine(t, t | t(t), (t, t -> t)) :: ok(t) | error
   def combine(opts, config, combinator) do
     case validate(opts, config[:valid]) do
-      {:ok, _} -> {:ok, combinator.(config[:defaults], opts)}
+      {:ok, _} -> {:ok, combinator.(config[:defaults], opts) |> sort_options}
       {:error, invalid} -> {:error, invalid}
     end
+  end
+
+  defp sort_options(options) do
+    Enum.sort(options, fn {key1, _}, {key2, _} -> key1 <= key2 end)
   end
 
   @doc ~S"""
