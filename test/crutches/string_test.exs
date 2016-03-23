@@ -4,9 +4,9 @@ defmodule Crutches.StringTest do
   doctest Crutches.String
 
   def compare_underscored_camel(string_pairs) do
-    string_pairs |> Enum.each fn([camel_case, underscore]) ->
+    string_pairs |> Enum.each(fn([camel_case, underscore]) ->
       assert underscore == String.underscore(camel_case)
-    end
+    end)
   end
 
   test :camel_to_underscore_without_reverse do
