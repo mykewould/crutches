@@ -62,6 +62,7 @@ defmodule Crutches.Integer do
   # TODO remove this when we drop support for Elixir < 1.1
   try do
     Elixir.Integer.digits(1140392)
+    def digits(n), do: digits(n, 10)
     defdelegate digits(n, base), to: Elixir.Integer
   rescue
     UndefinedFunctionError ->
