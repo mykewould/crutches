@@ -21,6 +21,30 @@ defmodule Crutches.Integer do
   @spec multiple_of?(integer, integer) :: boolean
   def multiple_of?(n, divisor) when is_integer(n), do: rem(n, divisor) == 0
 
+  @doc ~S"""
+  Check if integer is a prime number.
+
+  # Example
+      iex> Integer.is_prime?(2)
+      true
+
+      iex> Integer.is_prime?(4)
+      false
+
+      iex> Integer.is_prime?(7)
+      true
+  """
+  def is_prime?(int) do
+    is_prime?(int, 2, :math.sqrt(int))
+  end
+  def is_prime?(int, divisor, limit) when divisor > limit, do: true
+  def is_prime?(int, divisor, limit) do
+    cond do
+      rem(int, divisor) === 0 -> false
+      true -> is_prime?(int, divisor + 1, limit)
+    end
+  end
+
   @doc """
   Returns the ordered digits for the given non-negative integer.
 
