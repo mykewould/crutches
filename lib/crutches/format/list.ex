@@ -75,7 +75,12 @@ defmodule Crutches.Format.List do
   def as_sentence(words, opts) when is_list(words) do
     opts = Option.combine!(opts, @as_sentence)
 
-    init = Crutches.List.shorten(words) |> Enum.join(opts[:words_connector])
+    init =
+      case Crutches.List.shorten(words) do
+        {:ok, shortened_list} -> Enum.join(shortened_list, opts[:words_connector])
+        _ -> []
+      end
+      
     last = List.last(words)
 
     init <> opts[:last_word_connector] <> last

@@ -44,23 +44,25 @@ defmodule Crutches.List do
   ## Examples
 
       iex> List.shorten(["one", "two", "three"], 2)
-      ["one"]
+      {:ok, ["one"]}
 
       iex> List.shorten([5, 6], 2)
-      []
+      {:ok, []}
 
       iex> List.shorten([5, 6, 7, 8], 5)
-      nil
+      {:error, "Amount to shorten by is greater than the length of the list"}
   """
   @spec shorten(list(any), integer) :: list(any)
-  def shorten(list, amount \\ 1)
-  def shorten(list, amount) do
+  def shorten(list, amount \\ 1) do
     shorten(list, amount, length(list))
   end
 
-  defp shorten(_, amount, len) when len < amount, do: nil
+  defp shorten(_, amount, len) when len < amount, 
+  do: {:error, "Amount to shorten by is greater than the length of the list"}
+  
   defp shorten(list, amount, len) do
-    Enum.take(list, len - amount)
+    shortened_list = Enum.take(list, len - amount)
+    {:ok, shortened_list}
   end
 
   @doc ~S"""
