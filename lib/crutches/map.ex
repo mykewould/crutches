@@ -7,6 +7,9 @@ defmodule Crutches.Map do
   Simply call any function (with any options if applicable) to make use of it.
   """
 
+  @type key :: any
+  @type value :: any
+
   @doc ~S"""
   Recursively traverse `map` and change the keys based on `fun`.
 
@@ -30,4 +33,30 @@ defmodule Crutches.Map do
     end
     dkeys_update(Map.delete(map, key), fun, Map.put(acc, fun.(key), value))
   end
+
+  @doc ~S"""
+  Filters the map, i.e. returns only elements
+  for which `fun` returns a truthy value.
+
+  ## Examples
+
+      iex> Map.filter(%{a: 1, b: nil}, fn ({_k, v}) -> !is_nil(v) end)
+      %{a: 1}
+
+  """
+  @spec filter(map, ({key, value} -> as_boolean(term))) :: map
+  def filter(map, fun), do: :maps.filter(fn(k, v) -> fun.({k, v}) end, map)
+
+  @doc ~S"""
+  Filters the map, i.e. returns only elements
+  for which `fun` returns a `false` or `nil`.
+
+  ## Examples
+
+      iex> Map.reject(%{a: 1, b: nil}, fn ({_k, v}) -> is_nil(v) end)
+      %{a: 1}
+
+  """
+  @spec reject(map, ({key, value} -> as_boolean(term))) :: map
+  def reject(map, fun), do: :maps.filter(fn(k, v) -> !fun.({k, v}) end, map)
 end
