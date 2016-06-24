@@ -638,6 +638,30 @@ defmodule Crutches.Format.Number do
       iex> Number.as_human(12345012345, significant: false)
       "12.345 Billion"
 
+      iex> Number.as_human(999_501)
+      "1 Million"
+
+      iex> Number.as_human(999_499)
+      "999 Thousand"
+
+      iex> Number.as_human(999_999_501)
+      "1 Billion"
+
+      iex> Number.as_human(999_499_000)
+      "999 Million"
+
+      iex> Number.as_human(999_999_999_501)
+      "1 Trillion"
+
+      iex> Number.as_human(999_499_000_000)
+      "999 Billion"
+
+      iex> Number.as_human(999_999_999_999_501)
+      "1 Quadrillion"
+
+      iex> Number.as_human(999_499_000_000_000)
+      "999 Trillion"
+
       iex> Number.as_human!("abc")
       ** (ArithmeticError) bad argument in arithmetic expression
   """
@@ -676,15 +700,16 @@ defmodule Crutches.Format.Number do
     opts = Option.combine!(opts, @as_human)
     {exp, unit, sign} = closest_size_and_sign(number)
 
-    fract_num =
+    {fract_num, corrected_unit} =
       abs(number) / :math.pow(10, exp)
       |> as_rounded(Keyword.take(opts, @as_rounded[:valid]))
+      |> correct_round_up(unit)
 
     if sign < 0 do
       fract_num = "-" <> fract_num
     end
 
-    format_as_human(fract_num, opts[:units][unit], opts[:format])
+    format_as_human(fract_num, opts[:units][corrected_unit], opts[:format])
   end
 
   defp closest_size_and_sign(number) when is_number(number) do
@@ -715,6 +740,18 @@ defmodule Crutches.Format.Number do
     end
   end
 
+  defp correct_round_up(number, unit) do
+    cond do
+      number != "1000" -> {number, unit}
+      unit == :thousand -> {"1", :million}
+      unit == :million -> {"1", :billion}
+      unit == :billion -> {"1", :trillion}
+      unit == :trillion -> {"1", :quadrillion}
+      true -> {number, unit}
+    end
+  end
+
+
   defp number_sign(number) when is_number(number) do
     cond do
       number >= 0 ->  1
@@ -723,8 +760,10 @@ defmodule Crutches.Format.Number do
   end
 
   defp format_as_human(binary, unit, format) when is_binary(binary) do
-    str = String.replace(format, "%n", binary, global: false)
-    String.replace(str, "%u", unit, global: false) |> String.strip
+    format
+    |> String.replace("%n", binary, global: false)
+    |> String.replace("%u", unit, global: false)
+    |> String.strip
   end
 
   @doc ~S"""
