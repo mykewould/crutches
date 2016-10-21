@@ -1,6 +1,6 @@
 defmodule Crutches.Option do
   @moduledoc """
-  Convenience functions for dealing with funciton option handling.
+  Convenience functions for dealing with function option handling.
 
   This provides a mechanism for declaring default options and merging these with
   those given by any caller.
