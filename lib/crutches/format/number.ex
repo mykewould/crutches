@@ -189,14 +189,14 @@ defmodule Crutches.Format.Number do
     end
   end
 
-  defp strip_trailing_zeros(number, strip) do
-    if strip do
-      strip_trailing_zeros(number)
-    else
-      number
-    end
+  defp strip_insignificant_zeroes(number, false), do: number
+  defp strip_insignificant_zeroes(number, true), do: strip_insignificant_zeroes(number)
+  defp strip_insignificant_zeroes(number) do
+     Regex.replace(~r/0+$/, number, "0")
   end
 
+  defp strip_trailing_zeros(number, false), do: number
+  defp strip_trailing_zeros(number, true), do: strip_trailing_zeros(number)
   defp strip_trailing_zeros(number) do
     if String.contains?(number, ".") do
       case String.reverse(number) do
@@ -412,7 +412,7 @@ defmodule Crutches.Format.Number do
     format = number < 0 && opts[:negative_format] || opts[:format]
 
     abs(number/1)
-    |> Float.to_string(decimals: opts[:precision])
+    |> :erlang.float_to_binary(decimals: opts[:precision])
     |> as_delimited(delimiter: opts[:delimiter], separator: opts[:separator])
     |> format_as_currency(opts[:unit], format)
   end
@@ -519,7 +519,8 @@ defmodule Crutches.Format.Number do
     opts = Option.combine!(opts, @as_percentage)
 
     number/1
-    |> Float.to_string([decimals: opts[:precision], compact: opts[:strip_insignificant_zeros]])
+    |> :erlang.float_to_binary(decimals: opts[:precision])
+    |> strip_insignificant_zeroes(opts[:strip_insignificant_zeros])
     |> as_delimited(delimiter: opts[:delimiter], separator: opts[:separator])
     |> format_as_percentage(opts[:format])
   end
@@ -705,11 +706,12 @@ defmodule Crutches.Format.Number do
       |> as_rounded(Keyword.take(opts, @as_rounded[:valid]))
       |> correct_round_up(unit)
 
-    if sign < 0 do
-      fract_num = "-" <> fract_num
+    sign_corrected = case sign < 0 do
+      true -> "-" <> fract_num
+      false -> fract_num
     end
 
-    format_as_human(fract_num, opts[:units][corrected_unit], opts[:format])
+    format_as_human(sign_corrected, opts[:units][corrected_unit], opts[:format])
   end
 
   defp closest_size_and_sign(number) when is_number(number) do
