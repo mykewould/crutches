@@ -2,9 +2,6 @@ defmodule Crutches.String do
   alias Crutches.Option
   import String, only: [
     replace: 3,
-    downcase: 1,
-    split: 2,
-    capitalize: 1,
     slice: 2,
     strip: 1
   ]
@@ -41,27 +38,27 @@ defmodule Crutches.String do
       ["UsersSection.Commission.Department", "users_section/commission/department"],
 
   """
-  defdelegate underscore(string), to: Mix.Utils
+  defdelegate underscore(string), to: Macro
 
   @doc ~S"""
   Converts `string` to CamelCase.
 
   ## Examples
 
-      iex> String.camelize("product")
+      iex> Macro.camelize("product")
       "Product"
 
-      iex> String.camelize("special_guest")
+      iex> Macro.camelize("special_guest")
       "SpecialGuest"
 
-      iex> String.camelize("application_controller")
+      iex> Macro.camelize("application_controller")
       "ApplicationController"
 
-      iex> String.camelize("area51_controller")
+      iex> Macro.camelize("area51_controller")
       "Area51Controller"
 
   """
-  defdelegate camelize(string), to: Mix.Utils
+  defdelegate camelize(string), to: Macro
 
   # Access
 

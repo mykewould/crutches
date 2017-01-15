@@ -7,7 +7,7 @@ defmodule Crutches.Mixfile do
      elixir: "~> 1.0",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps,
+     deps: deps(),
      description: "An Elixir toolbelt freely inspired from Ruby's ActiveSupport",
      package: [maintainers: ["Michael Wood", "Kash Nouroozi", "Maurizio Del Corno",
                               "nawns", "Laurens Duijvesteijn", "Joel Meador",

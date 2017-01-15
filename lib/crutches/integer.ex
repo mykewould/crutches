@@ -37,7 +37,7 @@ defmodule Crutches.Integer do
   def is_prime?(int) do
     is_prime?(int, 2, :math.sqrt(int))
   end
-  def is_prime?(int, divisor, limit) when divisor > limit, do: true
+  def is_prime?(_int, divisor, limit) when divisor > limit, do: true
   def is_prime?(int, divisor, limit) do
     cond do
       rem(int, divisor) === 0 -> false
