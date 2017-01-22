@@ -13,53 +13,6 @@ defmodule Crutches.String do
   Simply call any function (with any options if applicable) to make use of it.
   """
 
-  @doc ~S"""
-  Converts a `string` to `snake_case`.
-
-  `underscore/1` also changes `.` to `/` to convert namespaces into paths.
-
-
-  ## Examples
-
-      iex> String.underscore("Product")
-      "product"
-
-      iex> String.underscore("SpecialGuest")
-      "special_guest"
-
-      iex> String.underscore("ApplicationController")
-      "application_controller"
-
-      iex> String.underscore("Area51Controller")
-      "area51_controller"
-
-      ["HTMLTidyGenerator",  "html_tidy_generator"],
-
-      ["UsersSection.Commission.Department", "users_section/commission/department"],
-
-  """
-  defdelegate underscore(string), to: Macro
-
-  @doc ~S"""
-  Converts `string` to CamelCase.
-
-  ## Examples
-
-      iex> Macro.camelize("product")
-      "Product"
-
-      iex> Macro.camelize("special_guest")
-      "SpecialGuest"
-
-      iex> Macro.camelize("application_controller")
-      "ApplicationController"
-
-      iex> Macro.camelize("area51_controller")
-      "Area51Controller"
-
-  """
-  defdelegate camelize(string), to: Macro
-
   # Access
 
   @doc ~S"""
