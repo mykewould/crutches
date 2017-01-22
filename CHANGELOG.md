@@ -9,6 +9,10 @@ All notable changes made to Crutches will be documented in this file.
  - `Enum.none?/1` and `Enum.none?/2` [#82], ([endersstocker])
  - `Enum.one?/1` and `Enum.one?/2` [#83], ([endersstocker])
 
+### Removed
+
+ - `String.underscore/1` and `String.camelize/1` [`ba7f4e93`][ba7f4e93], ([duijf])
+
 ## [1.0.0] - 2015-10-05
 
 ### Added
@@ -176,9 +180,9 @@ All notable changes made to Crutches will be documented in this file.
 [#9]:https://github.com/mykewould/crutches/pull/9
 [#8]:https://github.com/mykewould/crutches/pull/8
 
+[ba7f4e93]:https://github.com/mykewould/crutches/commit/ba7f4e93cc2d376aaddb184423277339706abcaf
 [37d466f6]:https://github.com/mykewould/crutches/commit/37d466f6a27096187ae20d341a31721079645a23
 [8e933327]:https://github.com/mykewould/crutches/commit/8e933327f409368545825b781d97c7415e02a2d9
-
 
 [1.0.0]: https://github.com/mykewould/crutches/compare/v0.0.5...v1.0.0
 [0.0.5]: https://github.com/mykewould/crutches/compare/v0.0.4...v0.0.5
