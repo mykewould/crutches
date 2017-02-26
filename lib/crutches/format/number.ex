@@ -167,7 +167,8 @@ defmodule Crutches.Format.Number do
     number |> make_significant(precision)
   end
   defp prepare_as_rounded(number, precision, false) do
-    number = Float.round(number, precision)
+    multiplier = :math.pow(10, precision)
+    number = Float.round(multiplier * number, 0) / multiplier
     if precision > 0 do
       :io_lib.format("~.#{precision}f", [number]) |> List.to_string
     else
