@@ -21,4 +21,34 @@ defmodule Crutches do
       alias Crutches.Format, as: F
     end
   end
+
+  @doc ~S"""
+    An object is blank if it's false, empty, or a whitespace string.
+
+    For example, false, "", '', "\n", nil, [], {} and %{} are all blank.
+
+    ## Examples
+
+      iex> Crutches.blank?("")
+      true
+
+      iex> Crutches.blank?("Hello")
+      false
+
+      iex> Crutches.blank?([])
+      true
+
+      iex > Crutches.blank?({1, 2})
+      false
+  """
+  def blank?(term) do
+    Crutches.Protocols.Blankable.blank?(term)
+  end
+
+  @doc """
+  Opposite of `blank?`
+  """
+  def present?(term) do
+    !blank?(term)
+  end
 end
