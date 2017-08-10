@@ -159,6 +159,7 @@ defmodule Crutches.String do
     iex> String.titlecase("the truth is rarely pure and NEVER simple.")
     "The Truth Is Rarely Pure And Never Simple."
   """
+  @spec titlecase(String.t) :: String.t
   def titlecase(string) when is_binary(string) do
     string
     |> String.split(" ")
