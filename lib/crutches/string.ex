@@ -150,6 +150,23 @@ defmodule Crutches.String do
   end
 
   @doc ~S"""
+  Capitalizes every word in a string. Similar to ActiveSupport's #titleize.
+
+    iex> String.titlecase("the truth is rarely pure and never simple.")
+    "The Truth Is Rarely Pure And Never Simple."
+    iex> String.titlecase("THE TRUTH IS RARELY PURE AND NEVER SIMPLE.")
+    "The Truth Is Rarely Pure And Never Simple."
+    iex> String.titlecase("the truth is rarely pure and NEVER simple.")
+    "The Truth Is Rarely Pure And Never Simple."
+  """
+  def titlecase(string) when is_binary(string) do
+    string
+    |> String.split(" ")
+    |> Enum.map(&String.capitalize/1)
+    |> Enum.join(" ")
+  end
+
+  @doc ~S"""
   Truncates a given `text` after a given `length` if `text` is longer than `length`:
 
   Truncates a given text after a given `len`gth if text is longer than `len`th.
