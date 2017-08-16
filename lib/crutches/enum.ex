@@ -130,4 +130,27 @@ defmodule Crutches.Enum do
   def one?(enumerable, fun \\ fn(x) -> x end) do
     match? [_], Stream.filter(enumerable, fun) |> Enum.take(2)
   end
+
+  @doc ~S"""
+  Returns a copy of the `collection` with any and all nils removed.
+
+  ## Examples
+
+      iex> Enum.compact(["David", "Rafael", nil, "Todd"])
+      ["David", "Rafael", "Todd"]
+
+      iex> Enum.compact([1, 1, 2, nil, 4, nil])
+      [1, 1, 2, 4]
+
+      iex> Enum.compact(%{ movie: "Frozen", rating: nil })
+      %{ movie: "Frozen" }
+  """
+  @spec compact(list(any)) :: list(any)
+  @spec compact(map) :: map
+  def compact(list) when is_list(list) do
+    Enum.reject(list, &is_nil(&1))
+  end
+  def compact(map) when is_map(map) do
+    for {key, value} <- map, !is_nil(value), do: {key, value}, into: %{}
+  end
 end
