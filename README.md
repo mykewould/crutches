@@ -54,13 +54,12 @@ that you can find in Crutches.
 
 Since `v1.0.0` all APIs are stable and subject to [semantic versioning][semver].
 
-We specifically test our code against the following combinations of Erlang/OTP
+We specifically test our code against the following versions of Erlang/OTP
 and Elixir:
 
-| Erlang | Elixir 	|
-|------- |--------- |
-| `18.0` | `1.1`  	|
-| `18.0` | `1.2`  	|
+Erlang: 18.0, 19.0, 20.0
+Elixir: 1.1.1, 1.2.6, 1.3.4, 1.4.0, 1.5.1
+
 
 ## Learn Elixir with us!
 
