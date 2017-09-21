@@ -51,4 +51,16 @@ defmodule Crutches do
   def present?(term) do
     !blank?(term)
   end
+
+  @doc """
+  Return the value if present? else nil.
+
+    iex> Crutches.presence("foo")
+    "foo"
+    iex> Crutches.presence(nil)
+    nil
+  """
+  def presence(term) do
+    if present?(term), do: term
+  end
 end
