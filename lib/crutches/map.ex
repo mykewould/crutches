@@ -59,4 +59,38 @@ defmodule Crutches.Map do
   """
   @spec reject(map, ({key, value} -> as_boolean(term))) :: map
   def reject(map, fun), do: :maps.filter(fn(k, v) -> !fun.({k, v}) end, map)
+
+  @doc """
+  Invert a map. Duplicate values raises an error.
+
+  ## Examples
+
+    iex> Map.invert(%{:foo => "bar", "baz" => :qux})
+    %{"bar" => :foo, :qux => "baz"}
+  """
+  @spec invert(map) :: map
+  def invert(map) when is_map(map) do
+    Enum.reduce(map, %{}, fn {k, v}, acc ->
+      if Map.has_key?(acc, v) do
+        raise "Cannot invert map with duplicate values"
+      else
+        Map.put(acc, v, k)
+      end
+    end)
+  end
+
+  @doc """
+  Convert map atom keys to strings.
+
+  Top level only - not recursive.
+
+    iex> Map.shallow_stringify_keys(%{foo: "bar", baz: "qux"})
+    %{"foo" => "bar", "baz" => "qux"}
+    iex> Map.shallow_stringify_keys(%{foo: "bar", baz: %{qux: 1}})
+    %{"foo" => "bar", "baz" => %{qux: 1}}
+  """
+  def shallow_stringify_keys(nil), do: nil
+  def shallow_stringify_keys(map) when is_map(map) do
+    for {k, v} <- map, do: {Atom.to_string(k), v}, into: %{}
+  end
 end
