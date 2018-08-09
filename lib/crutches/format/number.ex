@@ -55,6 +55,7 @@ defmodule Crutches.Format.Number do
   ]
 
   def as_delimited(number, opts \\ [])
+
   def as_delimited(number, opts) when is_binary(number) do
     opts = Option.combine!(opts, @as_delimited)
 
@@ -73,15 +74,15 @@ defmodule Crutches.Format.Number do
   end
 
   defp format_number(number, opts) do
-    delimiter = to_char_list(opts[:delimiter])
+    delimiter = to_charlist(opts[:delimiter])
 
     number
-    |> to_char_list
-    |> Enum.reverse
+    |> to_charlist
+    |> Enum.reverse()
     |> Enum.chunk(3, 3, [])
     |> Enum.map(&Enum.reverse/1)
     |> Enum.intersperse(delimiter)
-    |> Enum.reverse
+    |> Enum.reverse()
     |> to_string
   end
 
@@ -147,13 +148,15 @@ defmodule Crutches.Format.Number do
   ]
 
   def as_rounded(number, opts \\ @as_rounded[:defaults])
+
   def as_rounded(number, opts) when is_binary(number) do
-    number |> String.to_float |> as_rounded(opts)
+    number |> String.to_float() |> as_rounded(opts)
   end
 
   def as_rounded(number, opts) when is_integer(number) do
-    number |> :erlang.float |> as_rounded(opts)
+    number |> :erlang.float() |> as_rounded(opts)
   end
+
   def as_rounded(number, opts) when is_float(number) do
     opts = Option.combine!(opts, @as_rounded)
 
@@ -166,38 +169,42 @@ defmodule Crutches.Format.Number do
   defp prepare_as_rounded(number, precision, true) do
     number |> make_significant(precision)
   end
+
   defp prepare_as_rounded(number, precision, false) do
     multiplier = :math.pow(10, precision)
     number = Float.round(multiplier * number, 0) / multiplier
+
     if precision > 0 do
-      :io_lib.format("~.#{precision}f", [number]) |> List.to_string
+      :io_lib.format("~.#{precision}f", [number]) |> List.to_string()
     else
-      number |> trunc |> Integer.to_string
+      number |> trunc |> Integer.to_string()
     end
   end
 
   defp make_significant(number, precision) do
-    digits = (:math.log10(number) + 1) |> Float.floor |> trunc
+    digits = (:math.log10(number) + 1) |> Float.floor() |> trunc
     multiplier = :math.pow(10, digits - precision)
     extra_precision = precision - digits
 
     result = Float.round(number / multiplier) * multiplier
 
     if extra_precision > 0 do
-      :io_lib.format("~.#{extra_precision}f", [result]) |> List.to_string
+      :io_lib.format("~.#{extra_precision}f", [result]) |> List.to_string()
     else
-      result |> trunc |> Integer.to_string
+      result |> trunc |> Integer.to_string()
     end
   end
 
   defp strip_insignificant_zeroes(number, false), do: number
   defp strip_insignificant_zeroes(number, true), do: strip_insignificant_zeroes(number)
+
   defp strip_insignificant_zeroes(number) do
-     Regex.replace(~r/0+$/, number, "0")
+    Regex.replace(~r/0+$/, number, "0")
   end
 
   defp strip_trailing_zeros(number, false), do: number
   defp strip_trailing_zeros(number, true), do: strip_trailing_zeros(number)
+
   defp strip_trailing_zeros(number) do
     if String.contains?(number, ".") do
       case String.reverse(number) do
@@ -269,6 +276,7 @@ defmodule Crutches.Format.Number do
   ]
 
   def as_phone(number, opts \\ [])
+
   def as_phone(number, opts) when is_list(number) do
     number
     |> to_string
@@ -278,13 +286,13 @@ defmodule Crutches.Format.Number do
   def as_phone(number, opts) when is_binary(number) do
     case Integer.parse(number) do
       {integer, ""} -> as_phone(integer, opts)
-                  _ -> number
+      _ -> number
     end
   end
 
   def as_phone(number, opts) when is_integer(number) do
     opts = Option.combine!(opts, @as_phone)
-    delimiter = to_string opts[:delimiter]
+    delimiter = to_string(opts[:delimiter])
 
     Integer.to_string(number)
     |> split_for_phone
@@ -300,7 +308,7 @@ defmodule Crutches.Format.Number do
   defp split_for_phone(safe_string) when byte_size(safe_string) === 7 do
     safe_string
     |> String.split_at(3)
-    |> Tuple.to_list
+    |> Tuple.to_list()
   end
 
   defp split_for_phone(safe_string) when byte_size(safe_string) > 7 do
@@ -324,11 +332,13 @@ defmodule Crutches.Format.Number do
   end
 
   defp add_extension(phone_number, nil), do: phone_number
+
   defp add_extension(phone_number, extension) do
     phone_number <> " x #{extension}"
   end
 
   defp add_country_code(phone_number, nil, _), do: phone_number
+
   defp add_country_code(phone_number, country_code, delimiter) do
     "+#{country_code}#{delimiter}" <> phone_number
   end
@@ -398,10 +408,12 @@ defmodule Crutches.Format.Number do
   ]
 
   def as_currency(number, opts \\ [])
+
   def as_currency(number, opts) when is_binary(number) do
     case Float.parse(number) do
       {float, ""} ->
         as_currency(float, opts)
+
       _ ->
         opts = Option.combine!(opts, @as_currency)
         format_as_currency(number, opts[:unit], opts[:format])
@@ -410,9 +422,9 @@ defmodule Crutches.Format.Number do
 
   def as_currency(number, opts) when is_number(number) do
     opts = Option.combine!(opts, @as_currency)
-    format = number < 0 && opts[:negative_format] || opts[:format]
+    format = (number < 0 && opts[:negative_format]) || opts[:format]
 
-    abs(number/1)
+    abs(number / 1)
     |> :erlang.float_to_binary(decimals: opts[:precision])
     |> as_delimited(delimiter: opts[:delimiter], separator: opts[:separator])
     |> format_as_currency(opts[:unit], format)
@@ -420,7 +432,7 @@ defmodule Crutches.Format.Number do
 
   defp format_as_currency(binary, unit, format) when is_binary(binary) do
     format
-    |> String.replace("%n", String.lstrip(binary, ?-), global: false)
+    |> String.replace("%n", String.trim_leading(binary, "-"), global: false)
     |> String.replace("%u", unit)
   end
 
@@ -431,15 +443,16 @@ defmodule Crutches.Format.Number do
   """
 
   def as_currency!(number, opts \\ [])
+
   def as_currency!(number, opts) when is_binary(number) do
     case Float.parse(number) do
       {float, ""} -> as_currency(float, opts)
-                _ -> raise ArithmeticError
+      _ -> raise ArithmeticError
     end
   end
 
   def as_currency!(number, opts) do
-    as_currency number, opts
+    as_currency(number, opts)
   end
 
   @doc ~s"""
@@ -492,8 +505,15 @@ defmodule Crutches.Format.Number do
   """
 
   @as_percentage [
-    valid: [:locale, :precision, :significant, :separator, :delimiter,
-      :strip_insignificant_zeros, :format],
+    valid: [
+      :locale,
+      :precision,
+      :significant,
+      :separator,
+      :delimiter,
+      :strip_insignificant_zeros,
+      :format
+    ],
     defaults: [
       locale: :en,
       precision: 3,
@@ -506,10 +526,12 @@ defmodule Crutches.Format.Number do
   ]
 
   def as_percentage(number, opts \\ [])
+
   def as_percentage(number, opts) when is_binary(number) do
     case Float.parse(number) do
       {float, ""} ->
         as_percentage(float, opts)
+
       _ ->
         opts = Option.combine!(opts, @as_percentage)
         format_as_percentage(number, opts[:format])
@@ -519,7 +541,7 @@ defmodule Crutches.Format.Number do
   def as_percentage(number, opts) when is_number(number) do
     opts = Option.combine!(opts, @as_percentage)
 
-    number/1
+    (number / 1)
     |> :erlang.float_to_binary(decimals: opts[:precision])
     |> strip_insignificant_zeroes(opts[:strip_insignificant_zeros])
     |> as_delimited(delimiter: opts[:delimiter], separator: opts[:separator])
@@ -527,17 +549,18 @@ defmodule Crutches.Format.Number do
   end
 
   defp format_as_percentage(binary, format) when is_binary(binary) do
-    String.replace(format, "%n", String.lstrip(binary, ?-), global: false)
+    String.replace(format, "%n", String.trim_leading(binary, "-"), global: false)
   end
 
   @doc ~s"""
   Throwing version of `as_percentage`.
   """
   def as_percentage!(number, opts \\ [])
+
   def as_percentage!(number, opts) when is_binary(number) do
     case Float.parse(number) do
       {float, ""} -> as_percentage(float, opts)
-                _ -> raise ArithmeticError
+      _ -> raise ArithmeticError
     end
   end
 
@@ -668,8 +691,16 @@ defmodule Crutches.Format.Number do
       ** (ArithmeticError) bad argument in arithmetic expression
   """
   @as_human [
-    valid: [:locale, :precision, :significant, :separator, :delimiter,
-      :strip_insignificant_zeros, :units, :format],
+    valid: [
+      :locale,
+      :precision,
+      :significant,
+      :separator,
+      :delimiter,
+      :strip_insignificant_zeros,
+      :units,
+      :format
+    ],
     defaults: [
       precision: 3,
       significant: true,
@@ -698,19 +729,21 @@ defmodule Crutches.Format.Number do
   ]
 
   def as_human(number, opts \\ [])
+
   def as_human(number, opts) when is_number(number) do
     opts = Option.combine!(opts, @as_human)
     {exp, unit, sign} = closest_size_and_sign(number)
 
     {fract_num, corrected_unit} =
-      abs(number) / :math.pow(10, exp)
+      (abs(number) / :math.pow(10, exp))
       |> as_rounded(Keyword.take(opts, @as_rounded[:valid]))
       |> correct_round_up(unit)
 
-    sign_corrected = case sign < 0 do
-      true -> "-" <> fract_num
-      false -> fract_num
-    end
+    sign_corrected =
+      case sign < 0 do
+        true -> "-" <> fract_num
+        false -> fract_num
+      end
 
     format_as_human(sign_corrected, opts[:units][corrected_unit], opts[:format])
   end
@@ -719,7 +752,7 @@ defmodule Crutches.Format.Number do
     tenth_exp =
       number
       |> abs
-      |> :math.log10
+      |> :math.log10()
       |> trunc
 
     sign = number_sign(number)
@@ -727,17 +760,17 @@ defmodule Crutches.Format.Number do
     cond do
       tenth_exp >= 15 -> {15, :quadrillion, sign}
       tenth_exp >= 12 -> {12, :trillion, sign}
-      tenth_exp >= 9  -> {9, :billion, sign}
-      tenth_exp >= 6  -> {6, :million, sign}
-      tenth_exp >= 3  -> {3, :thousand, sign}
-      tenth_exp >= 2  -> {0, :hundred, sign}
-      tenth_exp >= 1  -> {0, :ten, sign}
-      tenth_exp >= 0  -> {0, :unit, sign}
-      tenth_exp < 0  && tenth_exp >= -1  -> {-1, :deci, sign}
-      tenth_exp < -1 && tenth_exp >= -2  -> {-2, :centi, sign}
-      tenth_exp < -2 && tenth_exp >= -3  -> {-3, :milli, sign}
-      tenth_exp < -3 && tenth_exp >= -6  -> {-6, :micro, sign}
-      tenth_exp < -6 && tenth_exp >= -9  -> {-9, :nano, sign}
+      tenth_exp >= 9 -> {9, :billion, sign}
+      tenth_exp >= 6 -> {6, :million, sign}
+      tenth_exp >= 3 -> {3, :thousand, sign}
+      tenth_exp >= 2 -> {0, :hundred, sign}
+      tenth_exp >= 1 -> {0, :ten, sign}
+      tenth_exp >= 0 -> {0, :unit, sign}
+      tenth_exp < 0 && tenth_exp >= -1 -> {-1, :deci, sign}
+      tenth_exp < -1 && tenth_exp >= -2 -> {-2, :centi, sign}
+      tenth_exp < -2 && tenth_exp >= -3 -> {-3, :milli, sign}
+      tenth_exp < -3 && tenth_exp >= -6 -> {-6, :micro, sign}
+      tenth_exp < -6 && tenth_exp >= -9 -> {-9, :nano, sign}
       tenth_exp < -9 && tenth_exp >= -12 -> {-12, :pico, sign}
       tenth_exp < -12 -> {-15, :femto, sign}
     end
@@ -754,10 +787,9 @@ defmodule Crutches.Format.Number do
     end
   end
 
-
   defp number_sign(number) when is_number(number) do
     cond do
-      number >= 0 ->  1
+      number >= 0 -> 1
       true -> -1
     end
   end
@@ -766,17 +798,18 @@ defmodule Crutches.Format.Number do
     format
     |> String.replace("%n", binary, global: false)
     |> String.replace("%u", unit, global: false)
-    |> String.strip
+    |> String.trim()
   end
 
   @doc ~S"""
   Throwing version of `as_human`, raises if the input is not a valid number.
   """
   def as_human!(number, opts \\ [])
+
   def as_human!(number, opts) when is_binary(number) do
     case Float.parse(number) do
       {num, ""} -> as_human(num, opts)
-              _ -> raise(ArithmeticError, message: "bad argument in arithmetic expression")
+      _ -> raise(ArithmeticError, message: "bad argument in arithmetic expression")
     end
   end
 
@@ -841,8 +874,15 @@ defmodule Crutches.Format.Number do
 
   """
   @as_human_size [
-    valid: [:precision, :significant, :separator, :delimiter,
-      :strip_insignificant_zeros, :units, :format],
+    valid: [
+      :precision,
+      :significant,
+      :separator,
+      :delimiter,
+      :strip_insignificant_zeros,
+      :units,
+      :format
+    ],
     defaults: [
       precision: 3,
       significant: true,
@@ -854,19 +894,20 @@ defmodule Crutches.Format.Number do
         gb: "GB",
         mb: "MB",
         kb: "KB",
-        b: "Bytes",
+        b: "Bytes"
       ],
       prefix: false
     ]
   ]
 
   def as_human_size(number, opts \\ [])
+
   def as_human_size(number, opts) when is_integer(number) and number > 0 do
     opts = Option.combine!(opts, @as_human_size)
     {exp, unit} = closest_bytes_size(number)
 
     fract_num =
-      abs(number) / :math.pow(1024, exp)
+      (abs(number) / :math.pow(1024, exp))
       |> as_rounded(Keyword.take(opts, @as_rounded[:valid]))
 
     "#{fract_num} #{opts[:units][unit]}"
@@ -896,10 +937,11 @@ defmodule Crutches.Format.Number do
   Throwing version of `as_human_size`, raises if the input is not a valid number.
   """
   def as_human_size!(number, opts \\ [])
+
   def as_human_size!(number, opts) when is_binary(number) do
     case Integer.parse(number) do
       {num, ""} -> as_human_size(num, opts)
-              _ -> raise(ArithmeticError, message: "bad argument in arithmetic expression")
+      _ -> raise(ArithmeticError, message: "bad argument in arithmetic expression")
     end
   end
 

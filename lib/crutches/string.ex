@@ -1,10 +1,12 @@
 defmodule Crutches.String do
   alias Crutches.Option
-  import String, only: [
-    replace: 3,
-    slice: 2,
-    strip: 1
-  ]
+
+  import String,
+    only: [
+      replace: 3,
+      slice: 2,
+      trim: 1
+    ]
 
   @moduledoc ~s"""
   Convenience functions for strings.
@@ -56,15 +58,16 @@ defmodule Crutches.String do
       iex> |> String.to(-7)
       ""
   """
-  @spec from(String.t, integer) :: String.t
+  @spec from(String.t(), integer) :: String.t()
   def from(string, position) when position >= 0 do
     slice(string, position..(String.length(string) - 1))
   end
 
   def from(string, position) when position < 0 do
     new_position = String.length(string) + position
+
     case new_position < 0 do
-      true  -> ""
+      true -> ""
       false -> slice(string, new_position..(String.length(string) - 1))
     end
   end
@@ -94,7 +97,7 @@ defmodule Crutches.String do
       iex> |> String.to(-2)
       "ell"
   """
-  @spec to(String.t, integer) :: String.t
+  @spec to(String.t(), integer) :: String.t()
   def to(string, length) when length >= 0 do
     slice(string, 0..length)
   end
@@ -120,9 +123,9 @@ defmodule Crutches.String do
       iex> String.squish(str)
       "foo bar boo"
   """
-  @spec squish(String.t) :: String.t
+  @spec squish(String.t()) :: String.t()
   def squish(string) do
-    string |> replace(~r/[[:space:]]+/, " ") |> strip
+    string |> replace(~r/[[:space:]]+/, " ") |> trim
   end
 
   @doc ~S"""
@@ -140,7 +143,7 @@ defmodule Crutches.String do
       iex> String.remove("foo bar test", [~r/foo /, " test"])
       "bar"
   """
-  @spec remove(String.t, String.t | Regex.t | list(any)) :: String.t
+  @spec remove(String.t(), String.t() | Regex.t() | list(any)) :: String.t()
   def remove(string, patterns) when is_list(patterns) do
     patterns |> Enum.reduce(string, &remove(&2, &1))
   end
@@ -159,7 +162,7 @@ defmodule Crutches.String do
     iex> String.titlecase("the truth is rarely pure and NEVER simple.")
     "The Truth Is Rarely Pure And Never Simple."
   """
-  @spec titlecase(String.t) :: String.t
+  @spec titlecase(String.t()) :: String.t()
   def titlecase(string) when is_binary(string) do
     string
     |> String.split(" ")
@@ -203,6 +206,7 @@ defmodule Crutches.String do
     ]
   ]
   def truncate(string, len, opts \\ [])
+
   def truncate(string, len, opts) when is_binary(string) and is_integer(len) do
     opts = Option.combine!(opts, @truncate)
 
@@ -217,28 +221,33 @@ defmodule Crutches.String do
   defp do_truncate(string, length, sep, omission) when is_nil(sep) do
     String.slice(string, 0, length) <> omission
   end
+
   defp do_truncate(string, length, sep, omission) when is_binary(sep) do
     sep_size = String.length(sep)
+
     chunk_indexes =
       string
-      |> String.codepoints
+      |> String.codepoints()
       |> Enum.take(length)
-      |> Enum.with_index
+      |> Enum.with_index()
       |> Enum.chunk(sep_size, sep_size, [])
-      |> Enum.reverse
+      |> Enum.reverse()
       |> Enum.find(fn chars ->
         str = chars |> Enum.map(&elem(&1, 0)) |> Enum.join("")
         str == sep
       end)
-    {_,index} = if chunk_indexes, do: List.last(chunk_indexes), else: {nil, length}
+
+    {_, index} = if chunk_indexes, do: List.last(chunk_indexes), else: {nil, length}
 
     do_truncate(string, index, nil, omission)
   end
+
   defp do_truncate(string, length, sep, omission) do
     case Regex.scan(sep, string, return: :index) do
-      [_|_] = captures ->
-        [{index,_}] = captures |> Enum.reverse |> Enum.find(fn [{i, _}] -> i <= length end)
+      [_ | _] = captures ->
+        [{index, _}] = captures |> Enum.reverse() |> Enum.find(fn [{i, _}] -> i <= length end)
         do_truncate(string, index, nil, omission)
+
       [] ->
         do_truncate(string, length, nil, omission)
     end
