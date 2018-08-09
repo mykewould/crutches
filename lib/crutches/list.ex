@@ -57,9 +57,9 @@ defmodule Crutches.List do
     shorten(list, amount, length(list))
   end
 
-  defp shorten(_, amount, len) when len < amount, 
-  do: {:error, "Amount to shorten by is greater than the length of the list"}
-  
+  defp shorten(_, amount, len) when len < amount,
+    do: {:error, "Amount to shorten by is greater than the length of the list"}
+
   defp shorten(list, amount, len) do
     shortened_list = Enum.take(list, len - amount)
     {:ok, shortened_list}
@@ -119,16 +119,20 @@ defmodule Crutches.List do
   """
   @spec split(list(any), any) :: list(any)
   def split([], _), do: [[]]
+
   def split(collection, predicate) when not is_function(predicate) do
     split(collection, &(&1 == predicate))
   end
+
   def split(collection, predicate) do
-    {head, tail} = List.foldr collection, {[], []}, fn elem, {head, acc} ->
-      case predicate.(elem) do
-        true  -> {[], [head | acc]}
-        false -> {[elem | head], acc}
-      end
-    end
+    {head, tail} =
+      List.foldr(collection, {[], []}, fn elem, {head, acc} ->
+        case predicate.(elem) do
+          true -> {[], [head | acc]}
+          false -> {[elem | head], acc}
+        end
+      end)
+
     [head] ++ tail
   end
 
@@ -166,6 +170,7 @@ defmodule Crutches.List do
       [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "a"]]
   """
   def in_groups(collection, number, elem \\ nil)
+
   def in_groups(collection, number, elem) when is_function(elem) do
     in_groups(collection, number, nil, elem)
   end
@@ -177,7 +182,7 @@ defmodule Crutches.List do
 
     {result, _} =
       Enum.to_list(1..number)
-      |> Enum.reduce({[], collection}, fn(x, acc) ->
+      |> Enum.reduce({[], collection}, fn x, acc ->
         {list, kollection} = acc
 
         if x <= group_rem do
@@ -186,17 +191,20 @@ defmodule Crutches.List do
           case group_rem do
             0 ->
               {[Enum.take(kollection, group_min) | list], Enum.drop(kollection, group_min)}
+
             _ ->
               case elem do
                 false ->
                   {[Enum.take(kollection, group_min) | list], Enum.drop(kollection, group_min)}
+
                 _ ->
-                  {[(Enum.take(kollection, group_min) |> Enum.concat([elem])) | list], Enum.drop(kollection, group_min)}
+                  {[Enum.take(kollection, group_min) |> Enum.concat([elem]) | list],
+                   Enum.drop(kollection, group_min)}
               end
           end
         end
       end)
 
-      Enum.reverse(result)
+    Enum.reverse(result)
   end
 end

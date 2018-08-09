@@ -1,5 +1,6 @@
 defmodule Crutches.Map do
   require Logger
+
   @moduledoc ~s"""
   Convenience functions for maps.
 
@@ -25,12 +26,16 @@ defmodule Crutches.Map do
   """
   def dkeys_update(map, fun), do: dkeys_update(map, fun, %{})
   defp dkeys_update(map, _, acc) when map == %{}, do: acc
+
   defp dkeys_update(map, fun, acc) do
-    key = Map.keys(map) |> List.first
-    value = case is_map(map[key]) do
-      true -> dkeys_update(map[key], fun)
-         _ -> map[key]
-    end
+    key = Map.keys(map) |> List.first()
+
+    value =
+      case is_map(map[key]) do
+        true -> dkeys_update(map[key], fun)
+        _ -> map[key]
+      end
+
     dkeys_update(Map.delete(map, key), fun, Map.put(acc, fun.(key), value))
   end
 
@@ -45,7 +50,7 @@ defmodule Crutches.Map do
 
   """
   @spec filter(map, ({key, value} -> as_boolean(term))) :: map
-  def filter(map, fun), do: :maps.filter(fn(k, v) -> fun.({k, v}) end, map)
+  def filter(map, fun), do: :maps.filter(fn k, v -> fun.({k, v}) end, map)
 
   @doc ~S"""
   Filters the map, i.e. returns only elements
@@ -58,7 +63,7 @@ defmodule Crutches.Map do
 
   """
   @spec reject(map, ({key, value} -> as_boolean(term))) :: map
-  def reject(map, fun), do: :maps.filter(fn(k, v) -> !fun.({k, v}) end, map)
+  def reject(map, fun), do: :maps.filter(fn k, v -> !fun.({k, v}) end, map)
 
   @doc """
   Invert a map. Duplicate values raises an error.
@@ -90,6 +95,7 @@ defmodule Crutches.Map do
     %{"foo" => "bar", "baz" => %{qux: 1}}
   """
   def shallow_stringify_keys(nil), do: nil
+
   def shallow_stringify_keys(map) when is_map(map) do
     for {k, v} <- map, do: {Atom.to_string(k), v}, into: %{}
   end

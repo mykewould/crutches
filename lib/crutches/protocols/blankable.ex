@@ -9,7 +9,7 @@ end
 
 defimpl Crutches.Protocols.Blankable, for: List do
   def blank?([]), do: true
-  def blank?(_),  do: false
+  def blank?(_), do: false
 end
 
 defimpl Crutches.Protocols.Blankable, for: Map do
@@ -29,19 +29,21 @@ defimpl Crutches.Protocols.Blankable, for: BitString do
 
   @doc "Optimise this common use case"
   def blank?(""), do: true
+
   def blank?(string) do
     Regex.match?(@blank_regex, string)
   end
 end
 
 defimpl Crutches.Protocols.Blankable, for: Any do
-  def blank?(nil),                                  do: true
-  def blank?(false),                                do: true
-  def blank?(atom)     when is_atom(atom),          do: false
-  def blank?(function) when is_function(function),  do: false
-  def blank?(number)   when is_number(number),      do: false
+  def blank?(nil), do: true
+  def blank?(false), do: true
+  def blank?(atom) when is_atom(atom), do: false
+  def blank?(function) when is_function(function), do: false
+  def blank?(number) when is_number(number), do: false
+
   def blank?(term) do
-   try do
+    try do
       Enum.empty?(term)
     rescue
       Protocol.UndefinedError -> false

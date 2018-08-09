@@ -6,7 +6,7 @@ defmodule Crutches.Enum do
   Simply call any function (with any options if applicable) to make use of it.
   """
 
-  @type t :: Enumerable.t
+  @type t :: Enumerable.t()
   @type element :: any
 
   @doc ~S"""
@@ -28,10 +28,10 @@ defmodule Crutches.Enum do
   """
   @spec without(list(any), list(any)) :: list(any)
   def without(collection, elements) when is_list(collection) do
-    if Keyword.keyword? collection do
-      Keyword.drop collection, elements
+    if Keyword.keyword?(collection) do
+      Keyword.drop(collection, elements)
     else
-      Enum.reject collection, &Enum.member?(elements, &1)
+      Enum.reject(collection, &Enum.member?(elements, &1))
     end
   end
 
@@ -94,7 +94,7 @@ defmodule Crutches.Enum do
   @spec none?(t) :: boolean
   @spec none?(t, (element -> as_boolean(term))) :: boolean
 
-  def none?(enumerable, fun \\ fn(x) -> x end)
+  def none?(enumerable, fun \\ fn x -> x end)
 
   def none?(enumerable, fun) do
     not Enum.any?(enumerable, fun)
@@ -127,8 +127,8 @@ defmodule Crutches.Enum do
   """
   @spec one?(t) :: boolean
   @spec one?(t, (element -> as_boolean(term))) :: boolean
-  def one?(enumerable, fun \\ fn(x) -> x end) do
-    match? [_], Stream.filter(enumerable, fun) |> Enum.take(2)
+  def one?(enumerable, fun \\ fn x -> x end) do
+    match?([_], Stream.filter(enumerable, fun) |> Enum.take(2))
   end
 
   @doc ~S"""
@@ -150,6 +150,7 @@ defmodule Crutches.Enum do
   def compact(list) when is_list(list) do
     Enum.reject(list, &is_nil(&1))
   end
+
   def compact(map) when is_map(map) do
     for {key, value} <- map, !is_nil(value), do: {key, value}, into: %{}
   end

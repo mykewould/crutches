@@ -29,18 +29,17 @@ defmodule Crutches.Format.Integer do
       iex> Integer.ordinal(-23)
       "rd"
   """
-  @spec ordinal(integer) :: String.t
+  @spec ordinal(integer) :: String.t()
   def ordinal(n) when is_integer(n) do
     cond do
-      n == 1      -> "st"
-      n == 2      -> "nd"
-      n == 3      -> "rd"
-      n in 0..13  -> "th"
+      n == 1 -> "st"
+      n == 2 -> "nd"
+      n == 3 -> "rd"
+      n in 0..13 -> "th"
       n in 14..99 -> n |> rem(10) |> abs |> ordinal
-      true        -> n |> rem(100) |> abs |> ordinal
+      true -> n |> rem(100) |> abs |> ordinal
     end
   end
-
 
   @doc ~S"""
   Return `n` and it's ordinal as a string.
@@ -56,6 +55,6 @@ defmodule Crutches.Format.Integer do
       iex> Integer.ordinalize(-8)
       "-8th"
   """
-  @spec ordinalize(integer) :: String.t
+  @spec ordinalize(integer) :: String.t()
   def ordinalize(n) when is_integer(n), do: Integer.to_string(n) <> ordinal(n)
 end

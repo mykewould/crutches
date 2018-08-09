@@ -63,15 +63,17 @@ defmodule Crutches.Format.List do
     ]
   ]
 
-  @spec as_sentence(list(any)) :: String.t
+  @spec as_sentence(list(any)) :: String.t()
   def as_sentence(words, opts \\ @as_sentence[:defaults])
-  def as_sentence([],     _), do: ""
+  def as_sentence([], _), do: ""
   def as_sentence([word], _), do: "#{word}"
+
   def as_sentence([first, last], opts) do
     opts = Option.combine!(opts, @as_sentence)
 
     first <> opts[:two_words_connector] <> last
   end
+
   def as_sentence(words, opts) when is_list(words) do
     opts = Option.combine!(opts, @as_sentence)
 
@@ -80,7 +82,7 @@ defmodule Crutches.Format.List do
         {:ok, shortened_list} -> Enum.join(shortened_list, opts[:words_connector])
         _ -> []
       end
-      
+
     last = List.last(words)
 
     init <> opts[:last_word_connector] <> last

@@ -51,7 +51,7 @@ defmodule Crutches.Option do
   @type t(value) :: [{key, value}]
 
   @type ok(value) :: {:ok, value}
-  @type error ::{:error, any}
+  @type error :: {:error, any}
 
   @doc """
   Validates the `opts` keyword list according to `config`, combines defaults.
@@ -148,7 +148,9 @@ defmodule Crutches.Option do
   @spec combine!(t, t | t(t), (t, t -> t)) :: t
   def combine!(opts, config, combinator) do
     case combine(opts, config, combinator) do
-      {:ok, opts} -> opts
+      {:ok, opts} ->
+        opts
+
       {:error, invalid} ->
         invalid = invalid |> Enum.join(" ")
         raise ArgumentError, message: "invalid key #{invalid}"
@@ -196,7 +198,9 @@ defmodule Crutches.Option do
   @spec validate!(t, [atom]) :: true
   def validate!(opts, valid) do
     case validate(opts, valid) do
-      {:ok, _} -> true
+      {:ok, _} ->
+        true
+
       {:error, invalid_options} ->
         raise ArgumentError, "invalid key " <> Enum.join(invalid_options, ", ")
     end
@@ -222,7 +226,7 @@ defmodule Crutches.Option do
 
   defp invalid_options(opts, valid) do
     opts
-    |> Keyword.keys
-    |> Enum.reject(& &1 in valid)
+    |> Keyword.keys()
+    |> Enum.reject(&(&1 in valid))
   end
 end

@@ -23,11 +23,10 @@ defmodule Crutches.Range do
     iex> Range.overlaps?(5..1, 6..4)
     true
   """
-  @spec overlaps?(Range.t, Range.t) :: boolean
+  @spec overlaps?(Range.t(), Range.t()) :: boolean
   def overlaps?(a..b, x..y) do
     a in x..y || b in x..y || x in a..b || y in a..b
   end
-
 
   @doc ~S"""
   Returns the intersection of two ranges, or nil if there is no intersection.
@@ -51,7 +50,7 @@ defmodule Crutches.Range do
     iex> Range.intersection(5..3, 2..4)
     3..4
   """
-  @spec intersection(Range.t, Range.t) :: Range.t | nil
+  @spec intersection(Range.t(), Range.t()) :: Range.t() | nil
   def intersection(range_1, range_2) do
     if overlaps?(range_1, range_2) do
       a..b = normalize_order(range_1)
@@ -61,7 +60,6 @@ defmodule Crutches.Range do
       nil
     end
   end
-
 
   @doc ~S"""
   Returns the union of two ranges, or nil if there is no union.
@@ -82,7 +80,7 @@ defmodule Crutches.Range do
     iex> Range.union(1..3, 3..6)
     1..6
   """
-  @spec union(Range.t, Range.t) :: Range.t | nil
+  @spec union(Range.t(), Range.t()) :: Range.t() | nil
   def union(range_1, range_2) do
     if overlaps?(range_1, range_2) do
       a..b = normalize_order(range_1)
@@ -94,9 +92,7 @@ defmodule Crutches.Range do
   end
 
   # Private helper function that flips a range's order so that it's ascending.
-  @spec normalize_order(Range.t) :: Range.t
-  defp normalize_order(first..last) when first > last,
-    do: last..first
-  defp normalize_order(range),
-    do: range
+  @spec normalize_order(Range.t()) :: Range.t()
+  defp normalize_order(first..last) when first > last, do: last..first
+  defp normalize_order(range), do: range
 end

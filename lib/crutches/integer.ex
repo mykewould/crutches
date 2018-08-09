@@ -3,7 +3,6 @@ defmodule Crutches.Integer do
   Convenience functions for Integers.
   """
 
-
   @doc ~S"""
   Check whether `n` is evenly divisible by `divisor`.
 
@@ -37,7 +36,9 @@ defmodule Crutches.Integer do
   def is_prime?(int) do
     is_prime?(int, 2, :math.sqrt(int))
   end
+
   def is_prime?(_int, divisor, limit) when divisor > limit, do: true
+
   def is_prime?(int, divisor, limit) do
     cond do
       rem(int, divisor) === 0 -> false
@@ -61,20 +62,21 @@ defmodule Crutches.Integer do
   """
   # TODO remove this when we drop support for Elixir < 1.1
   try do
-    Elixir.Integer.digits(1140392)
+    Elixir.Integer.digits(1_140_392)
     def digits(n), do: digits(n, 10)
     defdelegate digits(n, base), to: Elixir.Integer
   rescue
     UndefinedFunctionError ->
-      def digits(n, base \\ 10) when is_integer(n)    and n >= 0
-                                and  is_integer(base) and base >= 2 do
+      def digits(n, base \\ 10)
+          when is_integer(n) and n >= 0 and is_integer(base) and base >= 2 do
         do_digits(n, base, [])
       end
 
-      defp do_digits(0, _base, []),  do: [0]
+      defp do_digits(0, _base, []), do: [0]
       defp do_digits(0, _base, acc), do: acc
-      defp do_digits(n, base, acc)  do
-        do_digits div(n, base), base, [rem(n, base) | acc]
+
+      defp do_digits(n, base, acc) do
+        do_digits(div(n, base), base, [rem(n, base) | acc])
       end
   end
 end
