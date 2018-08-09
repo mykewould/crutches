@@ -1,12 +1,12 @@
 language: elixir
 
 otp_release:
-  - 20.0
-  - 21.0
+  - 20
+  - 21
 
 elixir:
-  - 1.6.0
-  - 1.7.0
+  - 1.6
+  - 1.7
 
 notifications:
   email: false
